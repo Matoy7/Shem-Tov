@@ -33,6 +33,7 @@ import { RecommendedNames } from "@/features/names/RecommendedNames"
 import { MyFamilyScreen } from "@/features/names/MyFamilyScreen"
 import { suggestName } from "@/data/names"
 import { redeemInvitation } from "@/data/families"
+import { logSearch } from "@/data/searchLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
 
 const PRODUCT_NAME = "שם טוב"
@@ -86,6 +87,18 @@ export default function App() {
     setActiveFamilyId,
     create: handleCreateFamily,
   } = useMyFamilies(userId)
+
+  // Logged after a short pause in typing, not on every keystroke — the
+  // actual search itself stays instant either way, this only debounces
+  // what gets written to search_logs.
+  useEffect(() => {
+    const trimmed = searchQuery.trim()
+    if (!userId || trimmed.length < 2) return
+    const id = window.setTimeout(() => {
+      void logSearch(trimmed, userId, activeFamilyId)
+    }, 600)
+    return () => window.clearTimeout(id)
+  }, [searchQuery, userId, activeFamilyId])
 
   const gridView: NameGridView = view === "ranking" ? "ranking" : "browse"
   const {
