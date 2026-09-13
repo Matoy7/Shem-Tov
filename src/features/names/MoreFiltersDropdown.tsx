@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
 import { MORE_FILTER_LABELS } from "./filterOptions"
+import type { FilterCategory as FilterCategoryLog } from "@/data/filterClickLogs"
 
 const HEBREW_ALPHABET = [
   "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ",
@@ -31,6 +32,7 @@ export function moreFiltersActiveCount(v: MoreFilters): number {
 type MoreFiltersDropdownProps = {
   value: MoreFilters
   onChange: (value: MoreFilters) => void
+  onOptionClick?: (category: FilterCategoryLog, value: string, selected: boolean) => void
 }
 
 function Checkbox({ checked }: { checked: boolean }) {
@@ -91,7 +93,7 @@ function LetterPicker({
  * small pill can open partially off-screen on mobile, a bottom sheet
  * cannot. All five options here are backed by real columns on `names`.
  */
-export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProps) {
+export function MoreFiltersDropdown({ value, onChange, onOptionClick }: MoreFiltersDropdownProps) {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState<MoreFilters>(value)
   const [isCompact, setIsCompact] = useState(
@@ -138,6 +140,12 @@ export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, draft])
 
+  const CATEGORY_BY_KEY: Record<"short" | "easyInEnglish" | "worksInternationally", FilterCategoryLog> = {
+    short: "short",
+    easyInEnglish: "easy_in_english",
+    worksInternationally: "works_internationally",
+  }
+
   const body = (
     <div className={isCompact ? "max-h-[55vh] overflow-y-auto px-4" : "max-h-80 overflow-y-auto p-3"}>
       <div className="flex flex-col gap-1">
@@ -145,7 +153,10 @@ export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProp
           <button
             key={key}
             type="button"
-            onClick={() => setDraft((d) => ({ ...d, [key]: !d[key] }))}
+            onClick={() => {
+              onOptionClick?.(CATEGORY_BY_KEY[key], key, !draft[key])
+              setDraft((d) => ({ ...d, [key]: !d[key] }))
+            }}
             className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-start text-body-sm transition-colors duration-150 hover:bg-surface-hover"
           >
             <Checkbox checked={draft[key]} />
@@ -157,10 +168,25 @@ export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProp
       </div>
 
       <div className="mt-3 flex flex-col gap-3 border-t border-border-subtle pt-3">
-        <LetterPicker label="מתחיל באות" selected={draft.initial} onSelect={(l) => setDraft((d) => ({ ...d, initial: l }))} />
-        <LetterPicker label="מסתיים באות" selected={draft.endsWith} onSelect={(l) => setDraft((d) => ({ ...d, endsWith: l }))} />
+        <LetterPicker
+          label="מתחיל באות"
+          selected={draft.initial}
+          onSelect={(l) => {
+            onOptionClick?.("starts_with", l ?? draft.initial ?? "", Boolean(l))
+            setDraft((d) => ({ ...d, initial: l }))
+          }}
+        />
+        <LetterPicker
+          label="מסתיים באות"
+          selected={draft.endsWith}
+          onSelect={(l) => {
+            onOptionClick?.("ends_with", l ?? draft.endsWith ?? "", Boolean(l))
+            setDraft((d) => ({ ...d, endsWith: l }))
+          }}
+        />
       </div>
     </div>
+
   )
 
   const footer = (

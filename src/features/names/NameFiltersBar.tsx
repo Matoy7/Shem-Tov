@@ -3,6 +3,7 @@ import { MultiFilterDropdown } from "./MultiFilterDropdown"
 import { MoreFiltersDropdown, type MoreFilters } from "./MoreFiltersDropdown"
 import { ORIGIN_OPTIONS, MEANING_OPTIONS, STYLE_OPTIONS, POPULARITY_OPTIONS } from "./filterOptions"
 import type { Gender, Origin, Meaning, Style, Popularity } from "@/data/names"
+import type { FilterCategory } from "@/data/filterClickLogs"
 
 const GENDER_TABS: { value: Gender | undefined; label: string }[] = [
   { value: undefined, label: "כל השמות" },
@@ -32,6 +33,7 @@ export const EMPTY_NAME_FILTERS: NameFiltersValue = {
 type NameFiltersBarProps = {
   value: NameFiltersValue
   onChange: (value: NameFiltersValue) => void
+  onFilterClick?: (category: FilterCategory, value: string, selected: boolean) => void
 }
 
 /**
@@ -47,7 +49,7 @@ type NameFiltersBarProps = {
  * is the only in-bar signal, since the real "what's active" answer lives in
  * the chip row below, not in this bar.
  */
-export function NameFiltersBar({ value, onChange }: NameFiltersBarProps) {
+export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBarProps) {
   const set = <K extends keyof NameFiltersValue>(key: K, next: NameFiltersValue[K]) =>
     onChange({ ...value, [key]: next })
 
@@ -66,7 +68,10 @@ export function NameFiltersBar({ value, onChange }: NameFiltersBarProps) {
               type="button"
               role="radio"
               aria-checked={active}
-              onClick={() => set("gender", tab.value)}
+              onClick={() => {
+                if (tab.value) onFilterClick?.("gender", tab.value, true)
+                set("gender", tab.value)
+              }}
               className={cn(
                 "h-7 shrink-0 rounded-full px-3 text-body-sm font-medium transition-colors duration-150",
                 active ? "bg-surface text-content-primary shadow-panel" : "text-content-secondary hover:text-content-primary",
@@ -81,21 +86,39 @@ export function NameFiltersBar({ value, onChange }: NameFiltersBarProps) {
       <span aria-hidden className="mx-0.5 hidden h-5 w-px shrink-0 bg-border sm:block" />
 
       <div className="flex flex-wrap items-center gap-1.5">
-        <MultiFilterDropdown label="מקור" options={ORIGIN_OPTIONS} values={value.origins} onChange={(v) => set("origins", v)} />
+        <MultiFilterDropdown
+          label="מקור"
+          options={ORIGIN_OPTIONS}
+          values={value.origins}
+          onChange={(v) => set("origins", v)}
+          category="origin"
+          onOptionClick={onFilterClick}
+        />
         <MultiFilterDropdown
           label="משמעות"
           options={MEANING_OPTIONS}
           values={value.meanings}
           onChange={(v) => set("meanings", v)}
+          category="meaning"
+          onOptionClick={onFilterClick}
         />
-        <MultiFilterDropdown label="סגנון" options={STYLE_OPTIONS} values={value.styles} onChange={(v) => set("styles", v)} />
+        <MultiFilterDropdown
+          label="סגנון"
+          options={STYLE_OPTIONS}
+          values={value.styles}
+          onChange={(v) => set("styles", v)}
+          category="style"
+          onOptionClick={onFilterClick}
+        />
         <MultiFilterDropdown
           label="פופולריות"
           options={POPULARITY_OPTIONS}
           values={value.popularities}
           onChange={(v) => set("popularities", v)}
+          category="popularity"
+          onOptionClick={onFilterClick}
         />
-        <MoreFiltersDropdown value={value.more} onChange={(v) => set("more", v)} />
+        <MoreFiltersDropdown value={value.more} onChange={(v) => set("more", v)} onOptionClick={onFilterClick} />
       </div>
     </div>
   )

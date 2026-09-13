@@ -34,6 +34,7 @@ import { MyFamilyScreen } from "@/features/names/MyFamilyScreen"
 import { suggestName } from "@/data/names"
 import { redeemInvitation } from "@/data/families"
 import { logSearch } from "@/data/searchLogs"
+import { logFilterClick } from "@/data/filterClickLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
 
 const PRODUCT_NAME = "שם טוב"
@@ -299,7 +300,13 @@ export default function App() {
                   <div className="flex flex-col gap-4">
                     {view === "browse" ? (
                       <>
-                        <NameFiltersBar value={filters} onChange={setFilters} />
+                        <NameFiltersBar
+                          value={filters}
+                          onChange={setFilters}
+                          onFilterClick={(category, value, selected) => {
+                            if (userId) void logFilterClick(userId, activeFamilyId, category, value, selected)
+                          }}
+                        />
                         <ActiveFiltersRow value={filters} onChange={setFilters} />
                       </>
                     ) : null}

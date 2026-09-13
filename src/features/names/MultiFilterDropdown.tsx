@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
+import type { FilterCategory as FilterCategoryLog } from "@/data/filterClickLogs"
 
 export type FilterOption<T extends string> = { value: T; label: string }
 
@@ -10,6 +11,9 @@ type MultiFilterDropdownProps<T extends string> = {
   values: T[]
   onChange: (values: T[]) => void
   className?: string
+  /** For click logging only — which filter category this dropdown represents. */
+  category?: FilterCategoryLog
+  onOptionClick?: (category: FilterCategoryLog, value: string, selected: boolean) => void
 }
 
 function ChevronDown({ className }: { className?: string }) {
@@ -42,6 +46,8 @@ export function MultiFilterDropdown<T extends string>({
   values,
   onChange,
   className,
+  category,
+  onOptionClick,
 }: MultiFilterDropdownProps<T>) {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState<T[]>(values)
@@ -90,6 +96,8 @@ export function MultiFilterDropdown<T extends string>({
   }, [open, draft])
 
   function toggle(value: T) {
+    const nextSelected = !draft.includes(value)
+    if (category) onOptionClick?.(category, value, nextSelected)
     setDraft((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
   }
 
