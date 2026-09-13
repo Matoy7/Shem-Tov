@@ -1,6 +1,8 @@
 import { Card } from "@/components/ui/Card"
 import { VoteButton } from "./VoteButton"
+import { originTag, meaningTag, styleTag, type CardTag } from "./tagColors"
 import type { VoteState } from "@/data/votes"
+import type { Origin, Meaning, Style } from "@/data/names"
 
 /** Shared shape both the catalogue view (NameEntry) and the ranked view (RankedName) reduce to. */
 export type NameCardData = {
@@ -8,6 +10,9 @@ export type NameCardData = {
   text: string
   gender: "boy" | "girl" | "unisex" | null
   origin: string | null
+  origins: Origin[]
+  meanings: Meaning[]
+  styles: Style[]
   meaningHe: string | null
   meaningConfidence: "verified" | "uncertain" | null
   /** Non-null when this row is one family's private suggestion. */
@@ -38,10 +43,13 @@ function GenderPill({ gender }: { gender: "boy" | "girl" | "unisex" }) {
   )
 }
 
-function Tag({ children }: { children: string }) {
+function Tag({ tag }: { tag: CardTag }) {
   return (
-    <span className="inline-flex h-6 shrink-0 items-center rounded-full border border-border bg-surface-muted px-2.5 text-caption font-medium text-content-secondary">
-      {children}
+    <span
+      className="inline-flex h-6 shrink-0 items-center rounded-full border px-2.5 text-caption font-medium"
+      style={{ backgroundColor: tag.swatch.bg, color: tag.swatch.text, borderColor: tag.swatch.border }}
+    >
+      {tag.label}
     </span>
   )
 }
@@ -61,10 +69,11 @@ type NameCardProps = {
  * elements below the divider are what the person actually needs: what kind
  * of name this is (tags) and whether to vote for it (the heart).
  *
- * Tags are derived from data the card already receives — the free-text
- * `origin` field, split on its own `;` separators, plus a family-suggestion
- * marker — rather than fetching anything new, so this stays a pure visual
- * pass over the existing data flow.
+ * Tags come straight from the name's real origin/meaning/style flags — one
+ * of each, at most, so a card never turns into a wall of pills. Each tag
+ * value has its own fixed color (see tagColors.ts): same lightness and
+ * saturation across all of them (one coherent "family"), distinct hue per
+ * value (so origin/meaning/style stay tellable apart at a glance).
  */
 export function NameCard({
   name,
@@ -73,10 +82,11 @@ export function NameCard({
   disabledReason = "צרו משפחה כדי להצביע",
   onToggleVote,
 }: NameCardProps) {
-  const tags = [
-    ...(name.origin ? name.origin.split(";").map((s) => s.trim()).filter(Boolean) : []),
-    ...(name.suggestedForFamilyId ? ["הצעת המשפחה"] : []),
-  ]
+  const tags: CardTag[] = [
+    ...name.origins.slice(0, 1).map(originTag),
+    ...name.meanings.slice(0, 1).map(meaningTag),
+    ...name.styles.slice(0, 1).map(styleTag),
+  ].slice(0, 3)
 
   return (
     <Card
@@ -112,9 +122,9 @@ export function NameCard({
       <div>
         <div className="mb-4 h-px bg-border-subtle" aria-hidden />
         <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-            {tags.slice(0, 2).map((tag) => (
-              <Tag key={tag}>{tag}</Tag>
+          <div className="flex min-w-0 flex-wrap items-center justify-start gap-1.5">
+            {tags.map((tag) => (
+              <Tag key={tag.key} tag={tag} />
             ))}
           </div>
 

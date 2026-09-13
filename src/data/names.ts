@@ -250,6 +250,9 @@ export type RankedName = {
   text: string
   gender: Gender | null
   origin: string | null
+  origins: Origin[]
+  meanings: Meaning[]
+  styles: Style[]
   suggestedForFamilyId: string | null
   voteCount: number
   lastVotedAt: string
@@ -267,7 +270,31 @@ type RankingRow = {
   last_voted_at: string
   meaning_he: string | null
   meaning_confidence: MeaningConfidence | null
+  biblical: boolean
+  hebrew: boolean
+  israeli: boolean
+  international: boolean
+  arabic: boolean
+  european: boolean
+  greek: boolean
+  meaning_love: boolean
+  meaning_nature: boolean
+  meaning_light: boolean
+  meaning_strength: boolean
+  meaning_joy: boolean
+  meaning_freedom: boolean
+  style_classic: boolean
+  style_modern: boolean
+  style_unique: boolean
+  style_soft: boolean
+  style_traditional: boolean
+  style_vintage: boolean
 }
+
+const RANKING_SELECT = `name_id, text, gender, origin, suggested_for_family_id, vote_count, last_voted_at, meaning_he, meaning_confidence,
+  biblical, hebrew, israeli, international, arabic, european, greek,
+  meaning_love, meaning_nature, meaning_light, meaning_strength, meaning_joy, meaning_freedom,
+  style_classic, style_modern, style_unique, style_soft, style_traditional, style_vintage`
 
 /**
  * A family's ranking, straight from family_name_rankings: distinct-voter
@@ -277,7 +304,7 @@ type RankingRow = {
 export async function fetchFamilyRanking(familyId: string): Promise<RankedName[]> {
   const { data, error } = await supabase
     .from("family_name_rankings")
-    .select("name_id, text, gender, origin, suggested_for_family_id, vote_count, last_voted_at, meaning_he, meaning_confidence")
+    .select(RANKING_SELECT)
     .eq("family_id", familyId)
     .order("vote_count", { ascending: false })
     .order("last_voted_at", { ascending: false })
@@ -287,6 +314,9 @@ export async function fetchFamilyRanking(familyId: string): Promise<RankedName[]
     text: r.text,
     gender: r.gender,
     origin: r.origin,
+    origins: ORIGIN_FLAGS.filter((o) => r[o]),
+    meanings: MEANING_FLAGS.filter((m) => r[`meaning_${m}` as keyof RankingRow]),
+    styles: STYLE_FLAGS.filter((s) => r[`style_${s}` as keyof RankingRow]),
     suggestedForFamilyId: r.suggested_for_family_id,
     voteCount: r.vote_count,
     lastVotedAt: r.last_voted_at,
