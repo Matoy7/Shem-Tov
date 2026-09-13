@@ -1,12 +1,24 @@
 import type { HTMLAttributes, ReactNode, Ref } from "react"
 import { cn } from "@/lib/cn"
 
-export type CardVariant = "default" | "accent"
+export type CardVariant = "default" | "accent" | "premium"
 export type CardPadding = "md" | "lg"
 
 const variantStyles: Record<CardVariant, string> = {
-  default: "bg-surface border-border-subtle shadow-card",
-  accent: "bg-surface-secondary border-transparent shadow-panel",
+  default: "rounded-lg bg-surface border-border-subtle shadow-card",
+  accent: "rounded-lg bg-surface-secondary border-transparent shadow-panel",
+  // Extra-large radius and a diffuse, low-contrast shadow — the "clean and
+  // premium" name-card redesign's look, kept as its own variant rather than
+  // a className override so it can never silently lose a specificity fight
+  // with the default radius/shadow (cn() here is plain concatenation, not
+  // a merge utility — see lib/cn.ts).
+  premium: "rounded-xl bg-surface border-border-subtle shadow-name-card",
+}
+
+const hoverShadowStyles: Record<CardVariant, string> = {
+  default: "hover:shadow-card-hover",
+  accent: "hover:shadow-card-hover",
+  premium: "hover:shadow-name-card-hover",
 }
 
 const paddingStyles: Record<CardPadding, string> = {
@@ -42,10 +54,10 @@ export function Card({
     <Tag
       ref={ref as Ref<HTMLDivElement>}
       className={cn(
-        "rounded-lg border",
+        "border",
         variantStyles[variant],
         paddingStyles[padding],
-        interactive && "transition-shadow duration-150 hover:shadow-card-hover",
+        interactive && cn("transition-shadow duration-150", hoverShadowStyles[variant]),
         className,
       )}
       {...rest}

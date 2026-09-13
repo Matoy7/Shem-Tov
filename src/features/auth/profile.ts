@@ -201,10 +201,11 @@ export async function chooseGuestDisplayName(userId: string, name: string): Prom
   const trimmed = name.trim().slice(0, GUEST_NAME_MAX_LENGTH)
   if (!trimmed) throw new Error("שם לא יכול להיות ריק")
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("profiles")
     .update({ display_name: trimmed })
     .eq("id", userId)
+    .select("id")
 
   if (error) {
     assertMigrated(error)
@@ -212,6 +213,15 @@ export async function chooseGuestDisplayName(userId: string, name: string): Prom
       throw new Error("השם הזה כבר בשימוש. נסו שם אחר, או הוסיפו לו משהו קטן.")
     }
     throw error
+  }
+
+  // An UPDATE that matches zero rows returns no error — Postgres has
+  // nothing to complain about, it just did nothing. That's exactly what a
+  // profile row that no longer exists looks like (see useSession.ts's
+  // ghost-session handling), so it's treated as a failure here too rather
+  // than reporting success for a write that changed nothing.
+  if (!data || data.length === 0) {
+    throw new Error("החשבון הזה כבר לא תקף. רעננו את הדף כדי להתחבר מחדש.")
   }
 
   return trimmed

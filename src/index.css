@@ -78,6 +78,7 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
+  --radius-xl: 24px;
 
   /* --- Elevation -------------------------------------------------------- */
   --shadow-card: 0 1px 2px rgba(30, 36, 48, 0.05);
@@ -85,6 +86,11 @@
   --shadow-panel: 0 2px 8px rgba(93, 26, 252, 0.06);
   --shadow-primary: 0 4px 10px rgba(15, 48, 64, 0.18);
   --shadow-overlay: 0 16px 40px rgba(30, 36, 48, 0.18);
+  /* Diffuse and low-contrast on purpose — for the name-card redesign, where
+     the brief calls for "extremely soft" elevation instead of the app's
+     ordinary card shadow. */
+  --shadow-name-card: 0 8px 30px rgba(15, 48, 64, 0.06);
+  --shadow-name-card-hover: 0 12px 36px rgba(15, 48, 64, 0.1);
 
   /* --- Layout ------------------------------------------------------------ */
   --container-page: 1440px;

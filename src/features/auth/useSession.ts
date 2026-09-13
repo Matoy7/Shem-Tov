@@ -61,9 +61,18 @@ export function useSession(): SessionState {
           if (active) setDisplayName(name)
         })
         .catch((error) => {
-          // Non-fatal: the signup trigger has already created the row.
-          console.error("profile upsert failed", error)
+          // A profile write failing almost always means the session itself
+          // is stale — most commonly a locally-cached token for a user
+          // whose auth.users row was deleted directly in SQL (which does
+          // not invalidate already-issued client sessions). Every write
+          // this user makes would keep failing the same way — including,
+          // confusingly, ones that look unrelated, like creating a family
+          // — because every table with a foreign key back to profiles
+          // rejects rows for an id that no longer exists there. Signing
+          // out clears the dead session so the next visit gets a real one.
+          console.error("profile upsert failed — signing out a stale session", error)
           syncedUserId.current = null
+          void supabase.auth.signOut()
         })
         .finally(() => {
           if (active) setProfileLoading(false)
