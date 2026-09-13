@@ -41,7 +41,7 @@ export function NameGrid({
   onToggleVote,
   votingDisabled = false,
 }: NameGridProps) {
-  if (loading) {
+  if (loading || error) {
     return (
       <div className={GRID} aria-busy="true" aria-label={searchQuery ? "מחפש" : "טוען שמות"}>
         {Array.from({ length: 6 }, (_, index) => (
@@ -51,10 +51,6 @@ export function NameGrid({
         ))}
       </div>
     )
-  }
-
-  if (error) {
-    return <EmptyState title="משהו השתבש" description={error} />
   }
 
   if (names.length === 0) {

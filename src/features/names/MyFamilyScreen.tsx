@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { Avatar } from "@/components/ui/Avatar"
 import { Input } from "@/components/ui/Input"
-import { EmptyState } from "@/components/ui/EmptyState"
 import { Section } from "@/components/layout/Section"
 import { useGeneratedAvatars } from "@/lib/avatar"
 import { relativeTime } from "@/lib/time"
+import { useSilentRetry } from "@/lib/useSilentRetry"
 import {
   fetchFamilyRoster,
   fetchFamilyInvitations,
@@ -69,6 +69,7 @@ export function MyFamilyScreen({ family, currentUserId, onRenamed }: MyFamilyScr
   }, [family.id, isOwner, nonce])
 
   const reload = useCallback(() => setNonce((n) => n + 1), [])
+  useSilentRetry(error, reload)
 
   async function handleCreateInvite() {
     setCreatingInvite(true)
@@ -111,16 +112,12 @@ export function MyFamilyScreen({ family, currentUserId, onRenamed }: MyFamilyScr
     reload()
   }
 
-  if (loading) {
+  if (loading || error) {
     return (
       <Card className="h-40 w-full animate-pulse" aria-hidden>
         <span className="sr-only">טוען</span>
       </Card>
     )
-  }
-
-  if (error) {
-    return <EmptyState title="משהו השתבש" description={error} />
   }
 
   return (

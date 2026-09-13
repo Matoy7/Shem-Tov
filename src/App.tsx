@@ -33,6 +33,7 @@ import { RecommendedNames } from "@/features/names/RecommendedNames"
 import { MyFamilyScreen } from "@/features/names/MyFamilyScreen"
 import { suggestName } from "@/data/names"
 import { redeemInvitation } from "@/data/families"
+import { useSilentRetry } from "@/lib/useSilentRetry"
 
 const PRODUCT_NAME = "שם טוב"
 const TAGLINE = "בוחרים ביחד. שם אחד טוב."
@@ -108,6 +109,9 @@ export default function App() {
     easyInEnglish: filters.more.easyInEnglish,
     worksInternationally: filters.more.worksInternationally,
   })
+
+  useSilentRetry(familiesError, reloadFamilies)
+  useSilentRetry(namesError, reloadNames)
 
   const handleJoinFamily = useCallback(
     async (token: string) => {
@@ -217,12 +221,10 @@ export default function App() {
           else void supabase.auth.signOut()
         }}
       >
-        {familiesLoading ? (
+        {familiesLoading || familiesError ? (
           <Section title="טוען…">
             <div className="h-40 w-full animate-pulse rounded-lg border border-border-subtle bg-surface" />
           </Section>
-        ) : familiesError ? (
-          <EmptyState title="משהו השתבש" description={familiesError} />
         ) : (
           <>
             <Section
