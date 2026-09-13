@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
 
 export type FilterOption<T extends string> = { value: T; label: string }
@@ -28,6 +29,12 @@ function ChevronDown({ className }: { className?: string }) {
  * dropdown and closing it without deciding never silently changes results.
  * Clicking outside or Escape still applies the draft — the common "didn't
  * click Apply but clearly made a choice" case shouldn't discard it.
+ *
+ * On desktop this opens as a small popover anchored to the trigger. On
+ * mobile it opens as a bottom sheet instead — the same pattern already used
+ * by NameNotificationsBell — because an anchored popover on a narrow screen
+ * can open partially off-screen whenever its trigger sits near an edge of a
+ * wrapped filter row. A bottom sheet has nowhere to overflow to.
  */
 export function MultiFilterDropdown<T extends string>({
   label,
@@ -38,9 +45,20 @@ export function MultiFilterDropdown<T extends string>({
 }: MultiFilterDropdownProps<T>) {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState<T[]>(values)
+  const [isCompact, setIsCompact] = useState(
+    () => typeof window !== "undefined" && !window.matchMedia("(min-width: 640px)").matches,
+  )
   const containerRef = useRef<HTMLDivElement>(null)
   const panelId = useId()
   const active = values.length > 0
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 640px)")
+    const sync = () => setIsCompact(!query.matches)
+    sync()
+    query.addEventListener("change", sync)
+    return () => query.removeEventListener("change", sync)
+  }, [])
 
   useEffect(() => {
     if (!open) setDraft(values)
@@ -57,7 +75,10 @@ export function MultiFilterDropdown<T extends string>({
       if (event.key === "Escape") commitAndClose()
     }
     const onPointerDown = (event: MouseEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) commitAndClose()
+      const target = event.target as Node
+      if (containerRef.current?.contains(target)) return
+      if ((target as HTMLElement).closest?.("[data-filter-dropdown-sheet]")) return
+      commitAndClose()
     }
     document.addEventListener("keydown", onKeyDown)
     document.addEventListener("mousedown", onPointerDown)
@@ -71,6 +92,61 @@ export function MultiFilterDropdown<T extends string>({
   function toggle(value: T) {
     setDraft((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
   }
+
+  const optionsList = (
+    <div className={isCompact ? "max-h-[50vh] overflow-y-auto" : "max-h-64 overflow-y-auto px-1.5 pb-1.5"}>
+      {options.map((opt) => {
+        const checked = draft.includes(opt.value)
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="option"
+            aria-selected={checked}
+            onClick={() => toggle(opt.value)}
+            className={cn(
+              "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-start text-body-sm transition-colors duration-150",
+              "hover:bg-surface-hover",
+            )}
+          >
+            <span
+              aria-hidden
+              className={cn(
+                "flex size-4 shrink-0 items-center justify-center rounded border transition-colors duration-150",
+                checked ? "border-accent bg-accent text-content-inverse" : "border-border-strong bg-surface",
+              )}
+            >
+              {checked ? (
+                <svg viewBox="0 0 10 8" className="size-2.5">
+                  <path d="M1 4 3.5 6.5 9 1" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : null}
+            </span>
+            <span className={checked ? "font-medium text-content-primary" : "text-content-secondary"}>{opt.label}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  const footer = (
+    <div className="flex items-center justify-between gap-2 border-t border-border-subtle px-3 py-2.5">
+      <button
+        type="button"
+        onClick={() => setDraft([])}
+        className="text-caption font-medium text-content-muted hover:text-content-secondary"
+      >
+        ניקוי
+      </button>
+      <button
+        type="button"
+        onClick={commitAndClose}
+        className="rounded-md bg-accent px-3 py-1.5 text-caption font-semibold text-content-inverse hover:opacity-90"
+      >
+        החלה
+      </button>
+    </div>
+  )
 
   return (
     <div ref={containerRef} className={cn("relative shrink-0", className)}>
@@ -95,70 +171,44 @@ export function MultiFilterDropdown<T extends string>({
         <ChevronDown className={cn("text-content-muted", open ? "-scale-y-100" : undefined)} />
       </button>
 
-      {open ? (
+      {open && !isCompact ? (
         <div
           id={panelId}
           role="listbox"
           aria-multiselectable="true"
           aria-label={label}
           className={cn(
-            "absolute end-0 top-full z-20 mt-2 w-60 overflow-hidden rounded-lg border border-border-subtle",
+            "absolute end-0 top-full z-20 mt-2 w-60 max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-border-subtle",
             "bg-surface shadow-overlay animate-notifications-in",
           )}
         >
           <p className="px-3 pt-3 pb-1 text-caption font-semibold text-content-muted">{label}</p>
-          <div className="max-h-64 overflow-y-auto px-1.5 pb-1.5">
-            {options.map((opt) => {
-              const checked = draft.includes(opt.value)
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  role="option"
-                  aria-selected={checked}
-                  onClick={() => toggle(opt.value)}
-                  className={cn(
-                    "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-body-sm transition-colors duration-150",
-                    "hover:bg-surface-hover",
-                  )}
-                >
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "flex size-4 shrink-0 items-center justify-center rounded border transition-colors duration-150",
-                      checked ? "border-accent bg-accent text-content-inverse" : "border-border-strong bg-surface",
-                    )}
-                  >
-                    {checked ? (
-                      <svg viewBox="0 0 10 8" className="size-2.5">
-                        <path d="M1 4 3.5 6.5 9 1" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    ) : null}
-                  </span>
-                  <span className={checked ? "font-medium text-content-primary" : "text-content-secondary"}>{opt.label}</span>
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="flex items-center justify-between gap-2 border-t border-border-subtle px-3 py-2.5">
-            <button
-              type="button"
-              onClick={() => setDraft([])}
-              className="text-caption font-medium text-content-muted hover:text-content-secondary"
-            >
-              ניקוי
-            </button>
-            <button
-              type="button"
-              onClick={commitAndClose}
-              className="rounded-md bg-accent px-3 py-1.5 text-caption font-semibold text-content-inverse hover:opacity-90"
-            >
-              החלה
-            </button>
-          </div>
+          {optionsList}
+          {footer}
         </div>
       ) : null}
+
+      {open && isCompact
+        ? createPortal(
+            <div data-filter-dropdown-sheet>
+              <div onClick={commitAndClose} className="fixed inset-0 z-40 bg-content-primary/35" aria-hidden />
+              <div
+                id={panelId}
+                role="listbox"
+                aria-multiselectable="true"
+                aria-label={label}
+                dir="rtl"
+                className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col rounded-t-lg border border-border-subtle bg-surface pb-6 shadow-overlay"
+              >
+                <span aria-hidden className="mx-auto mb-2 mt-3 block h-1 w-10 shrink-0 rounded-full bg-border-strong/50" />
+                <p className="px-4 pb-2 text-body font-semibold text-content-primary">{label}</p>
+                <div className="px-2.5">{optionsList}</div>
+                {footer}
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   )
 }

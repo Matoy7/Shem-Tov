@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
 import { MORE_FILTER_LABELS } from "./filterOptions"
 
@@ -84,15 +85,29 @@ function LetterPicker({
 }
 
 /**
- * Same draft + Apply/Clear pattern as MultiFilterDropdown — see its
- * comment. All five options here are backed by real columns on `names`.
+ * Same draft + Apply/Clear pattern as MultiFilterDropdown, and the same
+ * mobile-bottom-sheet-instead-of-anchored-popover treatment — see that
+ * file's comment for why: an absolutely positioned popover anchored to a
+ * small pill can open partially off-screen on mobile, a bottom sheet
+ * cannot. All five options here are backed by real columns on `names`.
  */
 export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProps) {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState<MoreFilters>(value)
+  const [isCompact, setIsCompact] = useState(
+    () => typeof window !== "undefined" && !window.matchMedia("(min-width: 640px)").matches,
+  )
   const containerRef = useRef<HTMLDivElement>(null)
   const panelId = useId()
   const activeCount = moreFiltersActiveCount(value)
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 640px)")
+    const sync = () => setIsCompact(!query.matches)
+    sync()
+    query.addEventListener("change", sync)
+    return () => query.removeEventListener("change", sync)
+  }, [])
 
   useEffect(() => {
     if (!open) setDraft(value)
@@ -109,7 +124,10 @@ export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProp
       if (event.key === "Escape") commitAndClose()
     }
     const onPointerDown = (event: MouseEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) commitAndClose()
+      const target = event.target as Node
+      if (containerRef.current?.contains(target)) return
+      if ((target as HTMLElement).closest?.("[data-filter-dropdown-sheet]")) return
+      commitAndClose()
     }
     document.addEventListener("keydown", onKeyDown)
     document.addEventListener("mousedown", onPointerDown)
@@ -119,6 +137,50 @@ export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProp
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, draft])
+
+  const body = (
+    <div className={isCompact ? "max-h-[55vh] overflow-y-auto px-4" : "max-h-80 overflow-y-auto p-3"}>
+      <div className="flex flex-col gap-1">
+        {(["short", "easyInEnglish", "worksInternationally"] as const).map((key) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setDraft((d) => ({ ...d, [key]: !d[key] }))}
+            className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-start text-body-sm transition-colors duration-150 hover:bg-surface-hover"
+          >
+            <Checkbox checked={draft[key]} />
+            <span className={draft[key] ? "font-medium text-content-primary" : "text-content-secondary"}>
+              {MORE_FILTER_LABELS[key]}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-3 flex flex-col gap-3 border-t border-border-subtle pt-3">
+        <LetterPicker label="מתחיל באות" selected={draft.initial} onSelect={(l) => setDraft((d) => ({ ...d, initial: l }))} />
+        <LetterPicker label="מסתיים באות" selected={draft.endsWith} onSelect={(l) => setDraft((d) => ({ ...d, endsWith: l }))} />
+      </div>
+    </div>
+  )
+
+  const footer = (
+    <div className="flex items-center justify-between gap-2 border-t border-border-subtle px-3 py-2.5">
+      <button
+        type="button"
+        onClick={() => setDraft(EMPTY_MORE)}
+        className="text-caption font-medium text-content-muted hover:text-content-secondary"
+      >
+        ניקוי
+      </button>
+      <button
+        type="button"
+        onClick={commitAndClose}
+        className="rounded-md bg-accent px-3 py-1.5 text-caption font-semibold text-content-inverse hover:opacity-90"
+      >
+        החלה
+      </button>
+    </div>
+  )
 
   return (
     <div ref={containerRef} className="relative shrink-0">
@@ -145,57 +207,41 @@ export function MoreFiltersDropdown({ value, onChange }: MoreFiltersDropdownProp
         ) : null}
       </button>
 
-      {open ? (
+      {open && !isCompact ? (
         <div
           id={panelId}
           role="dialog"
           aria-label="עוד פילטרים"
           className={cn(
-            "absolute end-0 top-full z-20 mt-2 w-72 overflow-hidden rounded-lg border border-border-subtle",
+            "absolute end-0 top-full z-20 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-border-subtle",
             "bg-surface shadow-overlay animate-notifications-in",
           )}
         >
-          <div className="max-h-80 overflow-y-auto p-3">
-            <div className="flex flex-col gap-1">
-              {(["short", "easyInEnglish", "worksInternationally"] as const).map((key) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setDraft((d) => ({ ...d, [key]: !d[key] }))}
-                  className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-start text-body-sm transition-colors duration-150 hover:bg-surface-hover"
-                >
-                  <Checkbox checked={draft[key]} />
-                  <span className={draft[key] ? "font-medium text-content-primary" : "text-content-secondary"}>
-                    {MORE_FILTER_LABELS[key]}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-3 flex flex-col gap-3 border-t border-border-subtle pt-3">
-              <LetterPicker label="מתחיל באות" selected={draft.initial} onSelect={(l) => setDraft((d) => ({ ...d, initial: l }))} />
-              <LetterPicker label="מסתיים באות" selected={draft.endsWith} onSelect={(l) => setDraft((d) => ({ ...d, endsWith: l }))} />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-2 border-t border-border-subtle px-3 py-2.5">
-            <button
-              type="button"
-              onClick={() => setDraft(EMPTY_MORE)}
-              className="text-caption font-medium text-content-muted hover:text-content-secondary"
-            >
-              ניקוי
-            </button>
-            <button
-              type="button"
-              onClick={commitAndClose}
-              className="rounded-md bg-accent px-3 py-1.5 text-caption font-semibold text-content-inverse hover:opacity-90"
-            >
-              החלה
-            </button>
-          </div>
+          {body}
+          {footer}
         </div>
       ) : null}
+
+      {open && isCompact
+        ? createPortal(
+            <div data-filter-dropdown-sheet>
+              <div onClick={commitAndClose} className="fixed inset-0 z-40 bg-content-primary/35" aria-hidden />
+              <div
+                id={panelId}
+                role="dialog"
+                aria-label="עוד פילטרים"
+                dir="rtl"
+                className="fixed inset-x-0 bottom-0 z-50 flex max-h-[85vh] flex-col rounded-t-lg border border-border-subtle bg-surface pb-6 shadow-overlay"
+              >
+                <span aria-hidden className="mx-auto mb-2 mt-3 block h-1 w-10 shrink-0 rounded-full bg-border-strong/50" />
+                <p className="px-4 pb-2 text-body font-semibold text-content-primary">עוד פילטרים</p>
+                {body}
+                {footer}
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   )
 }
