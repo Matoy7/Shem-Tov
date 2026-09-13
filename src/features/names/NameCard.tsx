@@ -100,7 +100,7 @@ export function NameCard({
         <div className="flex items-start justify-between gap-3">
           <p
             dir="auto"
-            className="font-display text-quote font-bold leading-snug text-primary [word-break:break-word]"
+            className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-display text-quote font-bold leading-snug text-primary"
           >
             {name.text}
           </p>

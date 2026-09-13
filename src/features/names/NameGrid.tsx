@@ -28,7 +28,7 @@ const EMPTY_COPY: Record<NameGridView, { title: string; description: string }> =
   },
 }
 
-const GRID = "grid w-full grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-6"
+const GRID = "grid w-full grid-cols-1 gap-4 md:grid-cols-4 xl:grid-cols-6"
 
 /** Responsive name grid — identical geometry to SentenceGrid on purpose. */
 export function NameGrid({
