@@ -19,12 +19,43 @@
 -- This is irreversible — families, their membership, invitations, and
 -- every vote ever cast are gone once this runs. If you need that data for
 -- any reason, export it first.
+--
+-- Corrected from the first version of this file: that one tried to drop
+-- is_family_member()/is_family_owner() while `names`' own RLS policies
+-- still called them — Postgres correctly refused ("other objects depend on
+-- it"). This version drops every policy that references those functions
+-- BEFORE dropping the functions themselves, and — the part the first
+-- version genuinely missed — replaces the old family-scoped SELECT policy
+-- on `names` with a plain "any signed-in user can read the catalogue"
+-- policy. Without that, this migration would have left `names` with no
+-- SELECT policy at all once the family-only one was dropped, which means
+-- RLS would silently return zero rows to everyone — exactly the "blank
+-- cards" symptom, just moved one step earlier.
 -- ---------------------------------------------------------------------------
 
--- Dependency order: triggers/functions that reference a table before the
--- table itself, then the table, working from the most-dependent objects
+-- ---------------------------------------------------------------------------
+-- names: drop the three family-scoped policies first — nothing later in
+-- this file can drop is_family_member()/is_family_owner() while these still
+-- reference them — then immediately add back a plain, family-free SELECT
+-- policy so the catalogue is never left with zero read access in between.
+-- ---------------------------------------------------------------------------
+
+drop policy if exists "the catalogue is readable, suggestions are family-only" on public.names;
+drop policy if exists "a member may suggest a name to their own family" on public.names;
+drop policy if exists "the suggester or an owner may remove a suggestion" on public.names;
+
+drop policy if exists "the catalogue is readable to any signed-in user" on public.names;
+create policy "the catalogue is readable to any signed-in user"
+  on public.names for select to authenticated
+  using (true);
+
+-- ---------------------------------------------------------------------------
+-- Dependency order for everything else: triggers/functions that reference a
+-- table before the table itself, working from the most-dependent objects
 -- (name_notifications, the ranking view, name_votes) down to families
--- itself.
+-- itself, and only dropping is_family_member/is_family_owner at the very
+-- end, once nothing references them any more.
+-- ---------------------------------------------------------------------------
 
 drop trigger if exists on_name_suggestion_voted on public.name_votes;
 drop function if exists public.notify_name_suggestion_voted();
@@ -43,10 +74,11 @@ drop trigger if exists on_family_created on public.families;
 drop function if exists public.handle_new_family();
 drop table if exists public.family_members;
 
-drop function if exists public.is_family_member(uuid);
-drop function if exists public.is_family_owner(uuid);
-drop table if exists public.families;
-
+-- names/search_logs/filter_click_logs each hold a family_id foreign key
+-- pointing at families — those columns must go before the table they
+-- reference does, or Postgres refuses the drop the same way it refused
+-- dropping is_family_member() while a policy still called it.
+--
 -- names: drop only the family-suggestion columns. The rows, and every other
 -- column (meaning, style, popularity, all the filter flags), are untouched.
 alter table public.names
@@ -58,6 +90,11 @@ alter table public.names
 -- unaffected.
 alter table public.search_logs       drop column if exists family_id;
 alter table public.filter_click_logs drop column if exists family_id;
+
+drop table if exists public.families;
+
+drop function if exists public.is_family_member(uuid);
+drop function if exists public.is_family_owner(uuid);
 
 -- ---------------------------------------------------------------------------
 -- name_favorites — the replacement for name_votes. A personal save/bookmark:

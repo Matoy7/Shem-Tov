@@ -1,6 +1,7 @@
 import type { User } from "@supabase/supabase-js"
 import { supabase } from "@/lib/supabase"
 import { hasGoogleIdentity } from "./linkAccount"
+import { detectDeviceType } from "@/lib/device"
 
 export type Profile = {
   id: string
@@ -10,6 +11,8 @@ export type Profile = {
   /** Generated guest name; NULL for provider users. */
   display_name: string | null
   avatar_url: string | null
+  /** Best-effort client classification — null until the user's first sign-in after this feature shipped. */
+  device_type: "mobile" | "desktop" | "tablet" | null
   created_at: string
   updated_at: string
 }
@@ -111,6 +114,7 @@ export async function upsertProfile(user: User): Promise<string | null> {
   const guest = isGuest(user)
   const metadata = (user.user_metadata ?? {}) as GoogleMetadata
   const fallback = splitName(metadata.full_name ?? metadata.name ?? "")
+  const deviceType = detectDeviceType()
 
   const row = guest
     ? {
@@ -119,6 +123,7 @@ export async function upsertProfile(user: User): Promise<string | null> {
         first_name: null,
         last_name: null,
         avatar_url: null,
+        device_type: deviceType,
       }
     : {
         id: user.id,
@@ -126,6 +131,7 @@ export async function upsertProfile(user: User): Promise<string | null> {
         first_name: metadata.given_name ?? fallback.first,
         last_name: metadata.family_name ?? fallback.last,
         avatar_url: metadata.avatar_url ?? metadata.picture ?? null,
+        device_type: deviceType,
       }
 
   const { error } = await supabase
