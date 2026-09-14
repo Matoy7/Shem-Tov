@@ -1,46 +1,20 @@
 import { Card } from "@/components/ui/Card"
 import { EmptyState } from "@/components/ui/EmptyState"
 import { NameCard, type NameCardData } from "./NameCard"
-import type { VoteState } from "@/data/votes"
-
-export type NameGridView = "browse" | "ranking"
 
 type NameGridProps = {
   names: NameCardData[]
-  votes: Map<string, VoteState>
-  view: NameGridView
+  favorites: Map<string, boolean>
   loading: boolean
   error: string | null
   searchQuery?: string
-  onToggleVote: (nameId: string) => void
-  /** True before any family exists/is active — browsing still works, voting doesn't have anywhere to belong yet. */
-  votingDisabled?: boolean
-}
-
-const EMPTY_COPY: Record<NameGridView, { title: string; description: string }> = {
-  browse: {
-    title: "לא מצאנו שמות",
-    description: "נסו לשנות את הסינון או להציע שם חדש למשפחה.",
-  },
-  ranking: {
-    title: "אין עדיין הצבעות",
-    description: "הצביעו על שמות שאהבתם כדי לראות את הדירוג של המשפחה.",
-  },
+  onToggleFavorite: (nameId: string) => void
 }
 
 const GRID = "grid w-full grid-cols-1 gap-4 md:grid-cols-4 xl:grid-cols-6"
 
-/** Responsive name grid — identical geometry to SentenceGrid on purpose. */
-export function NameGrid({
-  names,
-  votes,
-  view,
-  loading,
-  error,
-  searchQuery,
-  onToggleVote,
-  votingDisabled = false,
-}: NameGridProps) {
+/** Responsive name grid for browsing/searching/filtering the catalogue. */
+export function NameGrid({ names, favorites, loading, error, searchQuery, onToggleFavorite }: NameGridProps) {
   if (loading || error) {
     return (
       <div className={GRID} aria-busy="true" aria-label={searchQuery ? "מחפש" : "טוען שמות"}>
@@ -56,7 +30,7 @@ export function NameGrid({
   if (names.length === 0) {
     const copy = searchQuery
       ? { title: "לא מצאנו שמות מתאימים", description: "נסו לחפש מילה אחרת" }
-      : EMPTY_COPY[view]
+      : { title: "לא מצאנו שמות", description: "נסו לשנות את הסינון." }
     return <EmptyState title={copy.title} description={copy.description} />
   }
 
@@ -66,9 +40,8 @@ export function NameGrid({
         <li key={name.nameId} className="flex">
           <NameCard
             name={name}
-            vote={votes.get(name.nameId)}
-            disabled={votingDisabled}
-            onToggleVote={onToggleVote}
+            favorited={favorites.get(name.nameId) ?? false}
+            onToggleFavorite={onToggleFavorite}
           />
         </li>
       ))}

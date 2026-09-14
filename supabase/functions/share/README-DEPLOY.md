@@ -7,7 +7,7 @@ into your own account, from your own machine.
 
 **Until this is deployed, sharing still works** (copy link, native share,
 WhatsApp, the deep-link page itself) — the copied link just falls back to the
-plain `matoy7.github.io/Yamshich-Kvodo/...` URL, which a human opens exactly
+plain `matoy7.github.io/Shem-Tov/...` URL, which a human opens exactly
 as before. What you don't get without this function is a rich preview card
 when the link is *pasted* somewhere — that specific piece genuinely requires
 a server, which GitHub Pages cannot provide (see the long comment at the top
@@ -92,7 +92,7 @@ One more you should set once, so the function knows where to send real
 visitors:
 
 ```bash
-supabase secrets set SITE_ORIGIN=https://matoy7.github.io/Yamshich-Kvodo
+supabase secrets set SITE_ORIGIN=https://matoy7.github.io/Shem-Tov
 ```
 
 (If you don't set this, it defaults to that exact value already, so this

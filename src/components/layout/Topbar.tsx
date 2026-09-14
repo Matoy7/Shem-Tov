@@ -1,5 +1,4 @@
 import { IconButton } from "@/components/ui/IconButton"
-import { NameNotificationsBell } from "@/features/names/NameNotificationsBell"
 import { AccountMenu } from "@/features/auth/AccountMenu"
 import { assets } from "@/lib/assets"
 
@@ -10,12 +9,9 @@ type TopbarProps = {
   avatarUrl: string
   displayName: string
   isGuest: boolean
-  userId: string | undefined
   onOpenNav: () => void
   onLinkGoogle: () => void
   onSignOut: () => void
-  /** Switches to the family a notification belongs to. */
-  onOpenNotification: (familyId: string) => void
 }
 
 /**
@@ -28,11 +24,9 @@ export function Topbar({
   avatarUrl,
   displayName,
   isGuest,
-  userId,
   onOpenNav,
   onLinkGoogle,
   onSignOut,
-  onOpenNotification,
 }: TopbarProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-bg/85 backdrop-blur-sm">
@@ -73,11 +67,6 @@ export function Topbar({
 
         {/* Account controls — `ms-auto` pushes them to the inline end. */}
         <div className="ms-auto flex shrink-0 items-center gap-2 sm:gap-3">
-          <NameNotificationsBell
-            userId={userId}
-            onOpenFamily={onOpenNotification}
-          />
-
           <AccountMenu
             displayName={displayName}
             avatarUrl={avatarUrl}

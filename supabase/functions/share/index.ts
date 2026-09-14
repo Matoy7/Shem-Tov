@@ -34,7 +34,7 @@
 // automatically for every Edge Function — nothing to configure for those two.
 // Set the app's own public origin once:
 //
-//   supabase secrets set SITE_ORIGIN=https://matoy7.github.io/Yamshich-Kvodo
+//   supabase secrets set SITE_ORIGIN=https://matoy7.github.io/Shem-Tov
 //
 // The canonical share link people actually copy/paste is then this
 // function's own URL (see src/lib/deepLink.ts → buildEdgeShareUrl), not the
@@ -48,9 +48,9 @@ import satori from "npm:satori@0.10.13"
 import { Resvg, initWasm } from "npm:@resvg/resvg-wasm@2.6.2"
 
 const SITE_ORIGIN = (
-  Deno.env.get("SITE_ORIGIN") ?? "https://matoy7.github.io/Yamshich-Kvodo"
+  Deno.env.get("SITE_ORIGIN") ?? "https://matoy7.github.io/Shem-Tov"
 ).replace(/\/$/, "")
-const BRAND_NAME = "ימשיך כבודו"
+const BRAND_NAME = "שם טוב"
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,

@@ -61,7 +61,7 @@ export const supabase = createClient(
  *
  * Always the exact origin + path the app is being served from, so sign-in
  * returns to the same app that started it — whatever port `npm run dev`
- * happens to use, and preserving the `/Yamshich-Kvodo/` base on GitHub Pages.
+ * happens to use, and preserving the `/Shem-Tov/` base on GitHub Pages.
  * Nothing here is hardcoded.
  *
  * Deliberately NOT derived from `import.meta.env.BASE_URL`: the production

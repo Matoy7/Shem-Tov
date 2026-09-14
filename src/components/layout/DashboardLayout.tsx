@@ -16,12 +16,9 @@ type DashboardLayoutProps = {
   userName: string
   avatarUrl: string
   canUpgrade?: boolean
-  userId: string | undefined
   onSelectNav: (id: string) => void
   onUpgrade?: () => void
   onSignOut: () => void
-  /** Switches to the family a notification belongs to. */
-  onOpenNotification: (familyId: string) => void
   children: ReactNode
 }
 
@@ -42,11 +39,9 @@ export function DashboardLayout({
   userName,
   avatarUrl,
   canUpgrade,
-  userId,
   onSelectNav,
   onUpgrade,
   onSignOut,
-  onOpenNotification,
   children,
 }: DashboardLayoutProps) {
   const [navOpen, setNavOpen] = useState(false)
@@ -90,11 +85,9 @@ export function DashboardLayout({
           avatarUrl={avatarUrl}
           displayName={userName}
           isGuest={Boolean(canUpgrade)}
-          userId={userId}
           onLinkGoogle={() => onUpgrade?.()}
           onSignOut={onSignOut}
           onOpenNav={() => setNavOpen(true)}
-          onOpenNotification={onOpenNotification}
         />
 
         <main className="mx-auto w-full max-w-[1440px] px-4 py-6 md:px-6 md:py-8 lg:px-8">

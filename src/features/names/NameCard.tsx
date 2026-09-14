@@ -1,10 +1,8 @@
 import { Card } from "@/components/ui/Card"
-import { VoteButton } from "./VoteButton"
+import { FavoriteButton } from "./FavoriteButton"
 import { originTag, meaningTag, styleTag, type CardTag } from "./tagColors"
-import type { VoteState } from "@/data/votes"
 import type { Origin, Meaning, Style } from "@/data/names"
 
-/** Shared shape both the catalogue view (NameEntry) and the ranked view (RankedName) reduce to. */
 export type NameCardData = {
   nameId: string
   text: string
@@ -15,8 +13,6 @@ export type NameCardData = {
   styles: Style[]
   meaningHe: string | null
   meaningConfidence: "verified" | "uncertain" | null
-  /** Non-null when this row is one family's private suggestion. */
-  suggestedForFamilyId: string | null
 }
 
 const GENDER_LABEL: Record<"boy" | "girl" | "unisex", string> = {
@@ -56,32 +52,24 @@ function Tag({ tag }: { tag: CardTag }) {
 
 type NameCardProps = {
   name: NameCardData
-  vote: VoteState | undefined
-  disabled?: boolean
-  disabledReason?: string
-  onToggleVote: (nameId: string) => void
+  favorited: boolean
+  onToggleFavorite: (nameId: string) => void
 }
 
 /**
- * Deliberately minimal: no illustration, no avatar stack, no decorative
- * iconography anywhere near the name — the name and its meaning are the
- * entire visual point of the card. The only two interactive/informational
- * elements below the divider are what the person actually needs: what kind
- * of name this is (tags) and whether to vote for it (the heart).
+ * Deliberately minimal: no illustration, no decorative iconography anywhere
+ * near the name — the name and its meaning are the entire visual point of
+ * the card. The only two elements below the divider are what the person
+ * actually needs: what kind of name this is (tags) and whether to save it
+ * (the heart) — a private bookmark, not a shared/group action.
  *
  * Tags come straight from the name's real origin/meaning/style flags — one
  * of each, at most, so a card never turns into a wall of pills. Each tag
  * value has its own fixed color (see tagColors.ts): same lightness and
- * saturation across all of them (one coherent "family"), distinct hue per
- * value (so origin/meaning/style stay tellable apart at a glance).
+ * saturation across all of them (one coherent "family" of colors), distinct
+ * hue per value (so origin/meaning/style stay tellable apart at a glance).
  */
-export function NameCard({
-  name,
-  vote,
-  disabled = false,
-  disabledReason = "צרו משפחה כדי להצביע",
-  onToggleVote,
-}: NameCardProps) {
+export function NameCard({ name, favorited, onToggleFavorite }: NameCardProps) {
   const tags: CardTag[] = [
     ...name.origins.slice(0, 1).map(originTag),
     ...name.meanings.slice(0, 1).map(meaningTag),
@@ -128,13 +116,7 @@ export function NameCard({
             ))}
           </div>
 
-          <VoteButton
-            voted={vote?.votedByMe ?? false}
-            count={vote?.count ?? 0}
-            disabled={disabled}
-            disabledReason={disabledReason}
-            onToggle={() => onToggleVote(name.nameId)}
-          />
+          <FavoriteButton favorited={favorited} onToggle={() => onToggleFavorite(name.nameId)} />
         </div>
       </div>
     </Card>

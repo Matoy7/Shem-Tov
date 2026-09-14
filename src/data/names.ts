@@ -29,9 +29,6 @@ export type NameEntry = {
   meaningHe: string | null
   meaningSource: string | null
   meaningConfidence: MeaningConfidence | null
-  /** null = shared catalogue entry; set = this family's own suggestion. */
-  familyId: string | null
-  suggestedBy: string | null
   createdAt: string
 }
 
@@ -40,8 +37,6 @@ type NameRow = {
   text: string
   gender: Gender | null
   origin: string | null
-  family_id: string | null
-  suggested_by: string | null
   created_at: string
   popularity: Popularity | null
   length: number | null
@@ -74,7 +69,7 @@ type NameRow = {
   meaning_confidence: MeaningConfidence | null
 }
 
-const SELECT_COLUMNS = `id, text, gender, origin, family_id, suggested_by, created_at, popularity, length, short,
+const SELECT_COLUMNS = `id, text, gender, origin, created_at, popularity, length, short,
   easy_in_english, works_internationally, starts_with, ends_with,
   biblical, hebrew, israeli, international, arabic, european, greek,
   meaning_love, meaning_nature, meaning_light, meaning_strength, meaning_joy, meaning_freedom,
@@ -104,8 +99,6 @@ function fromRow(row: NameRow): NameEntry {
     meaningHe: row.meaning_he,
     meaningSource: row.meaning_source,
     meaningConfidence: row.meaning_confidence,
-    familyId: row.family_id,
-    suggestedBy: row.suggested_by,
     createdAt: row.created_at,
   }
 }
@@ -129,30 +122,15 @@ export type NameFilters = {
 }
 
 /**
- * The catalogue plus a family's own suggestions in one call: RLS already
- * scopes suggestions to families the caller belongs to, so `family_id is
- * null or family_id = eq(familyId)` reads exactly what the family is
- * allowed to see — nothing is filtered client-side that the server would
- * not also have allowed.
- *
- * Each `.or()` call below adds one more `or=(...)` query parameter to the
- * PostgREST request; independent `or=` parameters are ANDed together by
- * PostgREST, while the conditions listed inside a single call are ORed —
- * so calling `.or()` once per category (Origin, Meaning, Style) is exactly
- * "Girls AND (Biblical OR Hebrew) AND (Nature)", not one giant OR of
- * everything selected.
+ * The shared name catalogue. Every `.or()` call below adds one more
+ * `or=(...)` query parameter to the PostgREST request; independent `or=`
+ * parameters are ANDed together by PostgREST, while the conditions listed
+ * inside a single call are ORed — so calling `.or()` once per category
+ * (Origin, Meaning, Style) is exactly "Girls AND (Biblical OR Hebrew) AND
+ * (Nature)", not one giant OR of everything selected.
  */
-/**
- * familyId is optional: signed out of any family, a user still sees the
- * shared catalogue (family_id is null) — that's allowed by the same RLS
- * policy that lets any signed-in member read it. Only a family's own
- * private suggestions require actually belonging to that family, so those
- * simply don't appear until familyId is set.
- */
-export async function fetchNames(familyId: string | null, filters: NameFilters = {}): Promise<NameEntry[]> {
+export async function fetchNames(filters: NameFilters = {}): Promise<NameEntry[]> {
   let query = supabase.from("names").select(SELECT_COLUMNS)
-
-  query = familyId ? query.or(`family_id.is.null,family_id.eq.${familyId}`) : query.is("family_id", null)
 
   if (filters.gender) query = query.eq("gender", filters.gender)
 
@@ -182,145 +160,4 @@ export async function fetchNames(familyId: string | null, filters: NameFilters =
   const { data, error } = await ordered
   if (error) throw error
   return (data as NameRow[]).map(fromRow)
-}
-
-/** Suggests a new name, private to one family. */
-export async function suggestName(
-  familyId: string,
-  text: string,
-  gender: Gender | null,
-  origin: string | null,
-  suggestedBy: string,
-): Promise<NameEntry> {
-  const { data, error } = await supabase
-    .from("names")
-    .insert({ family_id: familyId, text: text.trim(), gender, origin, suggested_by: suggestedBy })
-    .select(SELECT_COLUMNS)
-    .single()
-  if (error) throw error
-  return fromRow(data as NameRow)
-}
-
-export async function deleteSuggestion(nameId: string): Promise<void> {
-  const { error } = await supabase.from("names").delete().eq("id", nameId)
-  if (error) throw error
-}
-
-/**
- * "Based on what your family already voted for": looks at the gender(s) of
- * names the family has voted for, then suggests other shared-catalogue
- * names of the same gender(s) they haven't voted for yet. Deliberately
- * simple and explainable — no black-box scoring, nothing invented, just
- * "more of what you already leaned toward."
- */
-export async function fetchRecommendations(familyId: string, limit = 6): Promise<NameEntry[]> {
-  const { data: votedRows, error: votedErr } = await supabase
-    .from("name_votes")
-    .select("name_id")
-    .eq("family_id", familyId)
-  if (votedErr) throw votedErr
-
-  const votedIds = [...new Set((votedRows as { name_id: string }[]).map((r) => r.name_id))]
-  if (votedIds.length === 0) return []
-
-  const { data: votedNames, error: namesErr } = await supabase
-    .from("names")
-    .select("id, gender")
-    .in("id", votedIds)
-  if (namesErr) throw namesErr
-
-  const genders = [
-    ...new Set((votedNames as { id: string; gender: Gender | null }[]).map((n) => n.gender).filter(Boolean)),
-  ] as Gender[]
-  if (genders.length === 0) return []
-
-  const { data, error } = await supabase
-    .from("names")
-    .select(SELECT_COLUMNS)
-    .is("family_id", null)
-    .in("gender", genders)
-    .not("id", "in", `(${votedIds.join(",")})`)
-    .limit(limit)
-  if (error) throw error
-  return (data as NameRow[]).map(fromRow)
-}
-
-export type RankedName = {
-  nameId: string
-  text: string
-  gender: Gender | null
-  origin: string | null
-  origins: Origin[]
-  meanings: Meaning[]
-  styles: Style[]
-  suggestedForFamilyId: string | null
-  voteCount: number
-  lastVotedAt: string
-  meaningHe: string | null
-  meaningConfidence: MeaningConfidence | null
-}
-
-type RankingRow = {
-  name_id: string
-  text: string
-  gender: Gender | null
-  origin: string | null
-  suggested_for_family_id: string | null
-  vote_count: number
-  last_voted_at: string
-  meaning_he: string | null
-  meaning_confidence: MeaningConfidence | null
-  biblical: boolean
-  hebrew: boolean
-  israeli: boolean
-  international: boolean
-  arabic: boolean
-  european: boolean
-  greek: boolean
-  meaning_love: boolean
-  meaning_nature: boolean
-  meaning_light: boolean
-  meaning_strength: boolean
-  meaning_joy: boolean
-  meaning_freedom: boolean
-  style_classic: boolean
-  style_modern: boolean
-  style_unique: boolean
-  style_soft: boolean
-  style_traditional: boolean
-  style_vintage: boolean
-}
-
-const RANKING_SELECT = `name_id, text, gender, origin, suggested_for_family_id, vote_count, last_voted_at, meaning_he, meaning_confidence,
-  biblical, hebrew, israeli, international, arabic, european, greek,
-  meaning_love, meaning_nature, meaning_light, meaning_strength, meaning_joy, meaning_freedom,
-  style_classic, style_modern, style_unique, style_soft, style_traditional, style_vintage`
-
-/**
- * A family's ranking, straight from family_name_rankings: distinct-voter
- * count first, most-recently-voted as the tiebreaker — computed in Postgres
- * so the client never has to derive an order from raw vote rows itself.
- */
-export async function fetchFamilyRanking(familyId: string): Promise<RankedName[]> {
-  const { data, error } = await supabase
-    .from("family_name_rankings")
-    .select(RANKING_SELECT)
-    .eq("family_id", familyId)
-    .order("vote_count", { ascending: false })
-    .order("last_voted_at", { ascending: false })
-  if (error) throw error
-  return (data as RankingRow[]).map((r) => ({
-    nameId: r.name_id,
-    text: r.text,
-    gender: r.gender,
-    origin: r.origin,
-    origins: ORIGIN_FLAGS.filter((o) => r[o]),
-    meanings: MEANING_FLAGS.filter((m) => r[`meaning_${m}` as keyof RankingRow]),
-    styles: STYLE_FLAGS.filter((s) => r[`style_${s}` as keyof RankingRow]),
-    suggestedForFamilyId: r.suggested_for_family_id,
-    voteCount: r.vote_count,
-    lastVotedAt: r.last_voted_at,
-    meaningHe: r.meaning_he,
-    meaningConfidence: r.meaning_confidence,
-  }))
 }

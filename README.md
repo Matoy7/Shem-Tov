@@ -1,8 +1,8 @@
 # שם טוב
 
-A Hebrew RTL family baby-name voting app. Families browse a shared name catalogue, suggest their own names, and vote — each family's votes and rankings are private to that family, and the same person's vote in one family is independent from their vote in any other family they belong to.
+A Hebrew RTL baby-name discovery app. Browse, search and filter a shared name catalogue — by gender, origin, meaning, style, popularity, and more — and save the names you like.
 
-Originally generated with Figma Make as "המשלים שלי" (a sentence-completion app) and since transformed into this product. The design system, component architecture, authentication and Supabase infrastructure are carried over deliberately; the product itself — data model, screens and interactions — is new.
+Originally generated with Figma Make as "המשלים שלי" (a sentence-completion app), then transformed into a family-based name-voting product, and since simplified into a focused name discovery and filtering tool. The design system, component architecture, authentication and Supabase infrastructure are carried over deliberately; the product itself — data model, screens and interactions — is new.
 
 ## Requirements
 
@@ -55,7 +55,7 @@ Only the minimum required to make the existing Figma Make output deployable as a
 - `vite.config.ts`: build `base` defaults to `./` (relative) instead of `/`, so asset/script URLs resolve correctly when the site is served from a GitHub Pages repository sub-path.
 - `src/App.tsx`: the local `assetPathPrefix` now uses `import.meta.env.BASE_URL` instead of a hard-coded absolute `/assets` path, for the same reason (this only affects how the URL is built — the images, icons, and everything else are unchanged).
 - `index.html`: added `dir="rtl"` on `<html>` (in addition to the existing `lang` templating) for correct document-level RTL semantics. This doesn't change any rendering — the app's root element already sets its own explicit `dir` for layout.
-- `.figma/make/site.json`: set `title` to "ימשיך כבודו" and `language` to `he` (previously an untitled/English-default placeholder), which only affects the browser tab title and `<html lang>` — no visible UI change.
+- `.figma/make/site.json`: set `title` to "שם טוב" and `language` to `he` (previously an untitled/English-default placeholder), which only affects the browser tab title and `<html lang>` — no visible UI change.
 - Added `public/.nojekyll` so GitHub Pages serves the build as-is without Jekyll processing.
 - Added `.github/workflows/deploy.yml` for automatic build + deploy on push to `main`.
 - Replaced `pnpm-lock.yaml` with a generated `package-lock.json` so `npm install` / `npm ci` work as specified (the project itself still uses only `npm`-standard tooling).
@@ -100,12 +100,10 @@ idempotent, so re-running is safe. It creates `profiles`, `sentences` and
 Security policies (everything readable by signed-in users; rows writable only
 by their owner).
 
-**שם טוב schema — run these two next, in order, both idempotent and safe to re-run:**
+**שם טוב schema — run in order, all idempotent and safe to re-run:**
 
-1. `supabase/2026-09-shem-tov-families.sql` — families, membership,
-   invitations, names, votes, and the family-scoped ranking view.
-2. `supabase/2026-09-shem-tov-phase2.sql` — family rename support and
-   name-vote notifications. Depends on the first file.
+1. `supabase/2026-09-shem-tov-families.sql` through `supabase/2026-09-shem-tov-phase12-filter-click-log.sql` — the app's schema history, including the family feature as it was originally built.
+2. `supabase/2026-09-shem-tov-phase13-remove-family.sql` — removes the Family feature entirely (families, membership, invitations, family-scoped votes, family-suggested names, family-vote notifications) and replaces family-scoped voting with `name_favorites`, a plain personal save/bookmark. **Run this last, after every other file** — it depends on those tables already existing. This one is genuinely irreversible: family data is dropped, not archived.
 
 ### 2. Google sign-in
 
@@ -119,8 +117,8 @@ by their owner).
 
 Supabase → Authentication → URL Configuration:
 
-- Site URL: `https://matoy7.github.io/Yamshich-Kvodo/`
-- Redirect allow-list: `https://matoy7.github.io/Yamshich-Kvodo/**` and
+- Site URL: `https://matoy7.github.io/Shem-Tov/`
+- Redirect allow-list: `https://matoy7.github.io/Shem-Tov/**` and
   `http://localhost:8443/**`
 
 ### 4. Keys
@@ -191,6 +189,6 @@ normal build never needs Playwright.
 
 WhatsApp caches a URL's preview for roughly a week, per URL, and re-checks
 nothing in between. After deploying a change, test with a URL it has not seen:
-append `?v=2` (`https://matoy7.github.io/Yamshich-Kvodo/?v=2`). Facebook's
+append `?v=2` (`https://matoy7.github.io/Shem-Tov/?v=2`). Facebook's
 [Sharing Debugger](https://developers.facebook.com/tools/debug/) shows exactly
 what the crawlers read and can force a re-scrape.

@@ -2,7 +2,7 @@
  * Static asset registry.
  *
  * Paths resolve against Vite's BASE_URL so every asset keeps working when the
- * site is served from a GitHub Pages sub-path (e.g. /Yamshich-Kvodo/assets/…).
+ * site is served from a GitHub Pages sub-path (e.g. /Shem-Tov/assets/…).
  * The hashed files are the original Figma Make exports — do not substitute
  * them. The two heart icons are project-authored, drawn on the same 24px grid
  * and in the same flat style, because likes arrived after the Figma export.

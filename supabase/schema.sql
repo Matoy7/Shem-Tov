@@ -1,5 +1,5 @@
 -- ============================================================================
--- ימשיך כבודו — database schema
+-- שם טוב — database schema
 --
 -- Run this in the Supabase dashboard: SQL Editor → New query → paste → Run.
 -- It is idempotent, so re-running it is safe.

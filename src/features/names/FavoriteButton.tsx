@@ -3,49 +3,36 @@ import { Icon } from "@/components/ui/Icon"
 import { cn } from "@/lib/cn"
 import { assets } from "@/lib/assets"
 
-type VoteButtonProps = {
-  voted: boolean
-  count: number
-  disabled?: boolean
-  /** Shown as a native tooltip when disabled — e.g. "create a family to vote". */
-  disabledReason?: string
+type FavoriteButtonProps = {
+  favorited: boolean
   onToggle: () => void
 }
 
 /**
- * Adapted from features/home/LikeButton.tsx unchanged in visual language —
- * same stacked/cross-faded hearts, same pop animation, same 44px+ touch
- * target. Only the vocabulary changed: a "vote" here is scoped to whichever
- * family is currently active, decided by the caller (see votes.ts) — this
- * component itself only knows liked vs. not, exactly as before.
+ * A personal save/bookmark toggle — same stacked/cross-faded heart icons and
+ * pop animation as the app has always used, but now scoped to just the
+ * signed-in person: no shared count, no group context, nothing else to
+ * coordinate. Saving a name is a private action.
  */
-export function VoteButton({
-  voted,
-  count,
-  disabled = false,
-  disabledReason,
-  onToggle,
-}: VoteButtonProps) {
+export function FavoriteButton({ favorited, onToggle }: FavoriteButtonProps) {
   const [pop, setPop] = useState(false)
-  const previous = useRef(voted)
+  const previous = useRef(favorited)
 
   useEffect(() => {
-    if (voted && !previous.current) {
+    if (favorited && !previous.current) {
       setPop(true)
       const id = window.setTimeout(() => setPop(false), 240)
-      previous.current = voted
+      previous.current = favorited
       return () => window.clearTimeout(id)
     }
-    previous.current = voted
-  }, [voted])
+    previous.current = favorited
+  }, [favorited])
 
   return (
     <button
       type="button"
-      disabled={disabled}
-      aria-pressed={voted}
-      aria-label={disabled && disabledReason ? disabledReason : voted ? "הסר הצבעה מהשם" : "הצביעו לשם הזה"}
-      title={disabled ? disabledReason : undefined}
+      aria-pressed={favorited}
+      aria-label={favorited ? "הסירו מהשמות השמורים" : "שמרו את השם הזה"}
       onClick={(event) => {
         event.preventDefault()
         event.stopPropagation()
@@ -54,19 +41,11 @@ export function VoteButton({
       className={cn(
         "group -my-2 -ms-2 inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 py-2",
         "text-label transition-colors duration-150 select-none",
-        voted ? "text-accent" : "text-content-muted",
-        !voted &&
+        favorited ? "text-accent" : "text-content-muted",
+        !favorited &&
           "[@media(hover:hover)_and_(pointer:fine)]:hover:text-content-secondary",
-        "disabled:pointer-events-none disabled:opacity-45",
       )}
     >
-      <span
-        className="min-w-2 text-start tabular-nums"
-        aria-hidden={count === 0}
-      >
-        {count > 0 ? count : ""}
-      </span>
-
       <span
         className={cn(
           "relative inline-flex size-4 shrink-0 items-center justify-center transition-transform duration-200 ease-out",
@@ -79,7 +58,7 @@ export function VoteButton({
           size="sm"
           className={cn(
             "absolute transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none",
-            voted ? "scale-90 opacity-0" : "scale-100 opacity-100",
+            favorited ? "scale-90 opacity-0" : "scale-100 opacity-100",
           )}
         />
         <Icon
@@ -87,7 +66,7 @@ export function VoteButton({
           size="sm"
           className={cn(
             "absolute transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none",
-            voted ? "scale-100 opacity-100" : "scale-50 opacity-0",
+            favorited ? "scale-100 opacity-100" : "scale-50 opacity-0",
           )}
         />
       </span>

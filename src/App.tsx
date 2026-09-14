@@ -22,36 +22,22 @@ import {
 import { assets } from "@/lib/assets"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
 
-import { useMyFamilies } from "@/features/names/useMyFamilies"
-import { useFamilyNames } from "@/features/names/useFamilyNames"
-import { FamilySwitcher } from "@/features/names/FamilySwitcher"
-import { SuggestNameForm } from "@/features/names/SuggestNameForm"
-import { NameGrid, type NameGridView } from "@/features/names/NameGrid"
+import { useNames } from "@/features/names/useNames"
+import { NameGrid } from "@/features/names/NameGrid"
 import { NameFiltersBar, EMPTY_NAME_FILTERS, type NameFiltersValue } from "@/features/names/NameFiltersBar"
 import { ActiveFiltersRow } from "@/features/names/ActiveFiltersRow"
-import { RecommendedNames } from "@/features/names/RecommendedNames"
-import { MyFamilyScreen } from "@/features/names/MyFamilyScreen"
-import { suggestName } from "@/data/names"
-import { redeemInvitation } from "@/data/families"
 import { logSearch } from "@/data/searchLogs"
 import { logFilterClick } from "@/data/filterClickLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
 
 const PRODUCT_NAME = "שם טוב"
-const TAGLINE = "בוחרים ביחד. שם אחד טוב."
-const PRIVACY_NOTE = "ההצבעות שלך גלויות רק לבני המשפחה שלך."
+const TAGLINE = "מגלים ובוחרים את השם המושלם."
+const PRIVACY_NOTE = "השמות שאתם שומרים גלויים רק לכם."
 
-type View = "browse" | "ranking" | "family"
-
-const NAV_ITEMS: { id: View; label: string; icon: string }[] = [
-  { id: "browse", label: "עיון בשמות", icon: assets.iconHome },
-  { id: "ranking", label: "דירוג המשפחה", icon: assets.iconCrown },
-  { id: "family", label: "המשפחה שלי", icon: assets.iconPerson },
-]
+const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: assets.iconHome }]
 
 export default function App() {
   const { session, loading: sessionLoading, profileLoading, displayName, setDisplayName } = useSession()
-  const [view, setView] = useState<View>("browse")
   const [searchQuery, setSearchQuery] = useState("")
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
@@ -78,17 +64,6 @@ export default function App() {
 
   const userId = session?.user.id
 
-  const {
-    families,
-    activeFamilyId,
-    activeFamily,
-    loading: familiesLoading,
-    error: familiesError,
-    reload: reloadFamilies,
-    setActiveFamilyId,
-    create: handleCreateFamily,
-  } = useMyFamilies(userId)
-
   // Logged after a short pause in typing, not on every keystroke — the
   // actual search itself stays instant either way, this only debounces
   // what gets written to search_logs.
@@ -96,22 +71,21 @@ export default function App() {
     const trimmed = searchQuery.trim()
     if (!userId || trimmed.length < 2) return
     const id = window.setTimeout(() => {
-      void logSearch(trimmed, userId, activeFamilyId)
+      void logSearch(trimmed, userId)
     }, 600)
     return () => window.clearTimeout(id)
-  }, [searchQuery, userId, activeFamilyId])
+  }, [searchQuery, userId])
 
-  const gridView: NameGridView = view === "ranking" ? "ranking" : "browse"
   const {
     names,
-    votes,
+    favorites,
     loading: namesLoading,
     error: namesError,
     reload: reloadNames,
-    toggleVote,
-  } = useFamilyNames(activeFamilyId, userId, gridView, {
+    toggleFavorite,
+  } = useNames(userId, {
     search: searchQuery || undefined,
-    sort: gridView === "browse" ? sort : undefined,
+    sort,
     gender: filters.gender,
     origins: filters.origins,
     meanings: filters.meanings,
@@ -124,30 +98,7 @@ export default function App() {
     worksInternationally: filters.more.worksInternationally,
   })
 
-  useSilentRetry(familiesError, reloadFamilies)
   useSilentRetry(namesError, reloadNames)
-
-  const handleJoinFamily = useCallback(
-    async (token: string) => {
-      const familyId = await redeemInvitation(token)
-      setActiveFamilyId(familyId)
-      // useMyFamilies reloads on its own effect deps; a family created
-      // elsewhere still needs its roster row to exist before we can select
-      // it, so a manual reload keeps the switcher's list honest immediately
-      // rather than waiting for an unrelated re-render.
-      window.setTimeout(() => setActiveFamilyId(familyId), 0)
-    },
-    [setActiveFamilyId],
-  )
-
-  const handleSuggestName = useCallback(
-    async (text: string, gender: Parameters<typeof suggestName>[2], origin: string | null) => {
-      if (!activeFamilyId || !userId) return
-      await suggestName(activeFamilyId, text, gender, origin, userId)
-      reloadNames()
-    },
-    [activeFamilyId, userId, reloadNames],
-  )
 
   if (!isSupabaseConfigured) {
     return (
@@ -215,7 +166,7 @@ export default function App() {
         brandName={PRODUCT_NAME}
         brandTagline={TAGLINE}
         navItems={NAV_ITEMS}
-        activeNavId={view}
+        activeNavId="browse"
         searchPlaceholder="חיפוש שם"
         searchQuery={searchQuery}
         onSearch={setSearchQuery}
@@ -223,129 +174,54 @@ export default function App() {
         userName={userName}
         avatarUrl={avatarUrl}
         canUpgrade={canUpgradeAccount(session.user)}
-        userId={userId}
-        onSelectNav={(id) => setView(id as View)}
+        onSelectNav={() => {}}
         onUpgrade={startAccountLink}
-        onOpenNotification={(familyId) => {
-          setActiveFamilyId(familyId)
-          setView("ranking")
-        }}
         onSignOut={() => {
           if (canUpgradeAccount(session.user)) setConfirmGuestSignOut(true)
           else void supabase.auth.signOut()
         }}
       >
-        {familiesLoading || familiesError ? (
-          <Section title="טוען…">
-            <div className="h-40 w-full animate-pulse rounded-lg border border-border-subtle bg-surface" />
-          </Section>
-        ) : (
-          <>
-            <Section
-              title="המשפחה הפעילה"
-              description={
-                families.length === 0
-                  ? "עיינו בשמות בלי הגבלה — כדי להציע שם, להצביע ולשתף עם המשפחה, צרו משפחה או הצטרפו לאחת."
-                  : undefined
-              }
-            >
-              <FamilySwitcher
-                families={families}
-                activeFamilyId={activeFamilyId}
-                onSelect={setActiveFamilyId}
-                onCreate={async (name) => { await handleCreateFamily(name) }}
-                onJoin={handleJoinFamily}
-              />
-            </Section>
+        <Section
+          title="כל השמות"
+          description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של שם טוב, ושמרו את השמות שאהבתם."
+        >
+          <div className="flex flex-col gap-4">
+            <NameFiltersBar
+              value={filters}
+              onChange={setFilters}
+              onFilterClick={(category, value, selected) => {
+                if (userId) void logFilterClick(userId, category, value, selected)
+              }}
+            />
+            <ActiveFiltersRow value={filters} onChange={setFilters} />
 
-            {view === "family" ? (
-              activeFamily ? (
-                <MyFamilyScreen family={activeFamily} currentUserId={session.user.id} onRenamed={reloadFamilies} />
-              ) : (
-                <EmptyState
-                  title="עדיין אין לכם משפחה"
-                  description="התחילו משפחה חדשה כדי להציע ולהצביע על שמות ביחד, או הצטרפו עם קוד הזמנה שקיבלתם — האפשרות למעלה."
-                />
-              )
-            ) : view === "ranking" && !activeFamilyId ? (
-              <EmptyState
-                title="הדירוג שייך למשפחה"
-                description="דירוג מבוסס על הצבעות של בני משפחה — צרו משפחה או הצטרפו לאחת כדי לראות אותו."
-              />
-            ) : (
-              <>
-                {view === "browse" && activeFamilyId ? (
-                  <>
-                    <Section
-                      title="הציעו שם למשפחה"
-                      description="השם יופיע רק אצל בני המשפחה שלכם, ואפשר להצביע עליו כמו על כל שם אחר."
-                    >
-                      <SuggestNameForm onSubmit={handleSuggestName} />
-                    </Section>
+            {!namesLoading && !namesError ? (
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-body-sm font-medium text-content-secondary">{names.length} שמות נמצאו</p>
+                <label className="flex items-center gap-1.5 text-caption text-content-muted">
+                  מיון:
+                  <select
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value as "alphabetical" | "popularity")}
+                    className="rounded-md border border-border bg-surface px-2 py-1 text-caption font-medium text-content-primary"
+                  >
+                    <option value="alphabetical">לפי א-ב</option>
+                    <option value="popularity">לפי פופולריות</option>
+                  </select>
+                </label>
+              </div>
+            ) : null}
 
-                    {userId ? <RecommendedNames familyId={activeFamilyId} userId={userId} refreshKey={votes.size} /> : null}
-                  </>
-                ) : null}
-
-                <Section
-                  title={view === "ranking" ? "הדירוג של המשפחה" : "כל השמות"}
-                  description={
-                    view === "ranking"
-                      ? "מדורג לפי מספר המצביעים השונים, ובשוויון — לפי ההצבעה האחרונה."
-                      : activeFamilyId
-                        ? "הקטלוג המשותף, יחד עם השמות שהמשפחה שלכם הציעה."
-                        : "הקטלוג המשותף של שם טוב — צרו משפחה כדי להציע שמות משלכם ולהצביע."
-                  }
-                >
-                  <div className="flex flex-col gap-4">
-                    {view === "browse" ? (
-                      <>
-                        <NameFiltersBar
-                          value={filters}
-                          onChange={setFilters}
-                          onFilterClick={(category, value, selected) => {
-                            if (userId) void logFilterClick(userId, activeFamilyId, category, value, selected)
-                          }}
-                        />
-                        <ActiveFiltersRow value={filters} onChange={setFilters} />
-                      </>
-                    ) : null}
-
-                    {!namesLoading && !namesError ? (
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <p className="text-body-sm font-medium text-content-secondary">{names.length} שמות נמצאו</p>
-                        {view === "browse" ? (
-                          <label className="flex items-center gap-1.5 text-caption text-content-muted">
-                            מיון:
-                            <select
-                              value={sort}
-                              onChange={(e) => setSort(e.target.value as "alphabetical" | "popularity")}
-                              className="rounded-md border border-border bg-surface px-2 py-1 text-caption font-medium text-content-primary"
-                            >
-                              <option value="alphabetical">לפי א-ב</option>
-                              <option value="popularity">לפי פופולריות</option>
-                            </select>
-                          </label>
-                        ) : null}
-                      </div>
-                    ) : null}
-
-                    <NameGrid
-                      names={names}
-                      votes={votes}
-                      view={gridView}
-                      loading={namesLoading}
-                      error={namesError}
-                      searchQuery={searchQuery}
-                      onToggleVote={toggleVote}
-                      votingDisabled={!activeFamilyId}
-                    />
-                  </div>
-                </Section>
-              </>
-            )}
-          </>
-        )}
+            <NameGrid
+              names={names}
+              favorites={favorites}
+              loading={namesLoading}
+              error={namesError}
+              searchQuery={searchQuery}
+              onToggleFavorite={toggleFavorite}
+            />
+          </div>
+        </Section>
       </DashboardLayout>
 
       <Modal
@@ -375,8 +251,8 @@ export default function App() {
         }
       >
         <p className="text-body text-content-secondary">
-          חשבון האורח קיים רק בדפדפן הזה. אם תצאו, לא נוכל לשחזר אותו — והמשפחות,
-          השמות וההצבעות שלכם לא יהיו נגישים יותר.
+          חשבון האורח קיים רק בדפדפן הזה. אם תצאו, לא נוכל לשחזר אותו — והשמות
+          ששמרתם לא יהיו נגישים יותר.
         </p>
         <p className="text-body-sm text-content-muted">
           כדי לשמור אותם, סגרו את החלון ובחרו "כניסה עם Google" בתפריט החשבון.
@@ -403,7 +279,7 @@ export default function App() {
       >
         <p className="text-body text-content-secondary">
           {linkResult?.outcome === "linked"
-            ? "המשפחות וההצבעות שלך איתך גם בפעם הבאה."
+            ? "השמות ששמרתם איתכם גם בפעם הבאה."
             : linkResult?.outcome === "conflict"
               ? "חשבון Google הזה כבר משויך למשתמש אחר. התחברו איתו ישירות, או נסו חשבון Google אחר. הנתונים שלכם כאן לא נפגעו."
               : "לא הצלחנו לשמור את החשבון, ונשארתם מחוברים כאורח. שום דבר לא אבד — אפשר לנסות שוב."}
