@@ -13,6 +13,8 @@ export type Profile = {
   avatar_url: string | null
   /** Best-effort client classification — null until the user's first sign-in after this feature shipped. */
   device_type: "mobile" | "desktop" | "tablet" | null
+  /** Raw navigator.userAgent — the honest, actually-available detail, since exact hardware model isn't reliably obtainable. */
+  user_agent: string | null
   created_at: string
   updated_at: string
 }
@@ -115,6 +117,7 @@ export async function upsertProfile(user: User): Promise<string | null> {
   const metadata = (user.user_metadata ?? {}) as GoogleMetadata
   const fallback = splitName(metadata.full_name ?? metadata.name ?? "")
   const deviceType = detectDeviceType()
+  const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : null
 
   const row = guest
     ? {
@@ -124,6 +127,7 @@ export async function upsertProfile(user: User): Promise<string | null> {
         last_name: null,
         avatar_url: null,
         device_type: deviceType,
+        user_agent: userAgent,
       }
     : {
         id: user.id,
@@ -132,6 +136,7 @@ export async function upsertProfile(user: User): Promise<string | null> {
         last_name: metadata.family_name ?? fallback.last,
         avatar_url: metadata.avatar_url ?? metadata.picture ?? null,
         device_type: deviceType,
+        user_agent: userAgent,
       }
 
   const { error } = await supabase
