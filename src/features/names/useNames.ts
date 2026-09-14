@@ -53,19 +53,29 @@ export function useNames(userId: string | undefined, filters: NameFilters = {}):
       .then((rows) => {
         if (!active) return
         setNames(rows)
-        return fetchFavorites(
+
+        // Favorites are a separate, best-effort concern from here on: if
+        // this fails (e.g. the name_favorites table isn't set up yet on
+        // this database), the names themselves already loaded and should
+        // still render normally — just with every heart unfavorited,
+        // rather than the whole grid falling back to its loading skeleton
+        // over a problem that has nothing to do with the names themselves.
+        fetchFavorites(
           rows.map((r) => r.nameId),
           userId ?? null,
         )
-      })
-      .then((favMap) => {
-        if (!active || !favMap) return
-        const asBool = new Map<string, boolean>()
-        for (const [nameId, state] of favMap) {
-          asBool.set(nameId, state.favorited)
-          seedFavoriteState(nameId, state.favorited)
-        }
-        setFavorites(asBool)
+          .then((favMap) => {
+            if (!active) return
+            const asBool = new Map<string, boolean>()
+            for (const [nameId, state] of favMap) {
+              asBool.set(nameId, state.favorited)
+              seedFavoriteState(nameId, state.favorited)
+            }
+            setFavorites(asBool)
+          })
+          .catch((err) => {
+            console.error("failed to load favorites", err)
+          })
       })
       .catch((err) => {
         if (active) setError(err instanceof Error ? err.message : "שגיאה לא צפויה")
