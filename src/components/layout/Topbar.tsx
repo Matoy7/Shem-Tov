@@ -1,6 +1,5 @@
 import { IconButton } from "@/components/ui/IconButton"
 import { AccountMenu } from "@/features/auth/AccountMenu"
-import { BrandLogo } from "@/components/BrandLogo"
 import { assets } from "@/lib/assets"
 
 type TopbarProps = {
@@ -53,7 +52,14 @@ export function Topbar({
         </IconButton>
 
         <div className="flex flex-col items-center gap-1 justify-self-center">
-          <BrandLogo className="size-14 shrink-0" />
+          <img
+            src={assets.brainMascot}
+            alt=""
+            aria-hidden
+            width={104}
+            height={77}
+            className="h-[52px] w-[70px] shrink-0 object-contain"
+          />
           <span className="truncate text-body font-black text-[#6f1e35]">{brandName}</span>
         </div>
 

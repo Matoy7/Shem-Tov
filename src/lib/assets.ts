@@ -16,6 +16,8 @@ const base = `${import.meta.env.BASE_URL}assets`
 export const assets = {
   heroIllustration: `${base}/b4624.png`,
   profileAvatar: `${base}/02a96.png`,
+  /** Tafsheet's actual brand mascot — the real file from the design project, not a recreation. */
+  brainMascot: `${base}/brain-mascot.png`,
   iconPerson: `${base}/8fa3b.svg`,
   iconQuote: `${base}/e9844.svg`,
   iconBell: `${base}/47618.svg`,
