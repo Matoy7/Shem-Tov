@@ -217,12 +217,13 @@ export function MoreFiltersDropdown({ value, onChange, onOptionClick }: MoreFilt
         aria-controls={open ? panelId : undefined}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-9 shrink-0 items-center gap-1.5 rounded-full border bg-surface px-3.5 text-body-sm font-medium",
-          "transition-colors duration-150 whitespace-nowrap text-content-secondary hover:bg-surface-hover",
-          activeCount > 0 ? "border-accent/40" : "border-border",
+          "flex h-10 shrink-0 items-center gap-1.5 rounded-full border-0 bg-white px-4 text-body-sm font-semibold text-[#131835]",
+          "shadow-[0px_2px_3px_rgba(0,0,0,0.05)] transition-colors duration-150 whitespace-nowrap",
+          "sm:h-9 sm:rounded-full sm:border sm:bg-surface sm:px-3.5 sm:font-medium sm:text-content-secondary sm:shadow-none sm:hover:bg-surface-hover",
+          activeCount > 0 ? "sm:border-accent/40" : "sm:border-border",
         )}
       >
-        <svg aria-hidden viewBox="0 0 14 14" className="size-3.5 shrink-0 text-content-muted">
+        <svg aria-hidden viewBox="0 0 14 14" className="size-3.5 shrink-0 text-[#131835]/60 sm:text-content-muted">
           <path d="M1 3.5h12M3.5 7h7M6 10.5h2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
         </svg>
         <span>עוד פילטרים</span>

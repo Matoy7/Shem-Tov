@@ -165,9 +165,10 @@ export function MultiFilterDropdown<T extends string>({
         aria-controls={open ? panelId : undefined}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-9 shrink-0 items-center gap-1.5 rounded-full border bg-surface px-3.5 text-body-sm font-medium",
-          "transition-colors duration-150 whitespace-nowrap text-content-secondary hover:bg-surface-hover",
-          active ? "border-accent/40" : "border-border",
+          "flex h-10 shrink-0 items-center gap-1.5 rounded-full border-0 bg-white px-4 text-body-sm font-semibold text-[#131835]",
+          "shadow-[0px_2px_3px_rgba(0,0,0,0.05)] transition-colors duration-150 whitespace-nowrap",
+          "sm:h-9 sm:rounded-full sm:border sm:bg-surface sm:px-3.5 sm:font-medium sm:text-content-secondary sm:shadow-none sm:hover:bg-surface-hover",
+          active ? "sm:border-accent/40" : "sm:border-border",
         )}
       >
         <span>{label}</span>

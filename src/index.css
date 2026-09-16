@@ -21,6 +21,12 @@
   /* --- Semantic colour tokens -----------------------------------------
      Brand palette preserved from the original implementation.            */
   --color-bg: #e5e9fa;
+
+  /* --- Mobile design pass (see below) ---------------------------------- */
+  --color-mobile-cream: #fefffc;
+  --color-mobile-navy: #131835;
+  --shadow-mobile-soft: 0px 8px 24px rgba(0, 0, 0, 0.05);
+  --shadow-mobile-pill: 0px 2px 3px rgba(0, 0, 0, 0.05);
   --color-surface: #ffffff;
   --color-surface-secondary: #f4effc;
   --color-surface-muted: #f6f1fe;
@@ -112,6 +118,16 @@
     line-height: var(--text-body--line-height);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Mobile-only: cream/off-white background per the mobile design
+     reference — matches Tailwind's own `sm:` breakpoint exactly, so it
+     reverts to the standard --color-bg lavender the instant a screen is
+     wide enough to be treated as "not mobile" anywhere else in the app. */
+  @media (max-width: 639px) {
+    body {
+      background-color: var(--color-mobile-cream);
+    }
   }
 
   /* One consistent focus treatment for every interactive element. */

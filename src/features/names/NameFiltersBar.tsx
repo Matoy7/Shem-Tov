@@ -12,6 +12,17 @@ const GENDER_TABS: { value: Gender | undefined; label: string }[] = [
   { value: "unisex", label: "יוניסקס" },
 ]
 
+// Mobile-only: each gender tab's own pastel when active, from the design
+// reference (same hues as NameCard's gender pill). "All names" has no
+// reference color of its own, so it gets a neutral navy-on-cream treatment
+// instead of picking one gender's color arbitrarily.
+const GENDER_TAB_MOBILE_ACTIVE: Record<string, string> = {
+  all: "bg-[#131835] text-white",
+  boy: "bg-[#cfe6f7] text-[#0c4a6e]",
+  girl: "bg-[#eed5dc] text-[#830e2f]",
+  unisex: "bg-[#d0fcd1] text-[#081e18]",
+}
+
 export type NameFiltersValue = {
   gender: Gender | undefined
   origins: Origin[]
@@ -58,10 +69,11 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
       <div
         role="radiogroup"
         aria-label="למי מיועד השם"
-        className="flex shrink-0 items-center gap-0.5 rounded-full bg-surface-hover p-1"
+        className="flex shrink-0 items-center gap-1.5 sm:gap-0.5 sm:rounded-full sm:bg-surface-hover sm:p-1"
       >
         {GENDER_TABS.map((tab) => {
           const active = value.gender === tab.value
+          const mobileKey = tab.value ?? "all"
           return (
             <button
               key={tab.label}
@@ -73,8 +85,11 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
                 set("gender", tab.value)
               }}
               className={cn(
-                "h-7 shrink-0 rounded-full px-3 text-body-sm font-medium transition-colors duration-150",
-                active ? "bg-surface text-content-primary shadow-panel" : "text-content-secondary hover:text-content-primary",
+                "h-9 shrink-0 rounded-full px-4 text-body-sm font-semibold transition-colors duration-150",
+                "sm:h-7 sm:px-3 sm:font-medium",
+                active
+                  ? cn(GENDER_TAB_MOBILE_ACTIVE[mobileKey], "sm:bg-surface sm:text-content-primary sm:shadow-panel")
+                  : "bg-white text-[#131835]/70 sm:bg-transparent sm:text-content-secondary sm:hover:text-content-primary",
               )}
             >
               {tab.label}
