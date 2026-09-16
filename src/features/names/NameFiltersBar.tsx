@@ -12,25 +12,6 @@ const GENDER_TABS: { value: Gender | undefined; label: string }[] = [
   { value: "unisex", label: "יוניסקס" },
 ]
 
-// Mobile-only: each gender tab's own pastel when active, from the design
-// reference (same hues as NameCard's gender pill). "All names" has no
-// reference color of its own, so it gets a neutral navy-on-cream treatment
-// instead of picking one gender's color arbitrarily.
-const GENDER_TAB_MOBILE_ACTIVE: Record<string, string> = {
-  all: "bg-[#131835] text-white",
-  boy: "bg-[#cfe6f7] text-[#0c4a6e]",
-  girl: "bg-[#eed5dc] text-[#830e2f]",
-  unisex: "bg-[#d0fcd1] text-[#081e18]",
-}
-
-// Mobile-only: a small symbol per gender, matching the reference. Desktop
-// never had icons here and keeps not having them.
-const GENDER_TAB_ICON: Record<string, string> = {
-  boy: "♂",
-  girl: "♀",
-  unisex: "★",
-}
-
 export type NameFiltersValue = {
   gender: Gender | undefined
   origins: Origin[]
@@ -81,8 +62,6 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
       >
         {GENDER_TABS.map((tab) => {
           const active = value.gender === tab.value
-          const mobileKey = tab.value ?? "all"
-          const icon = GENDER_TAB_ICON[mobileKey]
           return (
             <button
               key={tab.label}
@@ -94,15 +73,14 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
                 set("gender", tab.value)
               }}
               className={cn(
-                "flex h-9 shrink-0 items-center gap-1.5 rounded-full px-4 text-body-sm font-semibold transition-colors duration-150",
-                "sm:h-7 sm:gap-0 sm:px-3 sm:font-medium",
+                "flex h-9 shrink-0 items-center rounded-full px-4 text-body-sm font-semibold transition-colors duration-150",
+                "sm:h-7 sm:px-3 sm:font-medium",
                 active
-                  ? cn(GENDER_TAB_MOBILE_ACTIVE[mobileKey], "sm:bg-surface sm:text-content-primary sm:shadow-panel")
-                  : "bg-white text-[#131835]/70 sm:bg-transparent sm:text-content-secondary sm:hover:text-content-primary",
+                  ? "bg-[#ffd9de] text-[#6f1e35] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sm:bg-surface sm:text-content-primary sm:shadow-panel"
+                  : "bg-white text-[#544245] sm:bg-transparent sm:text-content-secondary sm:hover:text-content-primary",
               )}
             >
-              <span>{tab.label}</span>
-              {icon ? <span aria-hidden className="text-[13px] leading-none sm:hidden">{icon}</span> : null}
+              {tab.label}
             </button>
           )
         })}

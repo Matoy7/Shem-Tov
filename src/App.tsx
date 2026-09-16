@@ -183,6 +183,7 @@ export default function App() {
       >
         <Section
           title="כל השמות"
+          mobileTitle="בחירת שם"
           description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של שם טוב, ושמרו את השמות שאהבתם."
         >
           <div className="flex flex-col gap-4">
@@ -197,16 +198,15 @@ export default function App() {
 
             {!namesLoading && !namesError ? (
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="flex items-center gap-1.5 text-body-sm font-medium text-content-secondary sm:gap-0">
-                  <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-[#10b981] sm:hidden" />
+                <p className="text-[15px] font-medium text-[#544245] sm:text-body-sm sm:text-content-secondary">
                   {names.length} שמות נמצאו
                 </p>
-                <label className="flex items-center gap-1.5 text-caption text-content-muted">
+                <label className="flex items-center gap-1.5 text-[15px] font-medium text-[#6f1e35] sm:text-caption sm:font-normal sm:text-content-muted">
                   מיון:
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value as "alphabetical" | "popularity")}
-                    className="rounded-md border border-border bg-surface px-2 py-1 text-caption font-medium text-content-primary"
+                    className="rounded-md border-0 bg-transparent px-1 py-1 text-[15px] font-medium text-[#6f1e35] sm:border sm:border-border sm:bg-surface sm:px-2 sm:text-caption sm:text-content-primary"
                   >
                     <option value="alphabetical">לפי א-ב</option>
                     <option value="popularity">לפי פופולריות</option>

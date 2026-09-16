@@ -41,7 +41,9 @@ function Checkbox({ checked }: { checked: boolean }) {
       aria-hidden
       className={cn(
         "flex size-4 shrink-0 items-center justify-center rounded border transition-colors duration-150",
-        checked ? "border-accent bg-accent text-content-inverse" : "border-border-strong bg-surface",
+        checked
+          ? "border-[#6f1e35] bg-[#6f1e35] text-white sm:border-accent sm:bg-accent sm:text-content-inverse"
+          : "border-border-strong bg-surface",
       )}
     >
       {checked ? (
@@ -74,7 +76,7 @@ function LetterPicker({
             className={cn(
               "flex size-7 shrink-0 items-center justify-center rounded-full border text-caption font-medium transition-colors duration-150",
               selected === letter
-                ? "border-accent bg-accent text-content-inverse"
+                ? "border-[#6f1e35] bg-[#6f1e35] text-white sm:border-accent sm:bg-accent sm:text-content-inverse"
                 : "border-border bg-surface text-content-secondary hover:bg-surface-hover",
             )}
           >
@@ -201,7 +203,7 @@ export function MoreFiltersDropdown({ value, onChange, onOptionClick }: MoreFilt
       <button
         type="button"
         onClick={commitAndClose}
-        className="rounded-md bg-accent px-3 py-1.5 text-caption font-semibold text-content-inverse hover:opacity-90"
+        className="rounded-md bg-[#6f1e35] px-3 py-1.5 text-caption font-semibold text-white hover:opacity-90 sm:bg-accent sm:text-content-inverse"
       >
         החלה
       </button>
@@ -217,18 +219,18 @@ export function MoreFiltersDropdown({ value, onChange, onOptionClick }: MoreFilt
         aria-controls={open ? panelId : undefined}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-10 shrink-0 items-center gap-1.5 rounded-full border-0 bg-white px-4 text-body-sm font-semibold text-[#131835]",
+          "flex h-10 shrink-0 items-center gap-1.5 rounded-full border-0 bg-white px-4 text-body-sm font-semibold text-[#6f1e35]",
           "shadow-[0px_2px_3px_rgba(0,0,0,0.05)] transition-colors duration-150 whitespace-nowrap",
           "sm:h-9 sm:rounded-full sm:border sm:bg-surface sm:px-3.5 sm:font-medium sm:text-content-secondary sm:shadow-none sm:hover:bg-surface-hover",
           activeCount > 0 ? "sm:border-accent/40" : "sm:border-border",
         )}
       >
-        <svg aria-hidden viewBox="0 0 14 14" className="size-3.5 shrink-0 text-[#131835]/60 sm:text-content-muted">
+        <svg aria-hidden viewBox="0 0 14 14" className="size-3.5 shrink-0 text-[#6f1e35]/60 sm:text-content-muted">
           <path d="M1 3.5h12M3.5 7h7M6 10.5h2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
         </svg>
         <span>עוד פילטרים</span>
         {activeCount > 0 ? (
-          <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-semibold leading-none text-content-inverse">
+          <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#6f1e35] text-[10px] font-semibold leading-none text-white sm:bg-accent sm:text-content-inverse">
             {activeCount}
           </span>
         ) : null}

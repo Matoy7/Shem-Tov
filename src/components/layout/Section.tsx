@@ -3,6 +3,8 @@ import { cn } from "@/lib/cn"
 
 type SectionProps = {
   title?: string
+  /** Shown instead of `title` below the sm: breakpoint — for a mobile-specific heading without changing desktop's title text or styling. */
+  mobileTitle?: string
   description?: string
   actions?: ReactNode
   className?: string
@@ -15,6 +17,7 @@ type SectionProps = {
  */
 export function Section({
   title,
+  mobileTitle,
   description,
   actions,
   className,
@@ -31,10 +34,16 @@ export function Section({
         <div className="flex items-end justify-between gap-4">
           <div className="flex flex-col gap-1">
             <h2 className="text-section-title font-semibold text-content-primary">
-              {title}
+              {/* Mobile: a larger/bolder heading when one is supplied — same
+                  DOM node, just different text/size below sm:, so nothing
+                  about the desktop heading's markup or styling changes. */}
+              <span className={mobileTitle ? "text-[32px] font-black text-[#6f1e35] sm:hidden" : "sm:contents"}>
+                {mobileTitle ?? title}
+              </span>
+              <span className={mobileTitle ? "hidden sm:inline" : "sm:contents"}>{title}</span>
             </h2>
             {description ? (
-              <p className="text-body-sm text-content-muted">{description}</p>
+              <p className="hidden text-body-sm text-content-muted sm:block">{description}</p>
             ) : null}
           </div>
           {actions ? (

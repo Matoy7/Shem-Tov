@@ -54,7 +54,7 @@ export function Topbar({
 
         <div className="flex flex-col items-center gap-1 justify-self-center">
           <BrandLogo className="size-14 shrink-0" />
-          <span className="truncate text-body font-black text-[#131835]">{brandName}</span>
+          <span className="truncate text-body font-black text-[#6f1e35]">{brandName}</span>
         </div>
 
         <div className="justify-self-end">

@@ -1,29 +1,46 @@
 /**
- * The app's brand mark: two footprint silhouettes on a navy circle. Drawn
- * as plain vector shapes (an oval "heel" plus a small cluster of "toes"
- * ovals, rotated per foot) rather than any traced/copied artwork — the
- * footprints-in-a-circle motif itself is generic enough that any baby-
- * themed product tends to reach for something like it.
+ * The Tafsheet brand mark: a friendly brain character with a small hanging
+ * name-tag — representing the product's own concept (forgetfulness/mental
+ * load during pregnancy, "טפשת"), not a generic baby icon. Drawn as plain
+ * overlapping rounded shapes forming a lobed brain silhouette (a cloud-like
+ * cluster of circles, the standard simple way to suggest brain "folds"
+ * without literal anatomy), a minimal closed-eye smiling face, and a
+ * rounded tag shape — an original composition built from primitive shapes,
+ * not traced or copied from any specific artwork or character.
  */
 export function BrandLogo({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden>
-      <circle cx="48" cy="48" r="48" fill="#131835" />
-      {/* Left (blue) foot — slightly higher and larger, matching the reference's offset pair. */}
-      <g transform="translate(33,30) rotate(-8)">
-        <ellipse cx="0" cy="16" rx="10.5" ry="15" fill="#7dd3fc" />
-        <ellipse cx="-8" cy="-6" rx="3.4" ry="4.6" fill="#7dd3fc" />
-        <ellipse cx="-2.5" cy="-10" rx="3.6" ry="4.9" fill="#7dd3fc" />
-        <ellipse cx="4" cy="-10.5" rx="3.6" ry="4.9" fill="#7dd3fc" />
-        <ellipse cx="10" cy="-8" rx="3.2" ry="4.4" fill="#7dd3fc" />
+    <svg viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden>
+      {/* Lobed brain silhouette — a cluster of overlapping circles reads as
+          "brain folds" at small sizes without needing literal anatomy. */}
+      <g>
+        <circle cx="34" cy="30" r="16" fill="#f9c9d4" />
+        <circle cx="54" cy="22" r="17" fill="#f9c9d4" />
+        <circle cx="73" cy="28" r="15" fill="#f9c9d4" />
+        <circle cx="26" cy="48" r="15" fill="#f9c9d4" />
+        <circle cx="45" cy="55" r="18" fill="#f9c9d4" />
+        <circle cx="66" cy="52" r="16" fill="#f9c9d4" />
+        <circle cx="30" cy="30" r="14" fill="#f9c9d4" />
       </g>
-      {/* Right (pink) foot — smaller and lower, overlapping slightly. */}
-      <g transform="translate(56,44) rotate(10)">
-        <ellipse cx="0" cy="13" rx="8.5" ry="12.2" fill="#fbb6ce" />
-        <ellipse cx="-6.5" cy="-5" rx="2.8" ry="3.7" fill="#fbb6ce" />
-        <ellipse cx="-2" cy="-8.2" rx="2.9" ry="4" fill="#fbb6ce" />
-        <ellipse cx="3.2" cy="-8.6" rx="2.9" ry="4" fill="#fbb6ce" />
-        <ellipse cx="8" cy="-6.4" rx="2.6" ry="3.6" fill="#fbb6ce" />
+      {/* A few darker strokes suggesting the folds, kept minimal. */}
+      <path
+        d="M28 34c4 4 10 4 14 0M46 30c4 5 11 5 15 0M32 52c5 4 12 4 16-1M52 50c4 4 10 4 14 0"
+        stroke="#a8395a"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.55"
+      />
+      <circle cx="34" cy="30" r="16" stroke="#a8395a" strokeWidth="2" fill="none" opacity="0.9" />
+      {/* Face */}
+      <path d="M32 60q3 3 6 0" stroke="#6f1e35" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      <path d="M24 55q1.5-2 3 0" stroke="#6f1e35" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M42 55q1.5-2 3 0" stroke="#6f1e35" strokeWidth="2" strokeLinecap="round" fill="none" />
+      {/* Hanging name-tag */}
+      <g transform="translate(76,34) rotate(18)">
+        <line x1="0" y1="0" x2="6" y2="10" stroke="#a8395a" strokeWidth="1.5" />
+        <rect x="-2" y="8" width="26" height="18" rx="4" fill="#fef8f3" stroke="#a8395a" strokeWidth="1.5" />
+        <circle cx="4" cy="17" r="1.6" fill="#a8395a" />
       </g>
     </svg>
   )

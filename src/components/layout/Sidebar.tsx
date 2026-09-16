@@ -77,7 +77,7 @@ export function SidebarSearch({
           type="button"
           aria-label="חיפוש"
           onClick={submit}
-          className="absolute start-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#131835]/60 transition-colors duration-150 hover:text-[#131835] sm:text-content-muted sm:hover:text-content-primary"
+          className="absolute start-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
         >
           <Icon src={assets.iconSearch} size="sm" />
         </button>
@@ -97,8 +97,9 @@ export function SidebarSearch({
           placeholder={placeholder}
           aria-label={placeholder}
           className={cn(
-            "h-11 w-full min-w-0 rounded-full border-0 bg-white text-body shadow-[0px_2px_3px_rgba(0,0,0,0.05)]",
-            "text-[#131835] placeholder:text-[#131835]/50 transition-colors duration-150",
+            "h-11 w-full min-w-0 rounded-full border bg-white text-body shadow-[0px_2px_3px_rgba(0,0,0,0.05)]",
+            "border-transparent text-[#6f1e35] placeholder:text-[#877275] transition-colors duration-150",
+            "focus-visible:border-[#ffd9de]",
             "ps-10 pe-10",
             "sm:h-10 sm:rounded-md sm:border sm:border-border sm:bg-surface sm:text-content-primary",
             "sm:placeholder:text-content-muted sm:shadow-none sm:ps-9 sm:pe-9",
@@ -114,7 +115,7 @@ export function SidebarSearch({
               setDraft("")
               onClear()
             }}
-            className="absolute end-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#131835]/60 transition-colors duration-150 hover:text-[#131835] sm:text-content-muted sm:hover:text-content-primary"
+            className="absolute end-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
           >
             <span aria-hidden className="relative block size-3">
               <span className="absolute inset-x-0 top-1/2 block h-0.5 -translate-y-1/2 rotate-45 rounded-full bg-current" />

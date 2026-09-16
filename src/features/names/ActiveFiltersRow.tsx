@@ -117,7 +117,7 @@ export function ActiveFiltersRow({ value, onChange }: ActiveFiltersRowProps) {
       <button
         type="button"
         onClick={() => onChange(EMPTY_NAME_FILTERS)}
-        className="ms-1 text-caption font-medium text-accent hover:underline"
+        className="ms-1 text-[13px] font-medium text-[#6f1e35] hover:underline sm:text-caption sm:text-accent"
       >
         ניקוי הכל
       </button>

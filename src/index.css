@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alef:wght@400;700&family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
 
 /* ==========================================================================
@@ -23,8 +23,17 @@
   --color-bg: #e5e9fa;
 
   /* --- Mobile design pass (see below) ---------------------------------- */
-  --color-mobile-cream: #fefffc;
-  --color-mobile-navy: #131835;
+  /* Tafsheet mobile visual language: warm cream + burgundy/mauve primary +
+     soft pink accents, replacing the earlier navy/footprints direction. */
+  --color-mobile-cream: #fef8f3;
+  --color-mobile-navy: #6f1e35;
+  --color-mobile-text-body: #1d1b19;
+  --color-mobile-text-secondary: #544245;
+  --color-mobile-placeholder: #877275;
+  --color-mobile-pink: #ffd9de;
+  --color-mobile-pink-popular: #ffdad6;
+  --color-mobile-neutral-tag-bg: #ede7e2;
+  --color-mobile-border: #f0e8e0;
   --shadow-mobile-soft: 0px 8px 24px rgba(0, 0, 0, 0.05);
   --shadow-mobile-pill: 0px 2px 3px rgba(0, 0, 0, 0.05);
   --color-surface: #ffffff;
