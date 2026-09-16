@@ -23,6 +23,14 @@ const GENDER_TAB_MOBILE_ACTIVE: Record<string, string> = {
   unisex: "bg-[#d0fcd1] text-[#081e18]",
 }
 
+// Mobile-only: a small symbol per gender, matching the reference. Desktop
+// never had icons here and keeps not having them.
+const GENDER_TAB_ICON: Record<string, string> = {
+  boy: "♂",
+  girl: "♀",
+  unisex: "★",
+}
+
 export type NameFiltersValue = {
   gender: Gender | undefined
   origins: Origin[]
@@ -74,6 +82,7 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
         {GENDER_TABS.map((tab) => {
           const active = value.gender === tab.value
           const mobileKey = tab.value ?? "all"
+          const icon = GENDER_TAB_ICON[mobileKey]
           return (
             <button
               key={tab.label}
@@ -85,14 +94,15 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
                 set("gender", tab.value)
               }}
               className={cn(
-                "h-9 shrink-0 rounded-full px-4 text-body-sm font-semibold transition-colors duration-150",
-                "sm:h-7 sm:px-3 sm:font-medium",
+                "flex h-9 shrink-0 items-center gap-1.5 rounded-full px-4 text-body-sm font-semibold transition-colors duration-150",
+                "sm:h-7 sm:gap-0 sm:px-3 sm:font-medium",
                 active
                   ? cn(GENDER_TAB_MOBILE_ACTIVE[mobileKey], "sm:bg-surface sm:text-content-primary sm:shadow-panel")
                   : "bg-white text-[#131835]/70 sm:bg-transparent sm:text-content-secondary sm:hover:text-content-primary",
               )}
             >
-              {tab.label}
+              <span>{tab.label}</span>
+              {icon ? <span aria-hidden className="text-[13px] leading-none sm:hidden">{icon}</span> : null}
             </button>
           )
         })}

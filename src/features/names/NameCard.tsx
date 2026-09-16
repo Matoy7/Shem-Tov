@@ -38,7 +38,7 @@ const GENDER_TINT_MOBILE: Record<"boy" | "girl" | "unisex", string> = {
   unisex: "border-transparent bg-[#d0fcd1] text-[#081e18]",
 }
 
-function GenderPill({ gender }: { gender: "boy" | "girl" | "unisex" }) {
+function GenderPill({ gender, className }: { gender: "boy" | "girl" | "unisex"; className?: string }) {
   return (
     <span
       className={cn(
@@ -46,6 +46,7 @@ function GenderPill({ gender }: { gender: "boy" | "girl" | "unisex" }) {
         "sm:h-6 sm:px-2.5 sm:font-medium",
         GENDER_TINT_MOBILE[gender],
         GENDER_TINT_DESKTOP[gender],
+        className,
       )}
     >
       {GENDER_LABEL[gender]}
@@ -133,7 +134,21 @@ export function NameCard({ name, favorited, onToggleFavorite }: NameCardProps) {
           >
             {name.text}
           </p>
-          {name.gender ? <GenderPill gender={name.gender} /> : null}
+
+          {/* Desktop: gender pill, unchanged. Mobile: replaced by the heart
+              (see below) — the reference's card header holds the save
+              action there instead, not gender (gender is already shown one
+              level up, in the filter bar). */}
+          {name.gender ? <GenderPill gender={name.gender} className="hidden sm:inline-flex" /> : null}
+
+          {/* Mobile only: the same favorite button as the footer one below,
+              just visually relocated per the reference — same state, same
+              handler, not a second independent control. */}
+          <span className="sm:hidden">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white shadow-[0px_2px_3px_rgba(0,0,0,0.05)]">
+              <FavoriteButton favorited={favorited} onToggle={() => onToggleFavorite(name.nameId)} />
+            </span>
+          </span>
         </div>
 
         {name.meaningHe ? (
@@ -157,13 +172,17 @@ export function NameCard({ name, favorited, onToggleFavorite }: NameCardProps) {
       <div>
         <div className="mb-4 h-px bg-[#131835]/10 sm:bg-border-subtle" aria-hidden />
         <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 flex-wrap items-center justify-start gap-1.5">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-start gap-1.5">
             {tags.map((tag) => (
               <Tag key={tag.key} tag={tag} />
             ))}
           </div>
 
-          <FavoriteButton favorited={favorited} onToggle={() => onToggleFavorite(name.nameId)} />
+          {/* Desktop only: same favorite button, in its original footer
+              position. Mobile shows it in the header instead (above). */}
+          <span className="hidden sm:block">
+            <FavoriteButton favorited={favorited} onToggle={() => onToggleFavorite(name.nameId)} />
+          </span>
         </div>
       </div>
     </article>

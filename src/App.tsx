@@ -197,7 +197,10 @@ export default function App() {
 
             {!namesLoading && !namesError ? (
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-body-sm font-medium text-content-secondary">{names.length} שמות נמצאו</p>
+                <p className="flex items-center gap-1.5 text-body-sm font-medium text-content-secondary sm:gap-0">
+                  <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-[#10b981] sm:hidden" />
+                  {names.length} שמות נמצאו
+                </p>
                 <label className="flex items-center gap-1.5 text-caption text-content-muted">
                   מיון:
                   <select
