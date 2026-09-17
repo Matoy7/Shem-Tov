@@ -39,7 +39,7 @@ export function Topbar({
   return (
     <header className="sticky top-0 z-20 border-b border-[#f0e8e0] bg-[#fef8f3]/90 backdrop-blur-sm sm:border-border sm:bg-bg/85">
       {/* Mobile-only header: avatar (end/left) and menu button (start/right) only. */}
-      <div className="flex items-center justify-between px-5 py-4 sm:hidden">
+      <div className="flex items-center justify-between px-5 py-3 sm:hidden">
         <div className="justify-self-end">
           <AccountMenu
             displayName={displayName}
