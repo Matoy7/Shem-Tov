@@ -193,7 +193,7 @@ export default function App() {
             a wide screen, this stays invisible at sm: and up. */}
         {mobileView === "home" ? (
           <div className="sm:hidden">
-            <HomeScreen userName={firstName} onNavigateToNames={() => setMobileView("browse")} />
+            <HomeScreen userName={firstName} tagline={TAGLINE} onNavigateToNames={() => setMobileView("browse")} />
           </div>
         ) : null}
 

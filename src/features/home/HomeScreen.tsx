@@ -13,6 +13,7 @@ type HomeCard = {
 
 type HomeScreenProps = {
   userName: string
+  tagline: string
   onNavigateToNames: () => void
 }
 
@@ -24,7 +25,7 @@ type HomeScreenProps = {
  * Rubik weight scale — rather than introducing anything new, per "the
  * existing implementation is the source of truth."
  */
-export function HomeScreen({ userName, onNavigateToNames }: HomeScreenProps) {
+export function HomeScreen({ userName, tagline, onNavigateToNames }: HomeScreenProps) {
   const cards: HomeCard[] = [
     { key: "bag", img: assets.homeBirthBag, title: "הכנת תיק לידה" },
     { key: "names", img: assets.homeNames, title: "בחירת שם", onNavigate: onNavigateToNames },
@@ -34,9 +35,20 @@ export function HomeScreen({ userName, onNavigateToNames }: HomeScreenProps) {
 
   return (
     <div className="px-1 pb-6 pt-2" dir="rtl">
-      <h1 className="mb-7 text-[24px] font-bold leading-10 tracking-[-0.8px] text-[#6f1e35]">
+      <h1 className="mb-4 text-[24px] font-bold leading-10 tracking-[-0.8px] text-[#6f1e35]">
         היי {userName}
       </h1>
+
+      <div className="mb-6 flex flex-col items-center rounded-[28px] bg-[#fdeef1] px-5 py-7">
+        <img
+          src={assets.heroBrainLogo}
+          alt="טפשת"
+          className="h-auto w-full max-w-[320px] object-contain"
+        />
+        <p className="mt-3 text-center text-[15px] font-normal leading-5 text-[#544245]">
+          {tagline}
+        </p>
+      </div>
 
       <div className="grid grid-cols-2 gap-3.5">
         {cards.map((card) => (

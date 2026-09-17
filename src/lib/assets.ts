@@ -18,6 +18,8 @@ export const assets = {
   profileAvatar: `${base}/02a96.png`,
   /** Tafsheet's actual brand mascot — the real file from the design project, not a recreation. */
   brainMascot: `${base}/brain-mascot.png`,
+  /** Hero card lockup on the Home Page — brain + wordmark, the real file. */
+  heroBrainLogo: `${base}/hero-brain-logo.png`,
   /** Home Page category illustrations — real files from the design project. */
   homeBirthBag: `${base}/home-birth-bag.png`,
   homeNames: `${base}/home-names.png`,
