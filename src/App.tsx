@@ -126,7 +126,7 @@ export default function App() {
         className="flex min-h-screen flex-col items-center justify-center gap-4 bg-bg px-4"
       >
         <img
-          src={assets.heroIllustration}
+          src={assets.brainMascotCheerful}
           alt=""
           aria-hidden
           width={96}
