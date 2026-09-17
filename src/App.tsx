@@ -221,6 +221,7 @@ export default function App() {
           <Section
             title="כל השמות"
             mobileTitle="בחירת שם"
+            mobileImage={assets.homeNames}
             description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם."
           >
             <div className="flex flex-col gap-4">

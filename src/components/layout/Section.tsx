@@ -5,6 +5,8 @@ type SectionProps = {
   title?: string
   /** Shown instead of `title` below the sm: breakpoint — for a mobile-specific heading without changing desktop's title text or styling. */
   mobileTitle?: string
+  /** Shown above mobileTitle, mobile-only — matches the exact hero convention already used by the Hospital Bag / Baby Gear screens (illustration → title → subtitle), so this one screen isn't the odd one out. */
+  mobileImage?: string
   description?: string
   actions?: ReactNode
   className?: string
@@ -18,6 +20,7 @@ type SectionProps = {
 export function Section({
   title,
   mobileTitle,
+  mobileImage,
   description,
   actions,
   className,
@@ -31,23 +34,35 @@ export function Section({
       className={cn("flex flex-col gap-4", className)}
     >
       {labelled ? (
-        <div className="flex items-end justify-between gap-4">
-          <div className="flex flex-col gap-1">
+        <div className="flex flex-col items-center text-center sm:flex-row sm:items-end sm:justify-between sm:gap-4 sm:text-start">
+          <div className="flex flex-col items-center gap-1 sm:items-start">
+            {/* Mobile-only hero image — same "mb-1 h-28 wXX object-contain"
+                shape as Hospital Bag / Baby Gear's own hero illustration,
+                hidden entirely on desktop and when no image is supplied. */}
+            {mobileImage ? (
+              <img src={mobileImage} alt="" aria-hidden className="mb-1 h-28 w-28 object-contain sm:hidden" />
+            ) : null}
+
             <h2 className="text-section-title font-semibold text-content-primary">
-              {/* Mobile: a larger/bolder heading when one is supplied — same
-                  DOM node, just different text/size below sm:, so nothing
-                  about the desktop heading's markup or styling changes. */}
-              <span className={mobileTitle ? "text-[32px] font-black text-[#6f1e35] sm:hidden" : "sm:contents"}>
+              {/* Mobile: same 26px/black/burgundy treatment as the other
+                  screens' hero title — same DOM node, just different
+                  text/size below sm:, so nothing about the desktop
+                  heading's markup or styling changes. */}
+              <span className={mobileTitle ? "text-[26px] font-black leading-[34px] text-[#6f1e35] sm:hidden" : "sm:contents"}>
                 {mobileTitle ?? title}
               </span>
               <span className={mobileTitle ? "hidden sm:inline" : "sm:contents"}>{title}</span>
             </h2>
+
+            {description ? (
+              <p className="mt-1 text-[14px] leading-[22px] text-[#544245] sm:mt-0 sm:hidden">{description}</p>
+            ) : null}
             {description ? (
               <p className="hidden text-body-sm text-content-muted sm:block">{description}</p>
             ) : null}
           </div>
           {actions ? (
-            <div className="flex shrink-0 items-center gap-2">{actions}</div>
+            <div className="mt-3 flex shrink-0 items-center gap-2 sm:mt-0">{actions}</div>
           ) : null}
         </div>
       ) : null}
