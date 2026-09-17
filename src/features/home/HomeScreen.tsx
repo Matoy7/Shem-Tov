@@ -4,43 +4,50 @@ type HomeCard = {
   key: string
   img: string
   title: string
-  /** Only the names card is wired to a real destination — the other three
-   * illustrate categories that don't have a screen built yet, so they're
-   * shown (matching the design reference) but intentionally not clickable,
-   * rather than navigating somewhere that doesn't exist. */
+  subtitle: string
+  /** Only names/bag/gear are wired to a real destination — "leaving the
+   * house" doesn't have a screen built yet, so it's shown (matching the
+   * design reference) but intentionally not clickable, rather than
+   * navigating somewhere that doesn't exist. */
   onNavigate?: () => void
 }
 
 type HomeScreenProps = {
-  userName: string
   onNavigateToNames: () => void
   onNavigateToBag: () => void
   onNavigateToGear: () => void
 }
 
 /**
- * The app's mobile home screen: a greeting (with the brand mark beside it)
- * plus a 2×2 grid of category cards. Styling reuses the same tokens already
- * established for the name catalogue's mobile pass — same burgundy/cream/
- * pink palette, the same `rounded-[28px]` card radius and near-flat shadow
- * as NameCard, the same Rubik weight scale — rather than introducing
- * anything new, per "the existing implementation is the source of truth."
+ * The app's home screen: a brand-introduction hero (heading, subtitle, the
+ * cheerful brain mascot) plus a 2×2 grid of category cards — no greeting,
+ * no extra sections, per the redesign brief. See DESIGN_GUIDE.md for the
+ * full token reference this and future screens should draw from.
  */
-export function HomeScreen({ userName, onNavigateToNames, onNavigateToBag, onNavigateToGear }: HomeScreenProps) {
+export function HomeScreen({ onNavigateToNames, onNavigateToBag, onNavigateToGear }: HomeScreenProps) {
   const cards: HomeCard[] = [
-    { key: "bag", img: assets.homeBirthBag, title: "הכנת תיק לידה", onNavigate: onNavigateToBag },
-    { key: "names", img: assets.homeNames, title: "בחירת שם", onNavigate: onNavigateToNames },
-    { key: "leaving", img: assets.homeLeaving, title: "התארגנות לצאת" },
-    { key: "gear", img: assets.homeBabyGear, title: "ציוד לתינוק", onNavigate: onNavigateToGear },
+    { key: "bag", img: assets.homeBirthBag, title: "הכנת תיק לידה", subtitle: "מה כבר ארזת?", onNavigate: onNavigateToBag },
+    { key: "names", img: assets.homeNames, title: "בחירת שם", subtitle: "מצאתם כבר שם?", onNavigate: onNavigateToNames },
+    { key: "gear", img: assets.homeBabyGear, title: "ציוד לתינוק", subtitle: "מה עדיין חסר?", onNavigate: onNavigateToGear },
+    { key: "leaving", img: assets.homeLeaving, title: "לפני שיוצאים", subtitle: "לא לשכוח כלום." },
   ]
 
   return (
     <div className="px-1 pb-6 pt-2" dir="rtl">
-      <div className="mb-6 flex items-center justify-between gap-3">
-        <h1 className="text-[17px] font-bold leading-[23px] text-[#6f1e35]">
-          היי {userName}
+      {/* hero — brand introduction, not a dashboard status line: no
+          greeting, generous whitespace, the mascot as the visual anchor. */}
+      <div className="flex flex-col items-center px-4 pb-6 pt-4 text-center">
+        <h1 className="font-display text-[34px] font-extrabold leading-[42px] tracking-[-0.5px] text-[#6f1e35]">
+          טפשת
         </h1>
-        <img src={assets.logoStacked} alt="טפשת" className="h-[120px] w-auto shrink-0 object-contain" />
+        <p className="mt-1.5 text-[16px] leading-6 text-[#8a5a63]">המוח בהולד? אנחנו פה לעזור</p>
+
+        <img
+          src={assets.brainMascotCheerful}
+          alt=""
+          aria-hidden
+          className="mt-5 h-[180px] w-[180px] object-contain"
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-3.5">
@@ -50,12 +57,32 @@ export function HomeScreen({ userName, onNavigateToNames, onNavigateToBag, onNav
             type="button"
             onClick={card.onNavigate}
             disabled={!card.onNavigate}
-            className="flex min-h-[152px] flex-col items-center justify-center gap-2 rounded-[28px] bg-white p-4 text-center shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition-transform active:scale-[0.97] disabled:active:scale-100"
+            className="flex min-h-[220px] flex-col items-center justify-center gap-1 rounded-[28px] bg-white p-5 text-center shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition-transform active:scale-[0.97] disabled:active:scale-100"
           >
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center">
+            <div className="mb-1 flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-[rgba(255,217,222,0.4)]">
               <img src={card.img} alt="" aria-hidden className="h-14 w-14 object-contain" />
             </div>
             <p className="text-[17px] font-bold leading-[23px] text-[#6f1e35]">{card.title}</p>
+            <p className="text-[13px] leading-[18px] text-[#8a5a63]">{card.subtitle}</p>
+
+            {/* Purely visual — the whole card is already the real tap
+                target (its onClick above), so this isn't a second nested
+                interactive element, just the arrow affordance from the
+                design reference. */}
+            <span
+              aria-hidden
+              className="mt-1 flex size-9 shrink-0 items-center justify-center rounded-full bg-[rgba(255,217,222,0.5)]"
+            >
+              <svg width="15" height="12" viewBox="0 0 15 12" fill="none">
+                <path
+                  d="M1 6h12M8 1l5 5-5 5"
+                  stroke="#6f1e35"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
           </button>
         ))}
       </div>

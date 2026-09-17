@@ -22,6 +22,8 @@ export const assets = {
   heroBrainLogo: `${base}/hero-brain-logo.png`,
   /** Small inline logo mark next to the Home Page greeting — real file, stacked brain-over-wordmark. */
   logoStacked: `${base}/logo-stacked.png`,
+  /** Cheerful brain mascot (checklist + pen) for the Home Page hero — real file, not a recreation. */
+  brainMascotCheerful: `${base}/brain-mascot-cheerful.png`,
   /** Home Page category illustrations — real files from the design project. */
   homeBirthBag: `${base}/home-birth-bag.png`,
   homeNames: `${base}/home-names.png`,

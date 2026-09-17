@@ -164,9 +164,6 @@ export default function App() {
   }
 
   const userName = displayName ?? displayNameFor(session.user)
-  // Home Page greeting only — "Yotam Eliraz" → "יותם". Everywhere else
-  // (header, account menu) keeps the full name, exactly as before.
-  const firstName = userName.trim().split(/\s+/)[0] ?? userName
   const avatarUrl = providerAvatar ?? generatedAvatar ?? assets.heroIllustration
 
   return (
@@ -196,7 +193,6 @@ export default function App() {
         {mobileView === "home" ? (
           <div className="sm:hidden">
             <HomeScreen
-              userName={firstName}
               onNavigateToNames={() => setMobileView("browse")}
               onNavigateToBag={() => setMobileView("bag")}
               onNavigateToGear={() => setMobileView("gear")}
