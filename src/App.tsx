@@ -29,6 +29,7 @@ import { ActiveFiltersRow } from "@/features/names/ActiveFiltersRow"
 import { logSearch } from "@/data/searchLogs"
 import { logFilterClick } from "@/data/filterClickLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
+import { HomeScreen } from "@/features/home/HomeScreen"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
@@ -39,6 +40,9 @@ const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: assets.ic
 export default function App() {
   const { session, loading: sessionLoading, profileLoading, displayName, setDisplayName } = useSession()
   const [searchQuery, setSearchQuery] = useState("")
+  // Mobile-only: which screen is showing. Desktop always shows the name
+  // catalogue regardless of this — see the render below, guarded by sm:.
+  const [mobileView, setMobileView] = useState<"home" | "browse">("home")
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
   const [linkResult, setLinkResult] = useState<LinkResult | null>(null)
@@ -181,13 +185,38 @@ export default function App() {
           else void supabase.auth.signOut()
         }}
       >
-        <Section
-          title="כל השמות"
-          mobileTitle="בחירת שם"
-          description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם."
-        >
-          <div className="flex flex-col gap-4">
-            <NameFiltersBar
+        {/* Mobile-only Home Page. Guarded on both state (mobileView) and
+            viewport (sm:hidden) — even if the state were somehow "home" on
+            a wide screen, this stays invisible at sm: and up. */}
+        {mobileView === "home" ? (
+          <div className="sm:hidden">
+            <HomeScreen userName={userName} onNavigateToNames={() => setMobileView("browse")} />
+          </div>
+        ) : null}
+
+        {/* The existing name catalogue — byte-for-byte unchanged. Always
+            visible on desktop (sm:block, regardless of mobileView); on
+            mobile, visible only once mobileView is "browse". */}
+        <div className={mobileView === "home" ? "hidden sm:block" : undefined}>
+          <Section
+            title="כל השמות"
+            mobileTitle="בחירת שם"
+            description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם."
+          >
+            <div className="flex flex-col gap-4">
+              {/* Mobile-only way back to the Home Page — the desktop sidebar
+                  nav is untouched (still just the one "browse" item), so
+                  this is the only new navigation surface, and only on
+                  mobile. */}
+              <button
+                type="button"
+                onClick={() => setMobileView("home")}
+                className="flex items-center gap-1 self-end text-[14px] font-medium text-[#6f1e35] sm:hidden"
+              >
+                ← חזרה
+              </button>
+
+              <NameFiltersBar
               value={filters}
               onChange={setFilters}
               onFilterClick={(category, value, selected) => {
@@ -223,8 +252,9 @@ export default function App() {
               searchQuery={searchQuery}
               onToggleFavorite={toggleFavorite}
             />
-          </div>
-        </Section>
+            </div>
+          </Section>
+        </div>
       </DashboardLayout>
 
       <Modal
