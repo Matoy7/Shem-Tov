@@ -20,6 +20,8 @@ export const assets = {
   brainMascot: `${base}/brain-mascot.png`,
   /** Hero card lockup on the Home Page — brain + wordmark, the real file. */
   heroBrainLogo: `${base}/hero-brain-logo.png`,
+  /** Small inline logo mark next to the Home Page greeting — real file, stacked brain-over-wordmark. */
+  logoStacked: `${base}/logo-stacked.png`,
   /** Home Page category illustrations — real files from the design project. */
   homeBirthBag: `${base}/home-birth-bag.png`,
   homeNames: `${base}/home-names.png`,

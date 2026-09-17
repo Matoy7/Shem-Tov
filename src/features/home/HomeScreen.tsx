@@ -13,19 +13,18 @@ type HomeCard = {
 
 type HomeScreenProps = {
   userName: string
-  tagline: string
   onNavigateToNames: () => void
 }
 
 /**
- * The app's mobile home screen: a greeting plus a 2×2 grid of category
- * cards. Styling reuses the same tokens already established for the name
- * catalogue's mobile pass — same burgundy/cream/pink palette, the same
- * `rounded-[28px]` card radius and near-flat shadow as NameCard, the same
- * Rubik weight scale — rather than introducing anything new, per "the
- * existing implementation is the source of truth."
+ * The app's mobile home screen: a greeting (with the brand mark beside it)
+ * plus a 2×2 grid of category cards. Styling reuses the same tokens already
+ * established for the name catalogue's mobile pass — same burgundy/cream/
+ * pink palette, the same `rounded-[28px]` card radius and near-flat shadow
+ * as NameCard, the same Rubik weight scale — rather than introducing
+ * anything new, per "the existing implementation is the source of truth."
  */
-export function HomeScreen({ userName, tagline, onNavigateToNames }: HomeScreenProps) {
+export function HomeScreen({ userName, onNavigateToNames }: HomeScreenProps) {
   const cards: HomeCard[] = [
     { key: "bag", img: assets.homeBirthBag, title: "הכנת תיק לידה" },
     { key: "names", img: assets.homeNames, title: "בחירת שם", onNavigate: onNavigateToNames },
@@ -35,19 +34,11 @@ export function HomeScreen({ userName, tagline, onNavigateToNames }: HomeScreenP
 
   return (
     <div className="px-1 pb-6 pt-2" dir="rtl">
-      <h1 className="mb-4 text-[24px] font-bold leading-10 tracking-[-0.8px] text-[#6f1e35]">
-        היי {userName}
-      </h1>
-
-      <div className="mb-6 flex flex-col items-center rounded-[28px] bg-[#fdeef1] px-5 py-7">
-        <img
-          src={assets.heroBrainLogo}
-          alt="טפשת"
-          className="h-auto w-full max-w-[320px] object-contain"
-        />
-        <p className="mt-3 text-center text-[15px] font-normal leading-5 text-[#544245]">
-          {tagline}
-        </p>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h1 className="text-[24px] font-bold leading-10 tracking-[-0.8px] text-[#6f1e35]">
+          היי {userName}
+        </h1>
+        <img src={assets.logoStacked} alt="טפשת" className="h-10 w-auto shrink-0 object-contain" />
       </div>
 
       <div className="grid grid-cols-2 gap-3.5">
