@@ -39,10 +39,11 @@ export function HomeScreen({ onNavigateToNames, onNavigateToBag, onNavigateToGea
           purpose so header + hero + all four cards fit one screen without
           scrolling. */}
       <div className="flex flex-col items-center px-4 pb-1 pt-2 text-center">
-        <h1 className="font-display text-[40px] font-extrabold leading-[46px] tracking-[-0.5px] text-[#6f1e35]">
-          טפשת
-        </h1>
-        <p className="mt-1 text-[16px] leading-5 text-[#8a5a63]">המוח בהולד? אנחנו פה לעזור</p>
+        <img
+          src={assets.heroWordmark}
+          alt="טפשת — המוח בהולד? אנחנו פה לעזור"
+          className="h-[74px] w-[296px] max-w-full object-contain"
+        />
 
         <img
           src={assets.brainMascotCheerful}
