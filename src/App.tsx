@@ -30,6 +30,7 @@ import { logSearch } from "@/data/searchLogs"
 import { logFilterClick } from "@/data/filterClickLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
 import { HomeScreen } from "@/features/home/HomeScreen"
+import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
@@ -42,7 +43,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("")
   // Mobile-only: which screen is showing. Desktop always shows the name
   // catalogue regardless of this — see the render below, guarded by sm:.
-  const [mobileView, setMobileView] = useState<"home" | "browse">("home")
+  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag">("home")
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
   const [linkResult, setLinkResult] = useState<LinkResult | null>(null)
@@ -193,14 +194,25 @@ export default function App() {
             a wide screen, this stays invisible at sm: and up. */}
         {mobileView === "home" ? (
           <div className="sm:hidden">
-            <HomeScreen userName={firstName} onNavigateToNames={() => setMobileView("browse")} />
+            <HomeScreen
+              userName={firstName}
+              onNavigateToNames={() => setMobileView("browse")}
+              onNavigateToBag={() => setMobileView("bag")}
+            />
+          </div>
+        ) : null}
+
+        {/* Mobile-only Hospital Bag Preparation screen — same guard shape as Home above. */}
+        {mobileView === "bag" ? (
+          <div className="sm:hidden">
+            <HospitalBagScreen onBack={() => setMobileView("home")} />
           </div>
         ) : null}
 
         {/* The existing name catalogue — byte-for-byte unchanged. Always
             visible on desktop (sm:block, regardless of mobileView); on
             mobile, visible only once mobileView is "browse". */}
-        <div className={mobileView === "home" ? "hidden sm:block" : undefined}>
+        <div className={mobileView !== "browse" ? "hidden sm:block" : undefined}>
           <Section
             title="כל השמות"
             mobileTitle="בחירת שם"
