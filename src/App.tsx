@@ -32,6 +32,7 @@ import { useSilentRetry } from "@/lib/useSilentRetry"
 import { HomeScreen } from "@/features/home/HomeScreen"
 import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
+import { LeavingHouseScreen } from "@/features/leavingHouse/LeavingHouseScreen"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
@@ -44,7 +45,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("")
   // Mobile-only: which screen is showing. Desktop always shows the name
   // catalogue regardless of this — see the render below, guarded by sm:.
-  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear">("home")
+  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear" | "leaving">("home")
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
   const [linkResult, setLinkResult] = useState<LinkResult | null>(null)
@@ -196,6 +197,7 @@ export default function App() {
               onNavigateToNames={() => setMobileView("browse")}
               onNavigateToBag={() => setMobileView("bag")}
               onNavigateToGear={() => setMobileView("gear")}
+              onNavigateToLeaving={() => setMobileView("leaving")}
             />
           </div>
         ) : null}
@@ -211,6 +213,13 @@ export default function App() {
         {mobileView === "gear" ? (
           <div className="sm:hidden">
             <BabyGearScreen onBack={() => setMobileView("home")} />
+          </div>
+        ) : null}
+
+        {/* Mobile-only Leaving the House screen — same guard shape as Home above. */}
+        {mobileView === "leaving" ? (
+          <div className="sm:hidden">
+            <LeavingHouseScreen onBack={() => setMobileView("home")} />
           </div>
         ) : null}
 

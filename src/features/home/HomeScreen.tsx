@@ -5,10 +5,8 @@ type HomeCard = {
   img: string
   title: string
   subtitle: string
-  /** Only names/bag/gear are wired to a real destination — "leaving the
-   * house" doesn't have a screen built yet, so it's shown (matching the
-   * design reference) but intentionally not clickable, rather than
-   * navigating somewhere that doesn't exist. */
+  /** Only names/bag/gear/leaving are wired to a real destination — all
+   * four Home cards now have a screen behind them. */
   onNavigate?: () => void
 }
 
@@ -16,6 +14,7 @@ type HomeScreenProps = {
   onNavigateToNames: () => void
   onNavigateToBag: () => void
   onNavigateToGear: () => void
+  onNavigateToLeaving: () => void
 }
 
 /**
@@ -24,12 +23,12 @@ type HomeScreenProps = {
  * no extra sections, per the redesign brief. See DESIGN_GUIDE.md for the
  * full token reference this and future screens should draw from.
  */
-export function HomeScreen({ onNavigateToNames, onNavigateToBag, onNavigateToGear }: HomeScreenProps) {
+export function HomeScreen({ onNavigateToNames, onNavigateToBag, onNavigateToGear, onNavigateToLeaving }: HomeScreenProps) {
   const cards: HomeCard[] = [
     { key: "bag", img: assets.homeBirthBag, title: "הכנת תיק לידה", subtitle: "מה כבר ארזת?", onNavigate: onNavigateToBag },
     { key: "names", img: assets.homeNames, title: "בחירת שם", subtitle: "מצאתם כבר שם?", onNavigate: onNavigateToNames },
     { key: "gear", img: assets.homeBabyGear, title: "ציוד לתינוק", subtitle: "מה עדיין חסר?", onNavigate: onNavigateToGear },
-    { key: "leaving", img: assets.homeLeaving, title: "לפני שיוצאים", subtitle: "לא לשכוח כלום." },
+    { key: "leaving", img: assets.homeLeaving, title: "לפני שיוצאים", subtitle: "לא לשכוח כלום.", onNavigate: onNavigateToLeaving },
   ]
 
   return (
