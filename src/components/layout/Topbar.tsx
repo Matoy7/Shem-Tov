@@ -38,18 +38,12 @@ export function Topbar({
 }: TopbarProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-[#f0e8e0] bg-[#fef8f3]/90 backdrop-blur-sm sm:border-border sm:bg-bg/85">
-      {/* Mobile-only header: avatar (end/left) and menu button (start/right) only. */}
+      {/* Mobile-only header: hamburger first in DOM (renders right, RTL
+          inline-start) and avatar second (renders left, RTL inline-end) —
+          this order is what actually produces "avatar left, menu right" in
+          a dir="rtl" flex row; the previous DOM order here had this
+          backwards despite its own comment claiming otherwise. */}
       <div className="flex items-center justify-between px-5 py-3 sm:hidden">
-        <div className="justify-self-end">
-          <AccountMenu
-            displayName={displayName}
-            avatarUrl={avatarUrl}
-            isGuest={isGuest}
-            onLinkGoogle={onLinkGoogle}
-            onSignOut={onSignOut}
-          />
-        </div>
-
         <IconButton label="פתיחת תפריט" variant="ghost" size="md" onClick={onOpenNav}>
           <span aria-hidden className="flex flex-col gap-1">
             <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
@@ -57,6 +51,14 @@ export function Topbar({
             <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
           </span>
         </IconButton>
+
+        <AccountMenu
+          displayName={displayName}
+          avatarUrl={avatarUrl}
+          isGuest={isGuest}
+          onLinkGoogle={onLinkGoogle}
+          onSignOut={onSignOut}
+        />
       </div>
 
       {/* Desktop (sm: and up): the original layout, unchanged. */}
