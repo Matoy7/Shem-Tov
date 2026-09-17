@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — families, membership, invitations, names, votes.
+-- טפשת — families, membership, invitations, names, votes.
 --
 -- Run once in the Supabase SQL Editor, after schema.sql. Purely additive: it
 -- creates five new tables and touches nothing that exists today. sentences,

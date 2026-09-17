@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 2: family rename, name-vote notifications.
+-- טפשת — phase 2: family rename, name-vote notifications.
 --
 -- Run once in the Supabase SQL Editor, after 2026-09-shem-tov-families.sql.
 -- Purely additive: one new UPDATE policy, one new table, one new trigger.

@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 8: Hebrew translations for the 300 additional names.
+-- טפשת — phase 8: Hebrew translations for the 300 additional names.
 --
 -- Run once in the Supabase SQL Editor, after phase 7.
 --

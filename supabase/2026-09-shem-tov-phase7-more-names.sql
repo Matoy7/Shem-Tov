@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 7: 300 additional catalogue names.
+-- טפשת — phase 7: 300 additional catalogue names.
 --
 -- Run once in the Supabase SQL Editor, after phase 6.
 --

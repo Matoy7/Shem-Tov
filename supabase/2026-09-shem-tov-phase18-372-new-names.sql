@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 18: 372 more names, new ones only.
+-- טפשת — phase 18: 372 more names, new ones only.
 --
 -- Run once in the Supabase SQL Editor, after phase 17.
 --

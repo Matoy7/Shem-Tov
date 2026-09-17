@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 6: guests choose their own display name.
+-- טפשת — phase 6: guests choose their own display name.
 --
 -- Run once in the Supabase SQL Editor, after phase 5.
 --

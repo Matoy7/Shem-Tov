@@ -1,4 +1,4 @@
-# שם טוב
+# טפשת
 
 A Hebrew RTL baby-name discovery app. Browse, search and filter a shared name catalogue — by gender, origin, meaning, style, popularity, and more — and save the names you like.
 
@@ -55,7 +55,7 @@ Only the minimum required to make the existing Figma Make output deployable as a
 - `vite.config.ts`: build `base` defaults to `./` (relative) instead of `/`, so asset/script URLs resolve correctly when the site is served from a GitHub Pages repository sub-path.
 - `src/App.tsx`: the local `assetPathPrefix` now uses `import.meta.env.BASE_URL` instead of a hard-coded absolute `/assets` path, for the same reason (this only affects how the URL is built — the images, icons, and everything else are unchanged).
 - `index.html`: added `dir="rtl"` on `<html>` (in addition to the existing `lang` templating) for correct document-level RTL semantics. This doesn't change any rendering — the app's root element already sets its own explicit `dir` for layout.
-- `.figma/make/site.json`: set `title` to "שם טוב" and `language` to `he` (previously an untitled/English-default placeholder), which only affects the browser tab title and `<html lang>` — no visible UI change.
+- `.figma/make/site.json`: set `title` to "טפשת" and `language` to `he` (previously an untitled/English-default placeholder), which only affects the browser tab title and `<html lang>` — no visible UI change.
 - Added `public/.nojekyll` so GitHub Pages serves the build as-is without Jekyll processing.
 - Added `.github/workflows/deploy.yml` for automatic build + deploy on push to `main`.
 - Replaced `pnpm-lock.yaml` with a generated `package-lock.json` so `npm install` / `npm ci` work as specified (the project itself still uses only `npm`-standard tooling).
@@ -100,7 +100,7 @@ idempotent, so re-running is safe. It creates `profiles`, `sentences` and
 Security policies (everything readable by signed-in users; rows writable only
 by their owner).
 
-**שם טוב schema — run in order, all idempotent and safe to re-run:**
+**טפשת schema — run in order, all idempotent and safe to re-run:**
 
 1. `supabase/2026-09-shem-tov-families.sql` through `supabase/2026-09-shem-tov-phase12-filter-click-log.sql` — the app's schema history, including the family feature as it was originally built.
 2. `supabase/2026-09-shem-tov-phase13-remove-family.sql` — removes the Family feature entirely (families, membership, invitations, family-scoped votes, family-suggested names, family-vote notifications) and replaces family-scoped voting with `name_favorites`, a plain personal save/bookmark. **Run this last, after every other file** — it depends on those tables already existing. This one is genuinely irreversible: family data is dropped, not archived.

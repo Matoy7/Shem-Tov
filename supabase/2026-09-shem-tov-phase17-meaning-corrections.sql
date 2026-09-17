@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 17: corrected/completed meanings for the phase 16 names.
+-- טפשת — phase 17: corrected/completed meanings for the phase 16 names.
 --
 -- Run once in the Supabase SQL Editor, after phase 16.
 --

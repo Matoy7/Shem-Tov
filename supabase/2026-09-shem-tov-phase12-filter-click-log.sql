@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 12: filter-click log.
+-- טפשת — phase 12: filter-click log.
 --
 -- Run once in the Supabase SQL Editor, after phase 11.
 --

@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 9: 265 more names, compiled from a name-only list.
+-- טפשת — phase 9: 265 more names, compiled from a name-only list.
 --
 -- Run once in the Supabase SQL Editor, after phase 8.
 --

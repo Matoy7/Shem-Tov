@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 11: search log.
+-- טפשת — phase 11: search log.
 --
 -- Run once in the Supabase SQL Editor, after phase 10.
 --

@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 16: 296 more names, "ignore if it already exists".
+-- טפשת — phase 16: 296 more names, "ignore if it already exists".
 --
 -- Run once in the Supabase SQL Editor, after phase 15.
 --

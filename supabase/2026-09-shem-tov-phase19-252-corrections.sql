@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 19: corrections/completions for 252 names.
+-- טפשת — phase 19: corrections/completions for 252 names.
 --
 -- Run once in the Supabase SQL Editor, after phase 18.
 --

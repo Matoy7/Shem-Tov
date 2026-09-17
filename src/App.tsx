@@ -30,8 +30,8 @@ import { logSearch } from "@/data/searchLogs"
 import { logFilterClick } from "@/data/filterClickLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
 
-const PRODUCT_NAME = "שם טוב"
-const TAGLINE = "מגלים ובוחרים את השם המושלם."
+const PRODUCT_NAME = "טפשת"
+const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
 const PRIVACY_NOTE = "השמות שאתם שומרים גלויים רק לכם."
 
 const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: assets.iconHome }]
@@ -184,7 +184,7 @@ export default function App() {
         <Section
           title="כל השמות"
           mobileTitle="בחירת שם"
-          description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של שם טוב, ושמרו את השמות שאהבתם."
+          description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם."
         >
           <div className="flex flex-col gap-4">
             <NameFiltersBar

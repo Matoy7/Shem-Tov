@@ -47,7 +47,7 @@ const FONTS = {
 }
 
 const portrait = fs
-  .readFileSync(path.join(ROOT, "public/assets/b4624.png"))
+  .readFileSync(path.join(ROOT, "public/assets/brain-mascot.png"))
   .toString("base64")
 
 // Design tokens, mirrored from src/index.css so the card cannot drift from
@@ -136,12 +136,12 @@ const html = `<!doctype html>
   <div class="portrait"><img src="data:image/png;base64,${portrait}" alt=""></div>
 
   <div class="copy">
-    <div class="brand">שם טוב</div>
-    <div class="tagline">בוחרים ביחד. שם אחד טוב.</div>
+    <div class="brand">טפשת</div>
+    <div class="tagline">עוזרים לך לזכור את מה שחשוב</div>
     <div class="rule"></div>
     <div class="thread">
-      <div class="bubble open">מה דעתכם על "נועה"?</div>
-      <div class="bubble close">❤️ כל המשפחה הצביעה</div>
+      <div class="bubble open">איזה שם יפה זה!</div>
+      <div class="bubble close">❤️ שמרתי אותו למועדפים</div>
     </div>
   </div>
 </body></html>`

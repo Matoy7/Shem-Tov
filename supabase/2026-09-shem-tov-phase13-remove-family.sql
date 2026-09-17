@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 13: remove the Family feature entirely.
+-- טפשת — phase 13: remove the Family feature entirely.
 --
 -- Run once in the Supabase SQL Editor, after phase 12.
 --

@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 14: device type on profiles.
+-- טפשת — phase 14: device type on profiles.
 --
 -- Run once in the Supabase SQL Editor, after phase 13.
 --

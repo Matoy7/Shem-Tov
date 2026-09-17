@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 5: verified Hebrew meanings, replacing the seed catalogue.
+-- טפשת — phase 5: verified Hebrew meanings, replacing the seed catalogue.
 --
 -- Run once in the Supabase SQL Editor, after 2026-09-shem-tov-phase4-catalogue.sql.
 --

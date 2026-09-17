@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 3: structured name tags for filtering.
+-- טפשת — phase 3: structured name tags for filtering.
 --
 -- Run once in the Supabase SQL Editor, after 2026-09-shem-tov-phase2.sql.
 -- Purely additive: three new nullable columns on an existing table, each

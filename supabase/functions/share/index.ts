@@ -50,7 +50,7 @@ import { Resvg, initWasm } from "npm:@resvg/resvg-wasm@2.6.2"
 const SITE_ORIGIN = (
   Deno.env.get("SITE_ORIGIN") ?? "https://matoy7.github.io/Shem-Tov"
 ).replace(/\/$/, "")
-const BRAND_NAME = "שם טוב"
+const BRAND_NAME = "טפשת"
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,

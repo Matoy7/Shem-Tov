@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 4: real name-catalogue schema + 200-name seed data.
+-- טפשת — phase 4: real name-catalogue schema + 200-name seed data.
 --
 -- Run once in the Supabase SQL Editor, after 2026-09-shem-tov-phase3-tags.sql.
 --

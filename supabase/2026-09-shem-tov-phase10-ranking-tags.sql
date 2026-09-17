@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 10: category tags on the ranking view too.
+-- טפשת — phase 10: category tags on the ranking view too.
 --
 -- Run once in the Supabase SQL Editor, after phase 9.
 --

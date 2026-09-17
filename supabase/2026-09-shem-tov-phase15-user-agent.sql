@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- שם טוב — phase 15: raw user agent on profiles.
+-- טפשת — phase 15: raw user agent on profiles.
 --
 -- Run once in the Supabase SQL Editor, after phase 14.
 --
