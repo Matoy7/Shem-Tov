@@ -36,10 +36,10 @@ export function HomeScreen({ userName, onNavigateToNames, onNavigateToBag }: Hom
   return (
     <div className="px-1 pb-6 pt-2" dir="rtl">
       <div className="mb-6 flex items-center justify-between gap-3">
-        <h1 className="text-[24px] font-bold leading-10 tracking-[-0.8px] text-[#6f1e35]">
+        <h1 className="text-[17px] font-bold leading-[23px] text-[#6f1e35]">
           היי {userName}
         </h1>
-        <img src={assets.logoStacked} alt="טפשת" className="h-10 w-auto shrink-0 object-contain" />
+        <img src={assets.logoStacked} alt="טפשת" className="h-[120px] w-auto shrink-0 object-contain" />
       </div>
 
       <div className="grid grid-cols-2 gap-3.5">
