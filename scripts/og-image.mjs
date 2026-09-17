@@ -108,29 +108,6 @@ const html = `<!doctype html>
     margin: 26px 0 24px; width: 88px; height: 5px; border-radius: 999px;
     background: var(--cream); opacity: 0.85;
   }
-
-  /* The concept, shown rather than described: someone suggests a name, the
-     family votes on it. Both bubbles shrink to their text — a stretched
-     bubble would read as a text field, not as speech. */
-  .thread { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
-  .bubble {
-    width: fit-content; max-width: 100%;
-    padding: 16px 26px; font-size: 29px; line-height: 1.3; font-weight: 400;
-    white-space: nowrap;
-  }
-  .bubble.open {
-    background: var(--surface); color: var(--ink);
-    border-radius: 20px 20px 4px 20px;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
-  }
-  /* Stepped away from the start edge so the pair reads as a reply rather
-     than as two stacked labels. */
-  .bubble.close {
-    margin-inline-start: 72px;
-    background: var(--cream); color: #2a1c0c; font-weight: 500;
-    border-radius: 20px 20px 20px 4px;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
-  }
 </style></head>
 <body>
   <div class="portrait"><img src="data:image/png;base64,${portrait}" alt=""></div>
@@ -139,10 +116,6 @@ const html = `<!doctype html>
     <div class="brand">טפשת</div>
     <div class="tagline">עוזרים לך לזכור את מה שחשוב</div>
     <div class="rule"></div>
-    <div class="thread">
-      <div class="bubble open">איזה שם יפה זה!</div>
-      <div class="bubble close">❤️ שמרתי אותו למועדפים</div>
-    </div>
   </div>
 </body></html>`
 
