@@ -45,10 +45,10 @@ export function HomeScreen({ userName, onNavigateToNames }: HomeScreenProps) {
             type="button"
             onClick={card.onNavigate}
             disabled={!card.onNavigate}
-            className="flex min-h-[220px] flex-col items-center justify-center rounded-[28px] bg-white p-4 text-center shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition-transform active:scale-[0.97] disabled:active:scale-100"
+            className="flex min-h-[152px] flex-col items-center justify-center gap-2 rounded-[28px] bg-white p-4 text-center shadow-[0px_1px_1px_rgba(0,0,0,0.05)] transition-transform active:scale-[0.97] disabled:active:scale-100"
           >
-            <div className="mb-3 flex h-20 w-20 shrink-0 items-center justify-center">
-              <img src={card.img} alt="" aria-hidden className="h-20 w-20 object-contain" />
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center">
+              <img src={card.img} alt="" aria-hidden className="h-14 w-14 object-contain" />
             </div>
             <p className="text-[17px] font-bold leading-[23px] text-[#6f1e35]">{card.title}</p>
           </button>
