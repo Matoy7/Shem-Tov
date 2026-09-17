@@ -18,24 +18,94 @@
      1=4  2=8  3=12  4=16  5=20  6=24  8=32  10=40  12=48  16=64          */
   --spacing: 4px;
 
-  /* --- Semantic colour tokens -----------------------------------------
+  /* ======================================================================
+     TAFSHET DESIGN SYSTEM — foundational tokens only (colors, typography,
+     spacing). This is the single source of truth for the product's next
+     screens; nothing in the existing component library reads these yet,
+     by design — this phase is tokens only, not a UI migration.
+
+     Naming: these use a --color-tafsheet-* / --text-tafsheet-* namespace
+     rather than the bare --color-primary / --text-body names the source
+     spec suggests. Those bare names already exist below (in the ORIGINAL
+     tokens section) with different values that every unmigrated
+     component — including the entire desktop experience — still actively
+     depends on. Reusing them here would have silently recolored things
+     nothing asked to touch. When a future screen adopts this system, it
+     switches from the original tokens to these; both can coexist safely
+     until then.
+
+     These replace and extend the earlier ad-hoc --color-mobile-* set
+     (--color-mobile-cream, --color-mobile-navy, etc.) — confirmed unused
+     as Tailwind utility classes anywhere in the codebase, so renaming them
+     here is a zero-risk pure rename, not a behavior change. The one place
+     that referenced them (the mobile body-background override lower in
+     this file) now points at the new names.
+     ====================================================================== */
+
+  /* --- Colors ------------------------------------------------------------ */
+  --color-tafsheet-primary: #6f1e35;
+  --color-tafsheet-primary-dark: #5b162b;
+  --color-tafsheet-bg: #fef8f3;
+  --color-tafsheet-surface: #ffffff;
+  --color-tafsheet-surface-secondary: #fffdfc;
+  --color-tafsheet-text-primary: #1d1b19;
+  --color-tafsheet-text-secondary: #544245;
+  --color-tafsheet-text-muted: #877275;
+  --color-tafsheet-pink: #ffd9de;
+  --color-tafsheet-pink-light: #fff0f2;
+  --color-tafsheet-popular: #ffdad6;
+  --color-tafsheet-popular-text: #751d1b;
+  --color-tafsheet-tag-neutral: #ede7e2;
+  --color-tafsheet-tag-neutral-alt: #f3ede8;
+  --color-tafsheet-border: #f0e8e0;
+  --color-tafsheet-divider: #f5ede8;
+  --color-tafsheet-avatar: #8c5c68;
+
+  /* --- Typography ---------------------------------------------------------
+     Same --text-X / --text-X--line-height pairing already used by the
+     original scale below (Tailwind v4's @theme convention — each pair
+     becomes one `text-X` utility carrying both size and leading). Weights
+     reuse the font-sans family already loaded (Rubik, 300–900 available;
+     this scale only calls for 400/500/600/700). */
+  --text-tafsheet-hero: 44px;
+  --text-tafsheet-hero--line-height: 51px;
+  --text-tafsheet-page-title: 26px;
+  --text-tafsheet-page-title--line-height: 34px;
+  --text-tafsheet-section-title: 20px;
+  --text-tafsheet-section-title--line-height: 26px;
+  --text-tafsheet-card-title: 20px;
+  --text-tafsheet-card-title--line-height: 26px;
+  --text-tafsheet-body: 16px;
+  --text-tafsheet-body--line-height: 24px;
+  --text-tafsheet-secondary: 15px;
+  --text-tafsheet-secondary--line-height: 22px;
+  --text-tafsheet-control: 16px;
+  --text-tafsheet-control--line-height: 20px;
+  --text-tafsheet-tag: 13px;
+  --text-tafsheet-tag--line-height: 18px;
+  --text-tafsheet-meta: 12px;
+  --text-tafsheet-meta--line-height: 18px;
+
+  --font-weight-tafsheet-regular: 400;
+  --font-weight-tafsheet-medium: 500;
+  --font-weight-tafsheet-semibold: 600;
+  --font-weight-tafsheet-bold: 700;
+
+  /* --- Spacing --------------------------------------------------------
+     No new tokens needed: the brief's 8px-based scale (4/8/12/16/20/24/
+     32/40/48/64px) is already exactly what this file's single `--spacing:
+     4px` base value produces through Tailwind's own numeric utilities —
+     p-1/gap-1/m-1 = 4px, p-2 = 8px, p-3 = 12px, p-4 = 16px, p-5 = 20px,
+     p-6 = 24px, p-8 = 32px, p-10 = 40px, p-12 = 48px, p-16 = 64px. Adding
+     parallel --space-N variables would just duplicate a scale that
+     already exists and already resolves to the identical pixel values —
+     use p-5/gap-4/m-6/etc. directly rather than a second naming scheme
+     for the same numbers. */
+
+  /* --- Original tokens (unchanged) --------------------------------------
      Brand palette preserved from the original implementation.            */
   --color-bg: #e5e9fa;
 
-  /* --- Mobile design pass (see below) ---------------------------------- */
-  /* Tafsheet mobile visual language: warm cream + burgundy/mauve primary +
-     soft pink accents, replacing the earlier navy/footprints direction. */
-  --color-mobile-cream: #fef8f3;
-  --color-mobile-navy: #6f1e35;
-  --color-mobile-text-body: #1d1b19;
-  --color-mobile-text-secondary: #544245;
-  --color-mobile-placeholder: #877275;
-  --color-mobile-pink: #ffd9de;
-  --color-mobile-pink-popular: #ffdad6;
-  --color-mobile-neutral-tag-bg: #ede7e2;
-  --color-mobile-border: #f0e8e0;
-  --shadow-mobile-soft: 0px 8px 24px rgba(0, 0, 0, 0.05);
-  --shadow-mobile-pill: 0px 2px 3px rgba(0, 0, 0, 0.05);
   --color-surface: #ffffff;
   --color-surface-secondary: #f4effc;
   --color-surface-muted: #f6f1fe;
@@ -140,7 +210,7 @@
      still showing the lavender base value underneath. */
   @media (max-width: 639px) {
     :root {
-      --color-bg: var(--color-mobile-cream);
+      --color-bg: var(--color-tafsheet-bg);
     }
   }
 

@@ -43,7 +43,7 @@ export function GuestNameOnboarding({ brandName, userId, onChosen }: GuestNameOn
     <main className="flex min-h-screen items-center justify-center bg-bg px-4 py-12">
       <div className="flex w-full max-w-[380px] flex-col items-center gap-8 text-center">
         <img
-          src={assets.heroIllustration}
+          src={assets.brainMascotCheerful}
           alt=""
           aria-hidden
           width={160}
