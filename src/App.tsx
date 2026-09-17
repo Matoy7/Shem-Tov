@@ -31,6 +31,7 @@ import { logFilterClick } from "@/data/filterClickLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
 import { HomeScreen } from "@/features/home/HomeScreen"
 import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
+import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
@@ -43,7 +44,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("")
   // Mobile-only: which screen is showing. Desktop always shows the name
   // catalogue regardless of this — see the render below, guarded by sm:.
-  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag">("home")
+  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear">("home")
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
   const [linkResult, setLinkResult] = useState<LinkResult | null>(null)
@@ -198,6 +199,7 @@ export default function App() {
               userName={firstName}
               onNavigateToNames={() => setMobileView("browse")}
               onNavigateToBag={() => setMobileView("bag")}
+              onNavigateToGear={() => setMobileView("gear")}
             />
           </div>
         ) : null}
@@ -206,6 +208,13 @@ export default function App() {
         {mobileView === "bag" ? (
           <div className="sm:hidden">
             <HospitalBagScreen onBack={() => setMobileView("home")} />
+          </div>
+        ) : null}
+
+        {/* Mobile-only Baby Gear screen — same guard shape as Home above. */}
+        {mobileView === "gear" ? (
+          <div className="sm:hidden">
+            <BabyGearScreen onBack={() => setMobileView("home")} />
           </div>
         ) : null}
 

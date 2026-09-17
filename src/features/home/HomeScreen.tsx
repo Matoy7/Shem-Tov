@@ -15,6 +15,7 @@ type HomeScreenProps = {
   userName: string
   onNavigateToNames: () => void
   onNavigateToBag: () => void
+  onNavigateToGear: () => void
 }
 
 /**
@@ -25,12 +26,12 @@ type HomeScreenProps = {
  * as NameCard, the same Rubik weight scale — rather than introducing
  * anything new, per "the existing implementation is the source of truth."
  */
-export function HomeScreen({ userName, onNavigateToNames, onNavigateToBag }: HomeScreenProps) {
+export function HomeScreen({ userName, onNavigateToNames, onNavigateToBag, onNavigateToGear }: HomeScreenProps) {
   const cards: HomeCard[] = [
     { key: "bag", img: assets.homeBirthBag, title: "הכנת תיק לידה", onNavigate: onNavigateToBag },
     { key: "names", img: assets.homeNames, title: "בחירת שם", onNavigate: onNavigateToNames },
     { key: "leaving", img: assets.homeLeaving, title: "התארגנות לצאת" },
-    { key: "gear", img: assets.homeBabyGear, title: "ציוד לתינוק" },
+    { key: "gear", img: assets.homeBabyGear, title: "ציוד לתינוק", onNavigate: onNavigateToGear },
   ]
 
   return (
