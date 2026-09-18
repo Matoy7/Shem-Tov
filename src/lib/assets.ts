@@ -24,6 +24,10 @@ export const assets = {
   logoStacked: `${base}/logo-stacked.png`,
   /** Cheerful brain mascot (checklist + pen) for the Home Page hero — real file, not a recreation. */
   brainMascotCheerful: `${base}/brain-mascot-cheerful.png`,
+  /** Fixed avatar shown for every anonymous/guest session (no Google login),
+   *  replacing the per-user generated avatar — the user's own uploaded
+   *  illustration, not a recreation. */
+  guestAvatar: `${base}/guest-avatar.png`,
   /** Home Page hero title+subtitle wordmark — real file (replaces live text), single image. */
   heroWordmark: `${base}/hero-wordmark.png`,
   /** Home Page category illustrations — real files from the design project. */

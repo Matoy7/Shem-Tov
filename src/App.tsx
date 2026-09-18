@@ -13,7 +13,6 @@ import {
   isGuest,
   providerAvatarUrl,
 } from "@/features/auth/profile"
-import { useGeneratedAvatar } from "@/lib/avatar"
 import {
   beginAccountLink,
   consumeAccountLinkOutcome,
@@ -34,6 +33,7 @@ import { useSilentRetry } from "@/lib/useSilentRetry"
 import { HomeScreen } from "@/features/home/HomeScreen"
 import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
+import { LeavingScreen } from "@/features/leaving/LeavingScreen"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
@@ -46,13 +46,11 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("")
   // Mobile-only: which screen is showing. Desktop always shows the name
   // catalogue regardless of this — see the render below, guarded by sm:.
-  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear">("home")
+  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear" | "leaving">("home")
 
   // Mobile hamburger drawer content — the same four categories as the Home
   // screen's own cards (titles match exactly), so the drawer reads as
   // "everywhere I can go", not a second, different navigation scheme.
-  // "לפני שיוצאים" has no screen yet, so it's shown but disabled — same
-  // treatment HomeScreen already gives that card.
   const mobileCategories: MobileCategoryItem[] = [
     {
       id: "bag",
@@ -76,8 +74,7 @@ export default function App() {
       id: "leaving",
       label: "לפני שיוצאים",
       icon: CarSimple,
-      onSelect: () => {},
-      disabled: true,
+      onSelect: () => setMobileView("leaving"),
     },
   ]
 
@@ -87,9 +84,6 @@ export default function App() {
   const [confirmGuestSignOut, setConfirmGuestSignOut] = useState(false)
 
   const providerAvatar = session ? providerAvatarUrl(session.user) : null
-  const generatedAvatar = useGeneratedAvatar(
-    session && !providerAvatar ? session.user.id : null,
-  )
 
   useEffect(() => {
     consumeAccountLinkOutcome()
@@ -200,7 +194,9 @@ export default function App() {
   }
 
   const userName = displayName ?? displayNameFor(session.user)
-  const avatarUrl = providerAvatar ?? generatedAvatar ?? assets.heroIllustration
+  // Every anonymous/guest session (no linked Google login) shows the same
+  // fixed brain-mascot illustration instead of a per-user generated avatar.
+  const avatarUrl = providerAvatar ?? (isGuest(session.user) ? assets.guestAvatar : assets.heroIllustration)
 
   return (
     <>
@@ -234,6 +230,7 @@ export default function App() {
               onNavigateToNames={() => setMobileView("browse")}
               onNavigateToBag={() => setMobileView("bag")}
               onNavigateToGear={() => setMobileView("gear")}
+              onNavigateToLeaving={() => setMobileView("leaving")}
             />
           </div>
         ) : null}
@@ -249,6 +246,13 @@ export default function App() {
         {mobileView === "gear" ? (
           <div className="sm:hidden">
             <BabyGearScreen onBack={() => setMobileView("home")} />
+          </div>
+        ) : null}
+
+        {/* Mobile-only "לפני שיוצאים" screen — same guard shape as Home above. */}
+        {mobileView === "leaving" ? (
+          <div className="sm:hidden">
+            <LeavingScreen onBack={() => setMobileView("home")} />
           </div>
         ) : null}
 
