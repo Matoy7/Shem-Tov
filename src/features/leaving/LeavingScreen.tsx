@@ -469,7 +469,6 @@ export function LeavingScreen({ onBack }: LeavingScreenProps) {
               key={category.id}
               icon={<PhosphorIcon icon={category.icon} size={22} weight="duotone" color="#6f1e35" />}
               title={category.title}
-              subtitle={category.subtitle}
               items={category.items}
               checked={checked}
               onToggle={toggle}

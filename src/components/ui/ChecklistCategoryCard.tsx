@@ -4,8 +4,9 @@ import { Check } from "@phosphor-icons/react"
 
 /**
  * Desktop counterpart to `AccordionItem`: same card shell, icon-circle,
- * title/subtitle and progress-badge language as the mobile accordion header
- * (see Accordion.tsx) — but the items are always visible, never collapsed.
+ * title and progress-badge language as the mobile accordion header (see
+ * Accordion.tsx) — but the items are always visible, never collapsed, and
+ * no subtitle under the title (mobile's accordion header keeps its own).
  * Desktop has the room to show the whole checklist at once, so there is
  * nothing to expand or collapse here.
  */
@@ -14,7 +15,6 @@ export type ChecklistCardItem = { id: string; label: string }
 type ChecklistCategoryCardProps = {
   icon: ReactNode
   title: string
-  subtitle?: string
   items: ChecklistCardItem[]
   checked: Set<string>
   onToggle: (id: string) => void
@@ -44,7 +44,7 @@ function DesktopChecklistRow({ item, checked, onToggle }: { item: ChecklistCardI
   )
 }
 
-export function ChecklistCategoryCard({ icon, title, subtitle, items, checked, onToggle }: ChecklistCategoryCardProps) {
+export function ChecklistCategoryCard({ icon, title, items, checked, onToggle }: ChecklistCategoryCardProps) {
   const doneCount = items.filter((i) => checked.has(i.id)).length
   const total = items.length
   const hasProgress = doneCount > 0
@@ -58,7 +58,6 @@ export function ChecklistCategoryCard({ icon, title, subtitle, items, checked, o
           </span>
           <div className="flex min-w-0 flex-col items-start text-right">
             <span className="text-[20px] font-semibold leading-6 text-[#1d1b19]">{title}</span>
-            {subtitle ? <span className="text-[15px] font-normal leading-5 text-[#544245]">{subtitle}</span> : null}
           </div>
         </div>
         <span
