@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { DashboardLayout } from "@/components/layout/DashboardLayout"
 import { Section } from "@/components/layout/Section"
 import { EmptyState } from "@/components/ui/EmptyState"
@@ -34,6 +35,8 @@ import { HomeScreen } from "@/features/home/HomeScreen"
 import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
 import { LeavingScreen } from "@/features/leaving/LeavingScreen"
+import { ROUTE_FOR_VIEW, viewForPathname, type MobileView } from "@/lib/screenRoutes"
+import { cn } from "@/lib/cn"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
@@ -46,7 +49,21 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("")
   // Mobile-only: which screen is showing. Desktop always shows the name
   // catalogue regardless of this — see the render below, guarded by sm:.
-  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear" | "leaving">("home")
+  // Driven by the real URL (browser history is the source of truth — see
+  // src/lib/screenRoutes.ts) rather than local state, so the physical/
+  // browser Back button steps through the actual screens the person
+  // visited, in the order they visited them.
+  const location = useLocation()
+  const navigate = useNavigate()
+  const mobileView = viewForPathname(location.pathname)
+  const setMobileView = useCallback(
+    (view: MobileView) => {
+      const target = ROUTE_FOR_VIEW[view]
+      // Guard against pushing a duplicate entry for the screen already showing.
+      if (target !== location.pathname) navigate(target)
+    },
+    [location.pathname, navigate],
+  )
 
   // Mobile hamburger drawer content — the same four categories as the Home
   // screen's own cards (titles match exactly), so the drawer reads as
@@ -221,40 +238,33 @@ export default function App() {
           else void supabase.auth.signOut()
         }}
       >
-        {/* Mobile-only Home Page. Guarded on both state (mobileView) and
-            viewport (sm:hidden) — even if the state were somehow "home" on
-            a wide screen, this stays invisible at sm: and up. */}
-        {mobileView === "home" ? (
-          <div className="sm:hidden">
-            <HomeScreen
-              onNavigateToNames={() => setMobileView("browse")}
-              onNavigateToBag={() => setMobileView("bag")}
-              onNavigateToGear={() => setMobileView("gear")}
-              onNavigateToLeaving={() => setMobileView("leaving")}
-            />
-          </div>
-        ) : null}
+        {/* Mobile-only screens, all four always mounted (never conditionally
+            rendered to null) so each keeps its own state — a checked
+            checklist item, an expanded accordion category — when the person
+            navigates away and back. Only visibility toggles: the active one
+            is hidden at sm: and up (mobile-only, like before); every other
+            one is hidden at every breakpoint via a plain "hidden", not
+            unmounted, until it becomes the active route again. */}
+        <div className={cn(mobileView === "home" ? "sm:hidden" : "hidden")}>
+          <HomeScreen
+            onNavigateToNames={() => setMobileView("browse")}
+            onNavigateToBag={() => setMobileView("bag")}
+            onNavigateToGear={() => setMobileView("gear")}
+            onNavigateToLeaving={() => setMobileView("leaving")}
+          />
+        </div>
 
-        {/* Mobile-only Hospital Bag Preparation screen — same guard shape as Home above. */}
-        {mobileView === "bag" ? (
-          <div className="sm:hidden">
-            <HospitalBagScreen onBack={() => setMobileView("home")} />
-          </div>
-        ) : null}
+        <div className={cn(mobileView === "bag" ? "sm:hidden" : "hidden")}>
+          <HospitalBagScreen onBack={() => setMobileView("home")} />
+        </div>
 
-        {/* Mobile-only Baby Gear screen — same guard shape as Home above. */}
-        {mobileView === "gear" ? (
-          <div className="sm:hidden">
-            <BabyGearScreen onBack={() => setMobileView("home")} />
-          </div>
-        ) : null}
+        <div className={cn(mobileView === "gear" ? "sm:hidden" : "hidden")}>
+          <BabyGearScreen onBack={() => setMobileView("home")} />
+        </div>
 
-        {/* Mobile-only "לפני שיוצאים" screen — same guard shape as Home above. */}
-        {mobileView === "leaving" ? (
-          <div className="sm:hidden">
-            <LeavingScreen onBack={() => setMobileView("home")} />
-          </div>
-        ) : null}
+        <div className={cn(mobileView === "leaving" ? "sm:hidden" : "hidden")}>
+          <LeavingScreen onBack={() => setMobileView("home")} />
+        </div>
 
         {/* The existing name catalogue — byte-for-byte unchanged. Always
             visible on desktop (sm:block, regardless of mobileView); on

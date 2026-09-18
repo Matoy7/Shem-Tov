@@ -1,9 +1,20 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
+import { BrowserRouter } from "react-router-dom"
 import App from "./App"
 import { ErrorBoundary } from "./components/ErrorBoundary"
 import { attemptRecoveryReload, scheduleRecoveryStateClear } from "./lib/errorRecovery"
 import "./index.css"
+
+/**
+ * The app can be served from a sub-path (GitHub Pages, e.g. /Shem-Tov/) or
+ * from the domain root (local dev/preview). index.html already computes and
+ * inserts a <base> tag pinned to whichever root this page was actually
+ * loaded under — see the comment there — so reading it back via
+ * `document.baseURI` gives the router the exact same root, without
+ * hard-coding or re-deriving it here.
+ */
+const basename = new URL(document.baseURI).pathname
 
 /**
  * React's ErrorBoundary only catches errors thrown during render. An error
@@ -29,7 +40,9 @@ scheduleRecoveryStateClear()
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App />
+      <BrowserRouter basename={basename}>
+        <App />
+      </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>,
 )
