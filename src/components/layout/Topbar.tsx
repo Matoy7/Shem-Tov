@@ -72,11 +72,12 @@ export function Topbar({
         </IconButton>
 
         <img
-          src={assets.heroIllustration}
-          alt="איור של יד תינוק שולפת פתק עם סימן שאלה מתוך קערת שמות"
+          src={assets.brainMascotCheerful}
+          alt=""
+          aria-hidden
           width={96}
           height={96}
-          className="size-12 shrink-0 rounded-full bg-surface-secondary object-cover sm:size-20 md:size-24"
+          className="size-12 shrink-0 rounded-full bg-surface-secondary object-contain sm:size-20 md:size-24"
         />
 
         <div className="flex min-w-0 flex-col gap-1">
