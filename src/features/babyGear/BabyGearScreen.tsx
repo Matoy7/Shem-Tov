@@ -1,108 +1,130 @@
 import { useState } from "react"
+import { AccordionItem } from "@/components/ui/Accordion"
 import { assets } from "@/lib/assets"
 import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
-import {
-  Check,
-  Bed,
-  Camera,
-  Dresser,
-  Suitcase,
-  BabyCarriage,
-  Seatbelt,
-  Backpack,
-  Bag,
-  Table,
-  Bathtub,
-  Towel,
-  Thermometer,
-  TShirt,
-  Package,
-  Drop,
-  ShirtFolded,
-  Sock,
-  BowlFood,
-  BeerBottle,
-  Baby,
-  CookingPot,
-  Leaf,
-} from "@phosphor-icons/react"
+import { Check, Bed, Suitcase, Bathtub, TShirt, BowlFood, Lightbulb } from "@phosphor-icons/react"
 import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 
-type GearItem = { id: string; icon: PhosphorIconComponent; qty: string; title: string; subtitle: string }
-type GearCategory = { id: string; icon: PhosphorIconComponent; label: string; items: GearItem[] }
+/**
+ * One placeholder checklist row: a name plus a personal, per-user checked
+ * state. Same shape and behavior as Hospital Bag's own checklist rows —
+ * this screen intentionally follows that screen's accordion/checklist
+ * convention rather than its earlier tab-based layout.
+ */
+type GearItem = { id: string; label: string }
+
+type GearCategory = {
+  id: string
+  icon: PhosphorIconComponent
+  title: string
+  subtitle: string
+  items: GearItem[]
+}
 
 /**
- * Placeholder content only, per the request — realistic enough to preview
- * every tab's expanded state, trivial to replace. To swap in the real list
- * later: replace the `items` arrays below — the tab switching and
- * checked-state logic are generic over whatever items each category holds.
+ * Placeholder content only — realistic enough to preview the expanded
+ * state, trivial to replace. To swap in the real list later: replace the
+ * `items` arrays below (and `title`/`subtitle`/`icon` if the categories
+ * themselves change) — nothing else in this file needs to change, since
+ * the checked-state logic and rendering are generic over whatever items
+ * each category holds.
  */
 const CATEGORIES: GearCategory[] = [
   {
     id: "nursery",
     icon: Bed,
-    label: "חדר תינוק",
+    title: "חדר תינוק",
+    subtitle: "עריסה, מצעים, מוניטור וארון",
     items: [
-      { id: "nursery-1", icon: Bed, qty: "x1", title: "עריסה או מיטת תינוק", subtitle: "עם מזרן מתאים לגודל" },
-      { id: "nursery-2", icon: Bed, qty: "x3", title: "סדינים למיטה", subtitle: "כותנה רכה, כמה חלופות" },
-      { id: "nursery-3", icon: Camera, qty: "x1", title: "מוניטור תינוק", subtitle: "עם או בלי מצלמה" },
-      { id: "nursery-4", icon: Dresser, qty: "x1", title: "ארון או קומודה", subtitle: "לאחסון בגדים וציוד" },
+      { id: "nursery-1", label: "עריסה או מיטת תינוק (עם מזרן מתאים לגודל)" },
+      { id: "nursery-2", label: "סדינים למיטה (כותנה רכה, כמה חלופות)" },
+      { id: "nursery-3", label: "מוניטור תינוק (עם או בלי מצלמה)" },
+      { id: "nursery-4", label: "ארון או קומודה לאחסון" },
     ],
   },
   {
     id: "travel",
     icon: Suitcase,
-    label: "טיול ונסיעה",
+    title: "טיול ונסיעה",
+    subtitle: "עגלה, כיסא בטיחות ותיק החתלה",
     items: [
-      { id: "travel-1", icon: BabyCarriage, qty: "x1", title: "עגלת תינוק", subtitle: "מתאימה מגיל לידה" },
-      { id: "travel-2", icon: Seatbelt, qty: "x1", title: "כיסא בטיחות לרכב", subtitle: "מותקן ומוכן מראש" },
-      { id: "travel-3", icon: Backpack, qty: "x1", title: "מנשא לתינוק", subtitle: "לטיולים קצרים" },
-      { id: "travel-4", icon: Bag, qty: "x1", title: "תיק החתלה ניידת", subtitle: "עם ציוד בסיסי להחלפה" },
+      { id: "travel-1", label: "עגלת תינוק (מתאימה מגיל לידה)" },
+      { id: "travel-2", label: "כיסא בטיחות לרכב (מותקן ומוכן מראש)" },
+      { id: "travel-3", label: "מנשא לתינוק לטיולים קצרים" },
+      { id: "travel-4", label: "תיק החתלה ניידת עם ציוד בסיסי" },
     ],
   },
   {
     id: "bath",
     icon: Bathtub,
-    label: "החלפה ורחצה",
+    title: "החלפה ורחצה",
+    subtitle: "שולחן החתלה, אמבטיה ומגבות",
     items: [
-      { id: "bath-1", icon: Table, qty: "x1", title: "שולחן החתלה", subtitle: "עם משטח בטיחות" },
-      { id: "bath-2", icon: Bathtub, qty: "x1", title: "אמבטיית תינוק", subtitle: "עם תמיכה לגב" },
-      { id: "bath-3", icon: Towel, qty: "x4", title: "מגבות רכות", subtitle: "עם ברדס לחום נעים" },
-      { id: "bath-4", icon: Thermometer, qty: "x1", title: "מדחום", subtitle: "לבדיקת חום גוף וגם אמבטיה" },
+      { id: "bath-1", label: "שולחן החתלה עם משטח בטיחות" },
+      { id: "bath-2", label: "אמבטיית תינוק עם תמיכה לגב" },
+      { id: "bath-3", label: "מגבות רכות (כמה יחידות)" },
+      { id: "bath-4", label: "מדחום לבדיקת חום גוף וגם אמבטיה" },
     ],
   },
   {
     id: "clothes",
     icon: TShirt,
-    label: "ביגוד",
+    title: "ביגוד",
+    subtitle: "חיתולים, בגדי גוף וגרביים",
     items: [
-      { id: "clothes-1", icon: Package, qty: "x2", title: "חיתולים", subtitle: "מומלץ לקנות כמה גדלים" },
-      { id: "clothes-2", icon: Drop, qty: "x4", title: "מגבוני ניקוי", subtitle: "לשימוש יומיומי עדין" },
-      { id: "clothes-3", icon: Drop, qty: "x1", title: "קרם החתלה", subtitle: "מומלץ לעור רגיש" },
-      { id: "clothes-4", icon: TShirt, qty: "x6", title: "בגדי גוף", subtitle: "100% כותנה, כמה מידות" },
-      { id: "clothes-5", icon: ShirtFolded, qty: "x4", title: "אוברולים", subtitle: "נוחים ופרקטיים לסגירה" },
-      { id: "clothes-6", icon: Sock, qty: "x6", title: "גרביים", subtitle: "כמה זוגות רכים לחום" },
+      { id: "clothes-1", label: "חיתולים (כמה גדלים)" },
+      { id: "clothes-2", label: "מגבוני ניקוי" },
+      { id: "clothes-3", label: "קרם החתלה לעור רגיש" },
+      { id: "clothes-4", label: "בגדי גוף (100% כותנה, כמה מידות)" },
+      { id: "clothes-5", label: "אוברולים נוחים לסגירה" },
+      { id: "clothes-6", label: "גרביים רכים לחום" },
     ],
   },
   {
     id: "food",
     icon: BowlFood,
-    label: "האכלה",
+    title: "האכלה",
+    subtitle: "בקבוקים, מוצץ וסטריליזציה",
     items: [
-      { id: "food-1", icon: BeerBottle, qty: "x3", title: "בקבוקי האכלה", subtitle: "כמה גדלים לפי גיל" },
-      { id: "food-2", icon: Baby, qty: "x2", title: "מוצץ", subtitle: "מתאים לגיל התינוק" },
-      { id: "food-3", icon: CookingPot, qty: "x1", title: "מכשיר סטריליזציה", subtitle: "לחיטוי בקבוקים" },
-      { id: "food-4", icon: ShirtFolded, qty: "x2", title: "סינר האכלה", subtitle: "קל לניקוי" },
+      { id: "food-1", label: "בקבוקי האכלה (כמה גדלים לפי גיל)" },
+      { id: "food-2", label: "מוצץ מתאים לגיל התינוק" },
+      { id: "food-3", label: "מכשיר סטריליזציה לחיטוי בקבוקים" },
+      { id: "food-4", label: "סינר האכלה קל לניקוי" },
     ],
   },
 ]
+
+function ChecklistRow({ item, checked, onToggle }: { item: GearItem; checked: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-pressed={checked}
+      className="flex w-full items-center gap-2.5 py-1.5 text-right"
+    >
+      <span
+        aria-hidden
+        className={
+          "flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors " +
+          (checked ? "border-[#6f1e35] bg-[#6f1e35]" : "border-[#e0d5cd] bg-white")
+        }
+      >
+        {checked ? (
+          <PhosphorIcon icon={Check} size={10} color="white" weight="bold" />
+        ) : null}
+      </span>
+      <span className={"text-[14px] leading-5 " + (checked ? "text-[#877275] line-through" : "text-[#1d1b19]")}>
+        {item.label}
+      </span>
+    </button>
+  )
+}
 
 type BabyGearScreenProps = {
   onBack: () => void
 }
 
 export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
-  const [activeTab, setActiveTab] = useState(CATEGORIES[3]!.id) // "clothes" — matches the reference's default active tab
   const [checked, setChecked] = useState<Set<string>>(new Set())
 
   const toggle = (id: string) => {
@@ -114,11 +136,6 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
     })
   }
 
-  const category = CATEGORIES.find((c) => c.id === activeTab) ?? CATEGORIES[0]!
-  const doneCount = category.items.filter((i) => checked.has(i.id)).length
-  const total = category.items.length
-  const progressPct = total > 0 ? (doneCount / total) * 100 : 0
-
   return (
     <div className="px-1 pb-6 pt-2" dir="rtl">
       <button
@@ -129,121 +146,52 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
         ← חזרה
       </button>
 
-      {/* hero — same treatment as the other detail screens (Hospital Bag),
-          so the whole app reads as one flow. */}
+      {/* hero — unchanged: same title and page picture as before. */}
       <div className="flex flex-col items-center pb-2 pt-1 text-center">
         <img src={assets.homeBabyGear} alt="" aria-hidden className="mb-1 h-28 w-28 object-contain" />
         <h1 className="text-[26px] font-black leading-[34px] text-[#6f1e35]">ציוד לתינוק</h1>
         <p className="mt-1 text-[14px] leading-[22px] text-[#544245]">כל מה שצריך להכין לקראת הגעת הבייבי</p>
       </div>
 
-      {/* category tabs — horizontal scroll, matches the reference's own
-          structure for this screen (unlike Hospital Bag, which used
-          accordions — this screen genuinely calls for one active category
-          view at a time, per its own Figma reference). */}
-      <div className="scrollbar-none -mx-1 flex gap-2.5 overflow-x-auto px-1 py-2">
-        {CATEGORIES.map((cat) => {
-          const active = cat.id === activeTab
+      <div className="mt-4 flex flex-col gap-2.5">
+        {CATEGORIES.map((category) => {
+          const doneCount = category.items.filter((i) => checked.has(i.id)).length
+          const total = category.items.length
+          const hasProgress = doneCount > 0
           return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setActiveTab(cat.id)}
-              className={
-                "flex h-[72px] min-w-[68px] shrink-0 flex-col items-center justify-center gap-1 rounded-2xl px-2.5 transition-colors " +
-                (active
-                  ? "bg-[#6f1e35] shadow-[0px_6px_8px_rgba(111,30,53,0.2)]"
-                  : "bg-white shadow-[0px_2px_4px_rgba(111,30,53,0.04)]")
-              }
-            >
-              <span
-                aria-hidden
-                className={
-                  "flex size-8 shrink-0 items-center justify-center rounded-full " +
-                  (active ? "bg-[#8d354b]" : "bg-[#ede7e2]")
-                }
-              >
-                <PhosphorIcon icon={cat.icon} size={18} weight="duotone" color={active ? "#ffffff" : "#6f1e35"} />
-              </span>
-              <span className={"whitespace-nowrap text-[13px] leading-[18px] " + (active ? "font-semibold text-white" : "font-medium text-[#544245]")}>
-                {cat.label}
-              </span>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* shopping-list header + progress */}
-      <div className="pb-2 pt-4">
-        <div className="mb-1.5 flex items-center justify-between px-0.5">
-          <span className="flex items-center gap-1 rounded-full bg-[#f8f3ee] px-2.5 py-1">
-            <span className="text-[13px] font-bold leading-[18px] text-[#6f1e35]">{doneCount}</span>
-            <span className="text-[13px] font-medium leading-[18px] text-[#544245]">/ {total} נרכשו</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span aria-hidden className="size-2 rounded-full bg-[#ffd9de]" />
-            <span className="text-[20px] font-bold leading-7 text-[#6f1e35]">רשימת קניות</span>
-          </span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-[#ede7e2]">
-          <div className="h-full rounded-full bg-[#6f1e35] transition-all duration-300" style={{ width: `${progressPct}%` }} />
-        </div>
-      </div>
-
-      {/* checklist for the active category */}
-      <div className="flex flex-col gap-2.5 py-2">
-        {category.items.map((item) => {
-          const isChecked = checked.has(item.id)
-          return (
-            <div
-              key={item.id}
-              className={
-                "flex items-center justify-between rounded-2xl bg-white p-3.5 shadow-[0px_3px_6px_rgba(111,30,53,0.03)] transition-opacity " +
-                (isChecked ? "opacity-50" : "")
-              }
-            >
-              <div className="flex shrink-0 items-center gap-2.5">
-                <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f8f3ee]">
-                  <PhosphorIcon icon={item.icon} size={18} weight="duotone" color="#6f1e35" />
-                </span>
-                <span className="rounded-full bg-[#f3ede8] px-2 py-0.5 text-[11px] font-semibold leading-4 text-[#544245]">
-                  {item.qty}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col items-end">
-                  <span className={"text-[15px] font-semibold leading-5 " + (isChecked ? "text-[#a08080] line-through" : "text-[#1d1b19]")}>
-                    {item.title}
-                  </span>
-                  <span className="mt-0.5 text-[12px] font-normal leading-3 text-[#544245]">{item.subtitle}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => toggle(item.id)}
-                  aria-pressed={isChecked}
-                  aria-label="סמן כנרכש"
+            <AccordionItem
+              key={category.id}
+              icon={<PhosphorIcon icon={category.icon} size={22} weight="duotone" color="#6f1e35" />}
+              title={category.title}
+              subtitle={category.subtitle}
+              badge={
+                <span
                   className={
-                    "flex size-7 shrink-0 items-center justify-center rounded-full transition-colors " +
-                    (isChecked ? "bg-[#6f1e35]" : "bg-[#f8f3ee]")
+                    "rounded-full px-2 py-0.5 text-[13px] font-semibold leading-[18px] " +
+                    (hasProgress ? "bg-[#ffd9de] text-[#6f1e35]" : "bg-[#f3ede8] text-[#544245]")
                   }
                 >
-                  {isChecked ? (
-                    <PhosphorIcon icon={Check} size={10} color="white" weight="bold" />
-                  ) : null}
-                </button>
+                  {doneCount}/{total}
+                </span>
+              }
+            >
+              <div className="flex flex-col gap-1">
+                {category.items.map((item) => (
+                  <ChecklistRow key={item.id} item={item} checked={checked.has(item.id)} onToggle={() => toggle(item.id)} />
+                ))}
               </div>
-            </div>
+            </AccordionItem>
           )
         })}
       </div>
 
-      <div className="mx-1 mt-2 flex items-center gap-2.5 rounded-2xl bg-[rgba(255,217,222,0.4)] p-3">
-        <span aria-hidden className="shrink-0">
-          <PhosphorIcon icon={Leaf} size={16} weight="duotone" color="#6f1e35" />
+      <div className="mx-1 mt-4 flex items-start gap-3 rounded-xl bg-[rgba(255,218,214,0.3)] p-3.5">
+        <span aria-hidden className="mt-0.5 shrink-0">
+          <PhosphorIcon icon={Lightbulb} size={16} weight="duotone" color="#6f1e35" />
         </span>
-        <p className="text-right text-[12px] leading-5 text-[#1d1b19]">
-          לא חייבים להספיק הכל ביום אחד. קחו נשימה עמוקה, סמנו מה שיש, ואתם מוכנים להמשיך!
+        <p className="text-right text-[12px] leading-[16.5px] text-[#1d1b19]">
+          <span className="font-bold">טיפ: </span>
+          <span className="font-normal">לא חייבים להשיג הכל ביום אחד. קחו נשימה עמוקה, סמנו מה שיש, ואתם מוכנים להמשיך!</span>
         </p>
       </div>
     </div>
