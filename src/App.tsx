@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { DashboardLayout } from "@/components/layout/DashboardLayout"
+import { DesktopScreenHeader } from "@/components/layout/DesktopScreenHeader"
 import { Section } from "@/components/layout/Section"
 import { EmptyState } from "@/components/ui/EmptyState"
 import { Modal } from "@/components/ui/Modal"
@@ -43,9 +44,10 @@ const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
 const PRIVACY_NOTE = "השמות שאתם שומרים גלויים רק לכם."
 
-// Desktop sidebar navigation: the product's functional areas, then names,
-// as two groups — no "settings" row, since there is no settings screen to
-// send it to, and no "home" row, since desktop has no Home screen (see the
+// Desktop sidebar navigation: one flat list of the product's functional
+// areas, names included as just another item rather than a visually split-
+// off group — no divider, no "settings" row (there is no settings screen to
+// send it to), and no "home" row (desktop has no Home screen; see the
 // redirect effect below). Same icons as the mobile drawer's own categories,
 // so desktop and mobile read as the same navigation, just laid out
 // differently.
@@ -54,8 +56,8 @@ const NAV_GROUPS = [
     { id: "bag", label: "הכנת תיק לידה", icon: Suitcase },
     { id: "gear", label: "ציוד לתינוק", icon: Basket },
     { id: "leaving", label: "לפני שיוצאים", icon: CarSimple },
+    { id: "browse", label: "בחירת שם", icon: ListMagnifyingGlass },
   ],
-  [{ id: "browse", label: "בחירת שם", icon: ListMagnifyingGlass }],
 ]
 
 export default function App() {
@@ -311,14 +313,13 @@ export default function App() {
         {/* The existing name catalogue — its own content byte-for-byte
             unchanged. Now visible (mobile or desktop) only when "browse" is
             the active route, like every other screen, rather than always
-            showing on desktop regardless of navigation. */}
+            showing on desktop regardless of navigation. Header follows the
+            same mobile-hero / desktop-DesktopScreenHeader convention as
+            Bag/Gear/Leaving (Section's own generic header is no longer used
+            here) so this screen reads as one more workspace area rather
+            than a visually different, older part of the product. */}
         <div className={cn(mobileView === "browse" ? undefined : "hidden")}>
-          <Section
-            title="כל השמות"
-            mobileTitle="בחירת שם"
-            mobileImage={assets.homeNames}
-            description="עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם."
-          >
+          <Section>
             <div className="flex flex-col gap-4">
               {/* Mobile-only way back to the Home Page — the desktop sidebar
                   nav is untouched (still just the one "browse" item), so
@@ -331,6 +332,24 @@ export default function App() {
               >
                 ← חזרה
               </button>
+
+              <div className="sm:hidden">
+                <div className="flex flex-col items-center pb-2 pt-1 text-center">
+                  <img src={assets.homeNames} alt="" aria-hidden className="mb-1 h-28 w-28 object-contain" />
+                  <h1 className="text-[26px] font-black leading-[34px] text-[#6f1e35]">בחירת שם</h1>
+                  <p className="mt-1 text-[14px] leading-[22px] text-[#544245]">
+                    עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם.
+                  </p>
+                </div>
+              </div>
+
+              <div className="hidden sm:block">
+                <DesktopScreenHeader
+                  image={assets.homeNames}
+                  title="כל השמות"
+                  subtitle="עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם."
+                />
+              </div>
 
               <NameFiltersBar
               value={filters}
