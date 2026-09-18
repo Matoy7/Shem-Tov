@@ -271,13 +271,22 @@ export default function App() {
           else void supabase.auth.signOut()
         }}
       >
-        {/* Mobile-only screens, all four always mounted (never conditionally
-            rendered to null) so each keeps its own state — a checked
-            checklist item, an expanded accordion category — when the person
-            navigates away and back. Only visibility toggles: the active one
-            is hidden at sm: and up (mobile-only, like before); every other
-            one is hidden at every breakpoint via a plain "hidden", not
-            unmounted, until it becomes the active route again. */}
+        {/* All five screens always mounted (never conditionally rendered to
+            null) so each keeps its own state — a checked checklist item, an
+            expanded accordion category — when the person navigates away and
+            back. Visibility toggles per screen:
+              - Home has no desktop version at all (desktop redirects away
+                from it — see the effect above), so it alone is hidden at
+                sm: and up whenever it's the active route.
+              - Bag/Gear/Leaving/Browse each handle their own mobile-vs-
+                desktop split internally (an inner "sm:hidden" block for the
+                mobile JSX, "hidden sm:block" for the desktop JSX), so their
+                outer wrapper here must show on EVERY breakpoint when active
+                — using "sm:hidden" here like Home would hide the desktop
+                JSX too and leave the content area blank above the mobile
+                breakpoint.
+            Every non-active screen stays plain "hidden" at every breakpoint,
+            not unmounted, until it becomes the active route again. */}
         <div className={cn(mobileView === "home" ? "sm:hidden" : "hidden")}>
           <HomeScreen
             onNavigateToNames={() => setMobileView("browse")}
@@ -287,15 +296,15 @@ export default function App() {
           />
         </div>
 
-        <div className={cn(mobileView === "bag" ? "sm:hidden" : "hidden")}>
+        <div className={cn(mobileView === "bag" ? undefined : "hidden")}>
           <HospitalBagScreen onBack={() => setMobileView("home")} />
         </div>
 
-        <div className={cn(mobileView === "gear" ? "sm:hidden" : "hidden")}>
+        <div className={cn(mobileView === "gear" ? undefined : "hidden")}>
           <BabyGearScreen onBack={() => setMobileView("home")} />
         </div>
 
-        <div className={cn(mobileView === "leaving" ? "sm:hidden" : "hidden")}>
+        <div className={cn(mobileView === "leaving" ? undefined : "hidden")}>
           <LeavingScreen onBack={() => setMobileView("home")} />
         </div>
 
