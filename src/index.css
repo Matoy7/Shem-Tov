@@ -199,16 +199,37 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Cream/off-white background per the Tefeshet design reference, at every
-     width — the desktop workspace uses the exact same palette as mobile,
-     not the older lavender default below. Overrides the --color-bg custom
-     property itself, not just body's own background-color — every element
-     using the bg-bg utility (the page wrapper in DashboardLayout, the
-     login/loading screens) resolves through this variable, so overriding
-     just body left all of those still showing the lavender base value
-     underneath. */
+  /* Tafsheet palette, at every width — the desktop workspace uses the exact
+     same colors as mobile, not the older lavender/navy/violet scaffold
+     defaults above. Overrides the custom properties themselves, not just
+     one-off class names — every element using a bg-surface-hover,
+     border-border-strong, text-accent, etc. utility (or the global
+     :focus-visible ring below) resolves through these variables, so
+     overriding only specific components would leave every other consumer
+     of the same token still showing the scaffold's blue/purple/navy value
+     underneath. This was already true for --color-bg alone; the rest of
+     the scaffold's tokens were simply never carried over to match. */
   :root {
     --color-bg: var(--color-tafsheet-bg);
+
+    --color-surface-secondary: var(--color-tafsheet-pink-light);
+    --color-surface-muted: var(--color-tafsheet-tag-neutral-alt);
+    --color-surface-hover: var(--color-tafsheet-pink-light);
+
+    --color-border: var(--color-tafsheet-border);
+    --color-border-subtle: var(--color-tafsheet-border);
+    --color-border-strong: #e0d5cd;
+
+    --color-content-primary: var(--color-tafsheet-text-primary);
+    --color-content-secondary: var(--color-tafsheet-text-secondary);
+    --color-content-muted: var(--color-tafsheet-text-muted);
+
+    --color-primary: var(--color-tafsheet-primary);
+    --color-primary-hover: var(--color-tafsheet-primary-dark);
+    --color-primary-active: #45101f;
+    --color-accent: var(--color-tafsheet-primary);
+
+    --color-focus: var(--color-tafsheet-primary);
   }
 
   /* One consistent focus treatment for every interactive element. */
