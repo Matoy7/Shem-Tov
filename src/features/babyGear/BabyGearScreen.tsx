@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { assets } from "@/lib/assets"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { Tick01Icon } from "@hugeicons/core-free-icons"
 
 type GearItem = { id: string; icon: string; qty: string; title: string; subtitle: string }
 type GearCategory = { id: string; icon: string; label: string; items: GearItem[] }
@@ -202,9 +204,7 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
                   }
                 >
                   {isChecked ? (
-                    <svg viewBox="0 0 10 8" className="size-2.5">
-                      <path d="M1 4 3.5 6.5 9 1" stroke="white" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <HugeIcon icon={Tick01Icon} size={10} color="white" strokeWidth={2} />
                   ) : null}
                 </button>
               </div>

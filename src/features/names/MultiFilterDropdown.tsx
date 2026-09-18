@@ -1,6 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { ArrowDown01Icon, Tick01Icon } from "@hugeicons/core-free-icons"
 import type { FilterCategory as FilterCategoryLog } from "@/data/filterClickLogs"
 
 export type FilterOption<T extends string> = { value: T; label: string }
@@ -18,9 +20,13 @@ type MultiFilterDropdownProps<T extends string> = {
 
 function ChevronDown({ className }: { className?: string }) {
   return (
-    <svg aria-hidden viewBox="0 0 12 8" className={cn("size-3 shrink-0 transition-transform duration-150", className)}>
-      <path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <HugeIcon
+      icon={ArrowDown01Icon}
+      size={13}
+      color="currentColor"
+      strokeWidth={1.8}
+      className={cn("shrink-0 transition-transform duration-150", className)}
+    />
   )
 }
 
@@ -127,9 +133,7 @@ export function MultiFilterDropdown<T extends string>({
               )}
             >
               {checked ? (
-                <svg viewBox="0 0 10 8" className="size-2.5">
-                  <path d="M1 4 3.5 6.5 9 1" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <HugeIcon icon={Tick01Icon} size={10} color="currentColor" strokeWidth={2} />
               ) : null}
             </span>
             <span className={checked ? "font-medium text-content-primary" : "text-content-secondary"}>{opt.label}</span>

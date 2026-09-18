@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { AccordionItem } from "@/components/ui/Accordion"
 import { assets } from "@/lib/assets"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { Tick01Icon } from "@hugeicons/core-free-icons"
 
 /**
  * One placeholder checklist row: a name plus a personal, per-user checked
@@ -104,9 +106,7 @@ function ChecklistRow({ item, checked, onToggle }: { item: ChecklistItem; checke
         }
       >
         {checked ? (
-          <svg viewBox="0 0 10 8" className="size-2.5">
-            <path d="M1 4 3.5 6.5 9 1" stroke="white" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <HugeIcon icon={Tick01Icon} size={10} color="white" strokeWidth={2} />
         ) : null}
       </span>
       <span className={"text-[14px] leading-5 " + (checked ? "text-[#877275] line-through" : "text-[#1d1b19]")}>

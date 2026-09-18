@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/Button"
-import { Icon } from "@/components/ui/Icon"
-import { assets } from "@/lib/assets"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { Cancel01Icon, Search01Icon } from "@hugeicons/core-free-icons"
+import type { IconSvgElement } from "@hugeicons/react"
 import { cn } from "@/lib/cn"
 
 export type NavItem = {
   id: string
   label: string
-  icon: string
+  icon: IconSvgElement
   /** Shown as a small "(N)" after the label — omit for items with no count. */
   count?: number
 }
@@ -79,7 +80,7 @@ export function SidebarSearch({
           onClick={submit}
           className="absolute start-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
         >
-          <Icon src={assets.iconSearch} size="sm" />
+          <HugeIcon icon={Search01Icon} size={18} color="currentColor" />
         </button>
 
         <input
@@ -117,10 +118,7 @@ export function SidebarSearch({
             }}
             className="absolute end-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
           >
-            <span aria-hidden className="relative block size-3">
-              <span className="absolute inset-x-0 top-1/2 block h-0.5 -translate-y-1/2 rotate-45 rounded-full bg-current" />
-              <span className="absolute inset-x-0 top-1/2 block h-0.5 -translate-y-1/2 -rotate-45 rounded-full bg-current" />
-            </span>
+            <HugeIcon icon={Cancel01Icon} size={16} color="currentColor" strokeWidth={1.8} />
           </button>
         ) : null}
       </div>
@@ -155,7 +153,7 @@ export function SidebarNav({ items, activeId, onSelect }: SidebarNavProps) {
                     : "text-content-secondary hover:bg-surface-hover hover:text-content-primary",
                 )}
               >
-                <Icon src={item.icon} size="md" />
+                <HugeIcon icon={item.icon} size={20} color="currentColor" />
                 <span className="flex min-w-0 items-baseline gap-1">
                   <span className="truncate">{item.label}</span>
                   {typeof item.count === "number" ? (

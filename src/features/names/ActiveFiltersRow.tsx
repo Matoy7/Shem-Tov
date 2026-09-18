@@ -1,3 +1,5 @@
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { Cancel01Icon } from "@hugeicons/core-free-icons"
 import type { NameFiltersValue } from "./NameFiltersBar"
 import { EMPTY_NAME_FILTERS } from "./NameFiltersBar"
 import { GENDER_LABELS, ORIGIN_OPTIONS, MEANING_OPTIONS, STYLE_OPTIONS, POPULARITY_OPTIONS, MORE_FILTER_LABELS } from "./filterOptions"
@@ -13,9 +15,7 @@ function Chip({ chip }: { chip: ChipData }) {
         aria-label={`הסרת הסינון ${chip.label}`}
         className="flex size-5 shrink-0 items-center justify-center rounded-full text-content-muted transition-colors duration-150 hover:bg-surface-hover hover:text-content-primary"
       >
-        <svg aria-hidden viewBox="0 0 10 10" className="size-2.5">
-          <path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
+        <HugeIcon icon={Cancel01Icon} size={10} color="currentColor" strokeWidth={2} />
       </button>
       <span>{chip.label}</span>
     </span>

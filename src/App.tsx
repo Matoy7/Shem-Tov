@@ -21,6 +21,7 @@ import {
 } from "@/features/auth/linkAccount"
 import { assets } from "@/lib/assets"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
+import { SearchList01Icon } from "@hugeicons/core-free-icons"
 
 import { useNames } from "@/features/names/useNames"
 import { NameGrid } from "@/features/names/NameGrid"
@@ -32,20 +33,19 @@ import { useSilentRetry } from "@/lib/useSilentRetry"
 import { HomeScreen } from "@/features/home/HomeScreen"
 import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
-import { LeavingHouseScreen } from "@/features/leavingHouse/LeavingHouseScreen"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
 const PRIVACY_NOTE = "השמות שאתם שומרים גלויים רק לכם."
 
-const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: assets.iconHome }]
+const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: SearchList01Icon }]
 
 export default function App() {
   const { session, loading: sessionLoading, profileLoading, displayName, setDisplayName } = useSession()
   const [searchQuery, setSearchQuery] = useState("")
   // Mobile-only: which screen is showing. Desktop always shows the name
   // catalogue regardless of this — see the render below, guarded by sm:.
-  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear" | "leaving">("home")
+  const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear">("home")
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
   const [linkResult, setLinkResult] = useState<LinkResult | null>(null)
@@ -197,7 +197,6 @@ export default function App() {
               onNavigateToNames={() => setMobileView("browse")}
               onNavigateToBag={() => setMobileView("bag")}
               onNavigateToGear={() => setMobileView("gear")}
-              onNavigateToLeaving={() => setMobileView("leaving")}
             />
           </div>
         ) : null}
@@ -213,13 +212,6 @@ export default function App() {
         {mobileView === "gear" ? (
           <div className="sm:hidden">
             <BabyGearScreen onBack={() => setMobileView("home")} />
-          </div>
-        ) : null}
-
-        {/* Mobile-only Leaving the House screen — same guard shape as Home above. */}
-        {mobileView === "leaving" ? (
-          <div className="sm:hidden">
-            <LeavingHouseScreen onBack={() => setMobileView("home")} />
           </div>
         ) : null}
 

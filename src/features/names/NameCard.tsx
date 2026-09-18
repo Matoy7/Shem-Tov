@@ -1,31 +1,17 @@
 import { FavoriteButton } from "./FavoriteButton"
 import { originTag, meaningTag, styleTag, type CardTag } from "./tagColors"
 import { cn } from "@/lib/cn"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { HeartIcon } from "@hugeicons/core-free-icons"
 import type { Origin, Meaning, Style } from "@/data/names"
 
 /**
- * Mobile-only heart glyph, drawn inline (not via the shared Icon/<img>
- * asset) because the app's existing heart-filled SVG has its color baked
- * into the file itself (`fill="#5D1AFC"`, the original purple accent) —
- * an `<img>` can't be recolored with a CSS class, and that asset is shared
- * with desktop, so editing the file would change desktop's icon too.
- * Matches the design reference exactly either way: the reference always
- * renders the same outline heart regardless of saved state — only its
- * circular background toggles color — so no "filled" variant is needed
- * here at all, just this one constant burgundy-stroke glyph.
+ * Mobile-only heart glyph. The reference always renders the same outline
+ * heart regardless of saved state — only its circular background toggles
+ * color — so this stays a single constant burgundy-stroke glyph.
  */
 function MobileHeartGlyph() {
-  return (
-    <svg width="17" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M20.84 4.61C19.32 3.09 16.86 3.09 15.34 4.61L12 7.95L8.66 4.61C7.14 3.09 4.68 3.09 3.16 4.61C1.64 6.13 1.64 8.59 3.16 10.11L12 18.95L20.84 10.11C22.36 8.59 22.36 6.13 20.84 4.61Z"
-        stroke="#6f1e35"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
+  return <HugeIcon icon={HeartIcon} size={16} color="#6f1e35" fill="none" strokeWidth={1.7} />
 }
 
 export type NameCardData = {

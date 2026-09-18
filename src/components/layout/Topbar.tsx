@@ -1,4 +1,6 @@
 import { IconButton } from "@/components/ui/IconButton"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { Menu01Icon } from "@hugeicons/core-free-icons"
 import { AccountMenu } from "@/features/auth/AccountMenu"
 import { assets } from "@/lib/assets"
 
@@ -45,11 +47,7 @@ export function Topbar({
           backwards despite its own comment claiming otherwise. */}
       <div className="flex items-center justify-between px-5 py-3 sm:hidden">
         <IconButton label="פתיחת תפריט" variant="ghost" size="md" onClick={onOpenNav}>
-          <span aria-hidden className="flex flex-col gap-1">
-            <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
-            <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
-            <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
-          </span>
+          <HugeIcon icon={Menu01Icon} size={22} color="currentColor" />
         </IconButton>
 
         <AccountMenu
@@ -70,11 +68,7 @@ export function Topbar({
           onClick={onOpenNav}
           className="lg:hidden"
         >
-          <span aria-hidden className="flex flex-col gap-1">
-            <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
-            <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
-            <span className="block h-0.5 w-4 rounded-full bg-content-primary" />
-          </span>
+          <HugeIcon icon={Menu01Icon} size={22} color="currentColor" />
         </IconButton>
 
         <img

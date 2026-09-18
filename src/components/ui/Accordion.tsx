@@ -1,5 +1,7 @@
 import { useId, useRef, useState, type ReactNode } from "react"
 import { cn } from "@/lib/cn"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
 
 export type AccordionItemProps = {
   /** Small icon-circle content — an emoji or a short glyph, matching the app's existing restraint around iconography. */
@@ -62,16 +64,9 @@ export function AccordionItem({ icon, title, subtitle, badge, children, defaultO
 
           <div className="flex shrink-0 items-center gap-2">
             {badge}
-            <svg
-              width="11"
-              height="7"
-              viewBox="0 0 11 7"
-              fill="none"
-              aria-hidden
-              className={cn("shrink-0 transition-transform duration-200", open ? "rotate-180" : "")}
-            >
-              <path d="M1 1.5 5.5 6 10 1.5" stroke="#6f1e35" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <span className={cn("shrink-0 transition-transform duration-200", open ? "rotate-180" : "")}>
+              <HugeIcon icon={ArrowDown01Icon} size={16} color="#6f1e35" strokeWidth={1.8} />
+            </span>
           </div>
         </button>
       </h3>

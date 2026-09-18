@@ -1,6 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { FilterIcon, Tick01Icon } from "@hugeicons/core-free-icons"
 import { MORE_FILTER_LABELS } from "./filterOptions"
 import type { FilterCategory as FilterCategoryLog } from "@/data/filterClickLogs"
 
@@ -47,9 +49,7 @@ function Checkbox({ checked }: { checked: boolean }) {
       )}
     >
       {checked ? (
-        <svg viewBox="0 0 10 8" className="size-2.5">
-          <path d="M1 4 3.5 6.5 9 1" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <HugeIcon icon={Tick01Icon} size={10} color="currentColor" strokeWidth={2} />
       ) : null}
     </span>
   )
@@ -225,9 +225,9 @@ export function MoreFiltersDropdown({ value, onChange, onOptionClick }: MoreFilt
           activeCount > 0 ? "sm:border-accent/40" : "sm:border-border",
         )}
       >
-        <svg aria-hidden viewBox="0 0 14 14" className="size-3.5 shrink-0 text-[#6f1e35]/60 sm:text-content-muted">
-          <path d="M1 3.5h12M3.5 7h7M6 10.5h2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-        </svg>
+        <span className="shrink-0 text-[#6f1e35]/60 sm:text-content-muted">
+          <HugeIcon icon={FilterIcon} size={16} color="currentColor" strokeWidth={1.7} />
+        </span>
         <span>עוד פילטרים</span>
         {activeCount > 0 ? (
           <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#6f1e35] text-[10px] font-semibold leading-none text-white sm:bg-accent sm:text-content-inverse">

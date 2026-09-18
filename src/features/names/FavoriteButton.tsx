@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
-import { Icon } from "@/components/ui/Icon"
+import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
+import { HeartIcon } from "@hugeicons/core-free-icons"
 import { cn } from "@/lib/cn"
-import { assets } from "@/lib/assets"
 
 type FavoriteButtonProps = {
   favorited: boolean
@@ -53,17 +53,21 @@ export function FavoriteButton({ favorited, onToggle }: FavoriteButtonProps) {
           pop && "animate-like-pop",
         )}
       >
-        <Icon
-          src={assets.iconHeart}
-          size="sm"
+        <HugeIcon
+          icon={HeartIcon}
+          size={16}
+          color="currentColor"
+          fill="none"
           className={cn(
             "absolute transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none",
             favorited ? "scale-90 opacity-0" : "scale-100 opacity-100",
           )}
         />
-        <Icon
-          src={assets.iconHeartFilled}
-          size="sm"
+        <HugeIcon
+          icon={HeartIcon}
+          size={16}
+          color="currentColor"
+          fill="currentColor"
           className={cn(
             "absolute transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none",
             favorited ? "scale-100 opacity-100" : "scale-50 opacity-0",
