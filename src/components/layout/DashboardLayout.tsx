@@ -55,6 +55,7 @@ export function DashboardLayout({
         groups={navGroups}
         activeId={activeNavId}
         userName={userName}
+        avatarUrl={avatarUrl}
         canUpgrade={canUpgrade}
         onSelect={onSelectNav}
         onUpgrade={onUpgrade}
@@ -67,6 +68,7 @@ export function DashboardLayout({
         categories={mobileCategories}
         activeCategoryId={activeMobileCategoryId}
         userName={userName}
+        avatarUrl={avatarUrl}
         canUpgrade={canUpgrade}
         onUpgrade={onUpgrade}
         onSignOut={onSignOut}

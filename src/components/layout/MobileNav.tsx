@@ -19,6 +19,7 @@ type MobileNavProps = {
   categories: MobileCategoryItem[]
   activeCategoryId: string
   userName: string
+  avatarUrl: string
   canUpgrade?: boolean
   onUpgrade?: () => void
   onSignOut: () => void
@@ -37,6 +38,7 @@ export function MobileNav({
   categories,
   activeCategoryId,
   userName,
+  avatarUrl,
   canUpgrade,
   onUpgrade,
   onSignOut,
@@ -117,7 +119,13 @@ export function MobileNav({
           })}
         </nav>
 
-        <SidebarFooter userName={userName} onSignOut={onSignOut} />
+        <SidebarFooter
+          userName={userName}
+          avatarUrl={avatarUrl}
+          canUpgrade={canUpgrade}
+          onUpgrade={onUpgrade}
+          onSignOut={onSignOut}
+        />
       </div>
     </div>
   )

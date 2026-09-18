@@ -23,6 +23,12 @@ type TopbarProps = {
  * was redundant. Mobile still has no logo mark here either — the brand is
  * established by the Home screen's own hero heading instead (see
  * HomeScreen.tsx and DESIGN_GUIDE.md).
+ *
+ * The account menu (avatar + name + sign-out) follows the same logic below
+ * `lg:` — it's the only account control while the sidebar is hidden. Once
+ * the sidebar appears at `lg:`, it carries its own avatar + name + sign-out
+ * in its footer, so this row's copy would be a redundant second picture of
+ * the same identity and disappears there.
  */
 export function Topbar({
   avatarUrl,
@@ -53,10 +59,13 @@ export function Topbar({
         />
       </div>
 
-      {/* Desktop (sm: and up): hamburger (only shown below lg:, once the
-          sidebar itself is hidden) plus account controls — no brand lockup
-          here any more, since that now lives in the sidebar. */}
-      <div className="hidden items-center gap-3 px-4 py-3 sm:flex sm:gap-4 md:gap-5 md:px-6 lg:px-8">
+      {/* Tablet (sm: up to lg:): hamburger plus account controls — no brand
+          lockup here any more, since that now lives in the sidebar. The
+          whole row disappears at lg: too, once the sidebar itself takes
+          over both the nav (hamburger) and the account controls (avatar +
+          name + sign-out, in its own footer) — showing this row there would
+          just duplicate the sidebar's identity block. */}
+      <div className="hidden items-center gap-3 px-4 py-3 sm:flex sm:gap-4 md:gap-5 md:px-6 lg:hidden">
         <IconButton
           label="פתיחת תפריט"
           variant="ghost"

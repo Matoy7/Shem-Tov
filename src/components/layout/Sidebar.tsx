@@ -5,6 +5,7 @@ import { X, MagnifyingGlass } from "@phosphor-icons/react"
 import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 import { cn } from "@/lib/cn"
 import { assets } from "@/lib/assets"
+import { GoogleIcon } from "@/features/auth/ProviderIcons"
 
 export type NavItem = {
   id: string
@@ -16,14 +17,60 @@ export type NavItem = {
 
 type SidebarFooterProps = {
   userName: string
+  avatarUrl: string
+  /** Guests get a "כניסה עם Google" action alongside sign-out — the same
+   * upgrade path the account menu used to be the only way to reach. */
+  canUpgrade?: boolean
+  onUpgrade?: () => void
   onSignOut: () => void
 }
 
-/** Account block pinned to the bottom of the sidebar. */
-export function SidebarFooter({ userName, onSignOut }: SidebarFooterProps) {
+/**
+ * Account block pinned to the bottom of the sidebar: avatar + name as one
+ * row (the same identity treatment the header's account menu uses), then
+ * sign-out — the common "who's logged in" convention for a dashboard
+ * sidebar, rather than a name-only line.
+ */
+export function SidebarFooter({
+  userName,
+  avatarUrl,
+  canUpgrade,
+  onUpgrade,
+  onSignOut,
+}: SidebarFooterProps) {
   return (
-    <div className="mt-auto flex flex-col gap-2 border-t border-[#f0e8e0] pt-4">
-      <p className="truncate px-3 text-label text-[#877275]">{userName}</p>
+    <div className="mt-auto flex flex-col gap-3 border-t border-[#f0e8e0] pt-4">
+      <div className="flex items-center gap-3 px-3">
+        <img
+          src={avatarUrl}
+          alt=""
+          aria-hidden
+          width={40}
+          height={40}
+          className="size-10 shrink-0 rounded-full border-2 border-border-strong bg-surface-secondary object-cover"
+        />
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate text-body-sm font-medium leading-snug text-content-primary">
+            {userName}
+          </span>
+          {canUpgrade ? (
+            <span className="text-caption text-content-muted">אורח</span>
+          ) : null}
+        </div>
+      </div>
+
+      {canUpgrade ? (
+        <Button
+          variant="secondary"
+          size="md"
+          fullWidth
+          iconStart={<GoogleIcon />}
+          onClick={onUpgrade}
+          className="justify-start px-3"
+        >
+          כניסה עם Google
+        </Button>
+      ) : null}
 
       <Button
         variant="ghost"
@@ -207,6 +254,7 @@ type SidebarProps = {
   groups: NavItem[][]
   activeId: string
   userName: string
+  avatarUrl: string
   canUpgrade?: boolean
   onSelect: (id: string) => void
   onUpgrade?: () => void
@@ -220,6 +268,7 @@ export function Sidebar({
   groups,
   activeId,
   userName,
+  avatarUrl,
   canUpgrade,
   onSelect,
   onUpgrade,
@@ -235,7 +284,13 @@ export function Sidebar({
       <SidebarBrand brandName={brandName} brandTagline={brandTagline} />
 
       <SidebarNav groups={groups} activeId={activeId} onSelect={onSelect} />
-      <SidebarFooter userName={userName} onSignOut={onSignOut} />
+      <SidebarFooter
+        userName={userName}
+        avatarUrl={avatarUrl}
+        canUpgrade={canUpgrade}
+        onUpgrade={onUpgrade}
+        onSignOut={onSignOut}
+      />
     </aside>
   )
 }
