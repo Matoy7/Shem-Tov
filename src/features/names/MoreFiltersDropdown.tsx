@@ -1,8 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { FilterIcon, Tick01Icon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { Funnel, Check } from "@phosphor-icons/react"
 import { MORE_FILTER_LABELS } from "./filterOptions"
 import type { FilterCategory as FilterCategoryLog } from "@/data/filterClickLogs"
 
@@ -49,7 +49,7 @@ function Checkbox({ checked }: { checked: boolean }) {
       )}
     >
       {checked ? (
-        <HugeIcon icon={Tick01Icon} size={10} color="currentColor" strokeWidth={2} />
+        <PhosphorIcon icon={Check} size={10} color="currentColor" weight="bold" />
       ) : null}
     </span>
   )
@@ -226,7 +226,7 @@ export function MoreFiltersDropdown({ value, onChange, onOptionClick }: MoreFilt
         )}
       >
         <span className="shrink-0 text-[#6f1e35]/60 sm:text-content-muted">
-          <HugeIcon icon={FilterIcon} size={16} color="currentColor" strokeWidth={1.7} />
+          <PhosphorIcon icon={Funnel} size={16} color="currentColor" />
         </span>
         <span>עוד פילטרים</span>
         {activeCount > 0 ? (

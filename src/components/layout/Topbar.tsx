@@ -1,6 +1,6 @@
 import { IconButton } from "@/components/ui/IconButton"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { Menu01Icon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { List } from "@phosphor-icons/react"
 import { AccountMenu } from "@/features/auth/AccountMenu"
 import { assets } from "@/lib/assets"
 
@@ -47,7 +47,7 @@ export function Topbar({
           backwards despite its own comment claiming otherwise. */}
       <div className="flex items-center justify-between px-5 py-3 sm:hidden">
         <IconButton label="פתיחת תפריט" variant="ghost" size="md" onClick={onOpenNav}>
-          <HugeIcon icon={Menu01Icon} size={22} color="currentColor" />
+          <PhosphorIcon icon={List} size={22} color="currentColor" />
         </IconButton>
 
         <AccountMenu
@@ -68,7 +68,7 @@ export function Topbar({
           onClick={onOpenNav}
           className="lg:hidden"
         >
-          <HugeIcon icon={Menu01Icon} size={22} color="currentColor" />
+          <PhosphorIcon icon={List} size={22} color="currentColor" />
         </IconButton>
 
         <img

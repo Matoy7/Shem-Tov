@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { HeartIcon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { Heart } from "@phosphor-icons/react"
 import { cn } from "@/lib/cn"
 
 type FavoriteButtonProps = {
@@ -53,21 +53,21 @@ export function FavoriteButton({ favorited, onToggle }: FavoriteButtonProps) {
           pop && "animate-like-pop",
         )}
       >
-        <HugeIcon
-          icon={HeartIcon}
+        <PhosphorIcon
+          icon={Heart}
           size={16}
           color="currentColor"
-          fill="none"
+          weight="regular"
           className={cn(
             "absolute transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none",
             favorited ? "scale-90 opacity-0" : "scale-100 opacity-100",
           )}
         />
-        <HugeIcon
-          icon={HeartIcon}
+        <PhosphorIcon
+          icon={Heart}
           size={16}
           color="currentColor"
-          fill="currentColor"
+          weight="fill"
           className={cn(
             "absolute transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none",
             favorited ? "scale-100 opacity-100" : "scale-50 opacity-0",

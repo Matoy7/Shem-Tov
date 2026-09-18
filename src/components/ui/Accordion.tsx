@@ -1,7 +1,7 @@
 import { useId, useRef, useState, type ReactNode } from "react"
 import { cn } from "@/lib/cn"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { CaretDown } from "@phosphor-icons/react"
 
 export type AccordionItemProps = {
   /** Small icon-circle content — an emoji or a short glyph, matching the app's existing restraint around iconography. */
@@ -65,7 +65,7 @@ export function AccordionItem({ icon, title, subtitle, badge, children, defaultO
           <div className="flex shrink-0 items-center gap-2">
             {badge}
             <span className={cn("shrink-0 transition-transform duration-200", open ? "rotate-180" : "")}>
-              <HugeIcon icon={ArrowDown01Icon} size={16} color="#6f1e35" strokeWidth={1.8} />
+              <PhosphorIcon icon={CaretDown} size={16} color="#6f1e35" />
             </span>
           </div>
         </button>

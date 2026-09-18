@@ -1,10 +1,35 @@
 import { useState } from "react"
 import { assets } from "@/lib/assets"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { Tick01Icon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import {
+  Check,
+  Bed,
+  Camera,
+  Dresser,
+  Suitcase,
+  BabyCarriage,
+  Seatbelt,
+  Backpack,
+  Bag,
+  Table,
+  Bathtub,
+  Towel,
+  Thermometer,
+  TShirt,
+  Package,
+  Drop,
+  ShirtFolded,
+  Sock,
+  BowlFood,
+  BeerBottle,
+  Baby,
+  CookingPot,
+  Leaf,
+} from "@phosphor-icons/react"
+import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 
-type GearItem = { id: string; icon: string; qty: string; title: string; subtitle: string }
-type GearCategory = { id: string; icon: string; label: string; items: GearItem[] }
+type GearItem = { id: string; icon: PhosphorIconComponent; qty: string; title: string; subtitle: string }
+type GearCategory = { id: string; icon: PhosphorIconComponent; label: string; items: GearItem[] }
 
 /**
  * Placeholder content only, per the request — realistic enough to preview
@@ -15,59 +40,59 @@ type GearCategory = { id: string; icon: string; label: string; items: GearItem[]
 const CATEGORIES: GearCategory[] = [
   {
     id: "nursery",
-    icon: "🛏️",
+    icon: Bed,
     label: "חדר תינוק",
     items: [
-      { id: "nursery-1", icon: "🛏️", qty: "x1", title: "עריסה או מיטת תינוק", subtitle: "עם מזרן מתאים לגודל" },
-      { id: "nursery-2", icon: "🛌", qty: "x3", title: "סדינים למיטה", subtitle: "כותנה רכה, כמה חלופות" },
-      { id: "nursery-3", icon: "📷", qty: "x1", title: "מוניטור תינוק", subtitle: "עם או בלי מצלמה" },
-      { id: "nursery-4", icon: "🧺", qty: "x1", title: "ארון או קומודה", subtitle: "לאחסון בגדים וציוד" },
+      { id: "nursery-1", icon: Bed, qty: "x1", title: "עריסה או מיטת תינוק", subtitle: "עם מזרן מתאים לגודל" },
+      { id: "nursery-2", icon: Bed, qty: "x3", title: "סדינים למיטה", subtitle: "כותנה רכה, כמה חלופות" },
+      { id: "nursery-3", icon: Camera, qty: "x1", title: "מוניטור תינוק", subtitle: "עם או בלי מצלמה" },
+      { id: "nursery-4", icon: Dresser, qty: "x1", title: "ארון או קומודה", subtitle: "לאחסון בגדים וציוד" },
     ],
   },
   {
     id: "travel",
-    icon: "🧳",
+    icon: Suitcase,
     label: "טיול ונסיעה",
     items: [
-      { id: "travel-1", icon: "🛒", qty: "x1", title: "עגלת תינוק", subtitle: "מתאימה מגיל לידה" },
-      { id: "travel-2", icon: "🚗", qty: "x1", title: "כיסא בטיחות לרכב", subtitle: "מותקן ומוכן מראש" },
-      { id: "travel-3", icon: "🎒", qty: "x1", title: "מנשא לתינוק", subtitle: "לטיולים קצרים" },
-      { id: "travel-4", icon: "👜", qty: "x1", title: "תיק החתלה ניידת", subtitle: "עם ציוד בסיסי להחלפה" },
+      { id: "travel-1", icon: BabyCarriage, qty: "x1", title: "עגלת תינוק", subtitle: "מתאימה מגיל לידה" },
+      { id: "travel-2", icon: Seatbelt, qty: "x1", title: "כיסא בטיחות לרכב", subtitle: "מותקן ומוכן מראש" },
+      { id: "travel-3", icon: Backpack, qty: "x1", title: "מנשא לתינוק", subtitle: "לטיולים קצרים" },
+      { id: "travel-4", icon: Bag, qty: "x1", title: "תיק החתלה ניידת", subtitle: "עם ציוד בסיסי להחלפה" },
     ],
   },
   {
     id: "bath",
-    icon: "🛁",
+    icon: Bathtub,
     label: "החלפה ורחצה",
     items: [
-      { id: "bath-1", icon: "🧴", qty: "x1", title: "שולחן החתלה", subtitle: "עם משטח בטיחות" },
-      { id: "bath-2", icon: "🛁", qty: "x1", title: "אמבטיית תינוק", subtitle: "עם תמיכה לגב" },
-      { id: "bath-3", icon: "🧻", qty: "x4", title: "מגבות רכות", subtitle: "עם ברדס לחום נעים" },
-      { id: "bath-4", icon: "🌡️", qty: "x1", title: "מדחום", subtitle: "לבדיקת חום גוף וגם אמבטיה" },
+      { id: "bath-1", icon: Table, qty: "x1", title: "שולחן החתלה", subtitle: "עם משטח בטיחות" },
+      { id: "bath-2", icon: Bathtub, qty: "x1", title: "אמבטיית תינוק", subtitle: "עם תמיכה לגב" },
+      { id: "bath-3", icon: Towel, qty: "x4", title: "מגבות רכות", subtitle: "עם ברדס לחום נעים" },
+      { id: "bath-4", icon: Thermometer, qty: "x1", title: "מדחום", subtitle: "לבדיקת חום גוף וגם אמבטיה" },
     ],
   },
   {
     id: "clothes",
-    icon: "👕",
+    icon: TShirt,
     label: "ביגוד",
     items: [
-      { id: "clothes-1", icon: "🩲", qty: "x2", title: "חיתולים", subtitle: "מומלץ לקנות כמה גדלים" },
-      { id: "clothes-2", icon: "🧻", qty: "x4", title: "מגבוני ניקוי", subtitle: "לשימוש יומיומי עדין" },
-      { id: "clothes-3", icon: "🧴", qty: "x1", title: "קרם החתלה", subtitle: "מומלץ לעור רגיש" },
-      { id: "clothes-4", icon: "👕", qty: "x6", title: "בגדי גוף", subtitle: "100% כותנה, כמה מידות" },
-      { id: "clothes-5", icon: "🧥", qty: "x4", title: "אוברולים", subtitle: "נוחים ופרקטיים לסגירה" },
-      { id: "clothes-6", icon: "🧦", qty: "x6", title: "גרביים", subtitle: "כמה זוגות רכים לחום" },
+      { id: "clothes-1", icon: Package, qty: "x2", title: "חיתולים", subtitle: "מומלץ לקנות כמה גדלים" },
+      { id: "clothes-2", icon: Drop, qty: "x4", title: "מגבוני ניקוי", subtitle: "לשימוש יומיומי עדין" },
+      { id: "clothes-3", icon: Drop, qty: "x1", title: "קרם החתלה", subtitle: "מומלץ לעור רגיש" },
+      { id: "clothes-4", icon: TShirt, qty: "x6", title: "בגדי גוף", subtitle: "100% כותנה, כמה מידות" },
+      { id: "clothes-5", icon: ShirtFolded, qty: "x4", title: "אוברולים", subtitle: "נוחים ופרקטיים לסגירה" },
+      { id: "clothes-6", icon: Sock, qty: "x6", title: "גרביים", subtitle: "כמה זוגות רכים לחום" },
     ],
   },
   {
     id: "food",
-    icon: "🍼",
+    icon: BowlFood,
     label: "האכלה",
     items: [
-      { id: "food-1", icon: "🍼", qty: "x3", title: "בקבוקי האכלה", subtitle: "כמה גדלים לפי גיל" },
-      { id: "food-2", icon: "🩷", qty: "x2", title: "מוצץ", subtitle: "מתאים לגיל התינוק" },
-      { id: "food-3", icon: "♨️", qty: "x1", title: "מכשיר סטריליזציה", subtitle: "לחיטוי בקבוקים" },
-      { id: "food-4", icon: "🧷", qty: "x2", title: "סינר האכלה", subtitle: "קל לניקוי" },
+      { id: "food-1", icon: BeerBottle, qty: "x3", title: "בקבוקי האכלה", subtitle: "כמה גדלים לפי גיל" },
+      { id: "food-2", icon: Baby, qty: "x2", title: "מוצץ", subtitle: "מתאים לגיל התינוק" },
+      { id: "food-3", icon: CookingPot, qty: "x1", title: "מכשיר סטריליזציה", subtitle: "לחיטוי בקבוקים" },
+      { id: "food-4", icon: ShirtFolded, qty: "x2", title: "סינר האכלה", subtitle: "קל לניקוי" },
     ],
   },
 ]
@@ -134,11 +159,11 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
               <span
                 aria-hidden
                 className={
-                  "flex size-8 shrink-0 items-center justify-center rounded-full text-[15px] " +
+                  "flex size-8 shrink-0 items-center justify-center rounded-full " +
                   (active ? "bg-[#8d354b]" : "bg-[#ede7e2]")
                 }
               >
-                {cat.icon}
+                <PhosphorIcon icon={cat.icon} size={18} weight="duotone" color={active ? "#ffffff" : "#6f1e35"} />
               </span>
               <span className={"whitespace-nowrap text-[13px] leading-[18px] " + (active ? "font-semibold text-white" : "font-medium text-[#544245]")}>
                 {cat.label}
@@ -178,8 +203,8 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
               }
             >
               <div className="flex shrink-0 items-center gap-2.5">
-                <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f8f3ee] text-[15px]">
-                  {item.icon}
+                <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f8f3ee]">
+                  <PhosphorIcon icon={item.icon} size={18} weight="duotone" color="#6f1e35" />
                 </span>
                 <span className="rounded-full bg-[#f3ede8] px-2 py-0.5 text-[11px] font-semibold leading-4 text-[#544245]">
                   {item.qty}
@@ -204,7 +229,7 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
                   }
                 >
                   {isChecked ? (
-                    <HugeIcon icon={Tick01Icon} size={10} color="white" strokeWidth={2} />
+                    <PhosphorIcon icon={Check} size={10} color="white" weight="bold" />
                   ) : null}
                 </button>
               </div>
@@ -214,8 +239,8 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
       </div>
 
       <div className="mx-1 mt-2 flex items-center gap-2.5 rounded-2xl bg-[rgba(255,217,222,0.4)] p-3">
-        <span aria-hidden className="shrink-0 text-[15px]">
-          🍃
+        <span aria-hidden className="shrink-0">
+          <PhosphorIcon icon={Leaf} size={16} weight="duotone" color="#6f1e35" />
         </span>
         <p className="text-right text-[12px] leading-5 text-[#1d1b19]">
           לא חייבים להספיק הכל ביום אחד. קחו נשימה עמוקה, סמנו מה שיש, ואתם מוכנים להמשיך!

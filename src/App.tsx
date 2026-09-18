@@ -21,7 +21,7 @@ import {
 } from "@/features/auth/linkAccount"
 import { assets } from "@/lib/assets"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
-import { SearchList01Icon } from "@hugeicons/core-free-icons"
+import { ListMagnifyingGlass } from "@phosphor-icons/react"
 
 import { useNames } from "@/features/names/useNames"
 import { NameGrid } from "@/features/names/NameGrid"
@@ -38,7 +38,7 @@ const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
 const PRIVACY_NOTE = "השמות שאתם שומרים גלויים רק לכם."
 
-const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: SearchList01Icon }]
+const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: ListMagnifyingGlass }]
 
 export default function App() {
   const { session, loading: sessionLoading, profileLoading, displayName, setDisplayName } = useSession()

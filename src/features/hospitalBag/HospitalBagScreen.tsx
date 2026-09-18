@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { AccordionItem } from "@/components/ui/Accordion"
 import { assets } from "@/lib/assets"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { Tick01Icon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { Check, User, Baby, Files, Hospital, House, Lightbulb } from "@phosphor-icons/react"
+import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 
 /**
  * One placeholder checklist row: a name plus a personal, per-user checked
@@ -13,7 +14,7 @@ type ChecklistItem = { id: string; label: string }
 
 type Category = {
   id: string
-  icon: string
+  icon: PhosphorIconComponent
   title: string
   subtitle: string
   items: ChecklistItem[]
@@ -30,7 +31,7 @@ type Category = {
 const CATEGORIES: Category[] = [
   {
     id: "mom",
-    icon: "👩",
+    icon: User,
     title: "לאמא",
     subtitle: "בגדים נוחים, תחתונים, גרביים ועוד",
     items: [
@@ -43,7 +44,7 @@ const CATEGORIES: Category[] = [
   },
   {
     id: "baby",
-    icon: "👶",
+    icon: Baby,
     title: "לתינוק",
     subtitle: "בגדי גוף, אוברולים, כובע, גרביים",
     items: [
@@ -55,7 +56,7 @@ const CATEGORIES: Category[] = [
   },
   {
     id: "docs",
-    icon: "📄",
+    icon: Files,
     title: "מסמכים חשובים",
     subtitle: "תעודות, טפסים, כרטיס קופת חולים",
     items: [
@@ -67,7 +68,7 @@ const CATEGORIES: Category[] = [
   },
   {
     id: "hospital",
-    icon: "🏥",
+    icon: Hospital,
     title: "דברים לבית החולים",
     subtitle: "מטען, כרית, חטיפים ודברים שעושים טוב",
     items: [
@@ -79,7 +80,7 @@ const CATEGORIES: Category[] = [
   },
   {
     id: "home",
-    icon: "🏠",
+    icon: House,
     title: "דברים לחזרה הביתה",
     subtitle: "כיסא בטיחות, בגדים לחזרה",
     items: [
@@ -106,7 +107,7 @@ function ChecklistRow({ item, checked, onToggle }: { item: ChecklistItem; checke
         }
       >
         {checked ? (
-          <HugeIcon icon={Tick01Icon} size={10} color="white" strokeWidth={2} />
+          <PhosphorIcon icon={Check} size={10} color="white" weight="bold" />
         ) : null}
       </span>
       <span className={"text-[14px] leading-5 " + (checked ? "text-[#877275] line-through" : "text-[#1d1b19]")}>
@@ -159,7 +160,7 @@ export function HospitalBagScreen({ onBack }: HospitalBagScreenProps) {
           return (
             <AccordionItem
               key={category.id}
-              icon={category.icon}
+              icon={<PhosphorIcon icon={category.icon} size={22} weight="duotone" color="#6f1e35" />}
               title={category.title}
               subtitle={category.subtitle}
               badge={
@@ -184,8 +185,8 @@ export function HospitalBagScreen({ onBack }: HospitalBagScreenProps) {
       </div>
 
       <div className="mx-1 mt-4 flex items-start gap-3 rounded-xl bg-[rgba(255,218,214,0.3)] p-3.5">
-        <span aria-hidden className="mt-0.5 shrink-0 text-[16px]">
-          💡
+        <span aria-hidden className="mt-0.5 shrink-0">
+          <PhosphorIcon icon={Lightbulb} size={16} weight="duotone" color="#6f1e35" />
         </span>
         <p className="text-right text-[12px] leading-[16.5px] text-[#1d1b19]">
           <span className="font-bold">טיפ של אמהות: </span>

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react"
 import type { ReactNode } from "react"
 import { IconButton } from "./IconButton"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { X } from "@phosphor-icons/react"
 import { cn } from "@/lib/cn"
 
 type ModalProps = {
@@ -88,10 +90,7 @@ export function Modal({
           </div>
 
           <IconButton label="סגירה" variant="ghost" size="sm" onClick={onClose}>
-            <span aria-hidden className="relative block size-4">
-              <span className="absolute inset-x-0 top-1/2 block h-0.5 rotate-45 rounded-full bg-content-secondary" />
-              <span className="absolute inset-x-0 top-1/2 block h-0.5 -rotate-45 rounded-full bg-content-secondary" />
-            </span>
+            <PhosphorIcon icon={X} size={16} color="#544245" />
           </IconButton>
         </div>
 

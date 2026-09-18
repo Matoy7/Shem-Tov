@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/Button"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { Cancel01Icon, Search01Icon } from "@hugeicons/core-free-icons"
-import type { IconSvgElement } from "@hugeicons/react"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { X, MagnifyingGlass } from "@phosphor-icons/react"
+import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 import { cn } from "@/lib/cn"
 
 export type NavItem = {
   id: string
   label: string
-  icon: IconSvgElement
+  icon: PhosphorIconComponent
   /** Shown as a small "(N)" after the label — omit for items with no count. */
   count?: number
 }
@@ -80,7 +80,7 @@ export function SidebarSearch({
           onClick={submit}
           className="absolute start-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
         >
-          <HugeIcon icon={Search01Icon} size={18} color="currentColor" />
+          <PhosphorIcon icon={MagnifyingGlass} size={18} color="currentColor" />
         </button>
 
         <input
@@ -118,7 +118,7 @@ export function SidebarSearch({
             }}
             className="absolute end-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
           >
-            <HugeIcon icon={Cancel01Icon} size={16} color="currentColor" strokeWidth={1.8} />
+            <PhosphorIcon icon={X} size={16} color="currentColor" />
           </button>
         ) : null}
       </div>
@@ -153,7 +153,7 @@ export function SidebarNav({ items, activeId, onSelect }: SidebarNavProps) {
                     : "text-content-secondary hover:bg-surface-hover hover:text-content-primary",
                 )}
               >
-                <HugeIcon icon={item.icon} size={20} color="currentColor" />
+                <PhosphorIcon icon={item.icon} size={20} color="currentColor" />
                 <span className="flex min-w-0 items-baseline gap-1">
                   <span className="truncate">{item.label}</span>
                   {typeof item.count === "number" ? (

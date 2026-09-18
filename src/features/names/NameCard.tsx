@@ -1,8 +1,8 @@
 import { FavoriteButton } from "./FavoriteButton"
 import { originTag, meaningTag, styleTag, type CardTag } from "./tagColors"
 import { cn } from "@/lib/cn"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { HeartIcon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { Heart } from "@phosphor-icons/react"
 import type { Origin, Meaning, Style } from "@/data/names"
 
 /**
@@ -11,7 +11,7 @@ import type { Origin, Meaning, Style } from "@/data/names"
  * color — so this stays a single constant burgundy-stroke glyph.
  */
 function MobileHeartGlyph() {
-  return <HugeIcon icon={HeartIcon} size={16} color="#6f1e35" fill="none" strokeWidth={1.7} />
+  return <PhosphorIcon icon={Heart} size={16} color="#6f1e35" weight="regular" />
 }
 
 export type NameCardData = {

@@ -1,8 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "@/lib/cn"
-import { Icon as HugeIcon } from "@/components/ui/HugeIcon"
-import { ArrowDown01Icon, Tick01Icon } from "@hugeicons/core-free-icons"
+import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
+import { CaretDown, Check } from "@phosphor-icons/react"
 import type { FilterCategory as FilterCategoryLog } from "@/data/filterClickLogs"
 
 export type FilterOption<T extends string> = { value: T; label: string }
@@ -20,11 +20,10 @@ type MultiFilterDropdownProps<T extends string> = {
 
 function ChevronDown({ className }: { className?: string }) {
   return (
-    <HugeIcon
-      icon={ArrowDown01Icon}
+    <PhosphorIcon
+      icon={CaretDown}
       size={13}
       color="currentColor"
-      strokeWidth={1.8}
       className={cn("shrink-0 transition-transform duration-150", className)}
     />
   )
@@ -133,7 +132,7 @@ export function MultiFilterDropdown<T extends string>({
               )}
             >
               {checked ? (
-                <HugeIcon icon={Tick01Icon} size={10} color="currentColor" strokeWidth={2} />
+                <PhosphorIcon icon={Check} size={10} color="currentColor" weight="bold" />
               ) : null}
             </span>
             <span className={checked ? "font-medium text-content-primary" : "text-content-secondary"}>{opt.label}</span>
