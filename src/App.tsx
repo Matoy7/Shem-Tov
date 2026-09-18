@@ -49,36 +49,32 @@ export default function App() {
   const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear">("home")
 
   // Mobile hamburger drawer content — the same four categories as the Home
-  // screen's own cards (title/subtitle match exactly), so the drawer reads
-  // as "everywhere I can go", not a second, different navigation scheme.
+  // screen's own cards (titles match exactly), so the drawer reads as
+  // "everywhere I can go", not a second, different navigation scheme.
   // "לפני שיוצאים" has no screen yet, so it's shown but disabled — same
   // treatment HomeScreen already gives that card.
   const mobileCategories: MobileCategoryItem[] = [
     {
       id: "bag",
       label: "הכנת תיק לידה",
-      subtitle: "מה כבר ארזת?",
       icon: Suitcase,
       onSelect: () => setMobileView("bag"),
     },
     {
       id: "browse",
       label: "בחירת שם",
-      subtitle: "מצאתם כבר שם?",
       icon: ListMagnifyingGlass,
       onSelect: () => setMobileView("browse"),
     },
     {
       id: "gear",
       label: "ציוד לתינוק",
-      subtitle: "מה עדיין חסר?",
       icon: Basket,
       onSelect: () => setMobileView("gear"),
     },
     {
       id: "leaving",
       label: "לפני שיוצאים",
-      subtitle: "לא לשכוח כלום.",
       icon: CarSimple,
       onSelect: () => {},
       disabled: true,

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { SidebarFooter, SidebarSearch } from "./Sidebar"
+import { SidebarFooter } from "./Sidebar"
 import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
 import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 import { cn } from "@/lib/cn"
@@ -7,7 +7,6 @@ import { cn } from "@/lib/cn"
 export type MobileCategoryItem = {
   id: string
   label: string
-  subtitle?: string
   icon: PhosphorIconComponent
   onSelect: () => void
   /** Matches the Home screen's own "not wired up yet" cards — shown, not clickable. */
@@ -19,10 +18,6 @@ type MobileNavProps = {
   onClose: () => void
   categories: MobileCategoryItem[]
   activeCategoryId: string
-  searchPlaceholder: string
-  searchQuery: string
-  onSearch: (query: string) => void
-  onClearSearch: () => void
   userName: string
   canUpgrade?: boolean
   onUpgrade?: () => void
@@ -41,10 +36,6 @@ export function MobileNav({
   onClose,
   categories,
   activeCategoryId,
-  searchPlaceholder,
-  searchQuery,
-  onSearch,
-  onClearSearch,
   userName,
   canUpgrade,
   onUpgrade,
@@ -90,16 +81,6 @@ export function MobileNav({
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <SidebarSearch
-          placeholder={searchPlaceholder}
-          query={searchQuery}
-          onSearch={(query) => {
-            onSearch(query)
-            onClose()
-          }}
-          onClear={onClearSearch}
-        />
-
         <nav aria-label="קטגוריות" className="flex flex-col gap-1.5">
           {categories.map((category) => {
             const active = category.id === activeCategoryId
@@ -128,15 +109,8 @@ export function MobileNav({
                 >
                   <PhosphorIcon icon={category.icon} size={22} weight="duotone" color="#6f1e35" />
                 </span>
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-[21px] font-bold leading-7 text-[#6f1e35]">
-                    {category.label}
-                  </span>
-                  {category.subtitle ? (
-                    <span className="truncate text-[13px] font-medium leading-[18px] text-[#877275]">
-                      {category.subtitle}
-                    </span>
-                  ) : null}
+                <span className="min-w-0 truncate text-[21px] font-bold leading-7 text-[#6f1e35]">
+                  {category.label}
                 </span>
               </button>
             )

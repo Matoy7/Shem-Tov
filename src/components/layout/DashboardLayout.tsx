@@ -74,10 +74,6 @@ export function DashboardLayout({
         onClose={() => setNavOpen(false)}
         categories={mobileCategories}
         activeCategoryId={activeMobileCategoryId}
-        searchPlaceholder={searchPlaceholder}
-        searchQuery={searchQuery}
-        onSearch={onSearch}
-        onClearSearch={onClearSearch}
         userName={userName}
         canUpgrade={canUpgrade}
         onUpgrade={onUpgrade}
