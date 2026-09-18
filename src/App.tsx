@@ -21,7 +21,8 @@ import {
 } from "@/features/auth/linkAccount"
 import { assets } from "@/lib/assets"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
-import { ListMagnifyingGlass } from "@phosphor-icons/react"
+import { ListMagnifyingGlass, Suitcase, Basket, CarSimple } from "@phosphor-icons/react"
+import type { MobileCategoryItem } from "@/components/layout/MobileNav"
 
 import { useNames } from "@/features/names/useNames"
 import { NameGrid } from "@/features/names/NameGrid"
@@ -46,6 +47,44 @@ export default function App() {
   // Mobile-only: which screen is showing. Desktop always shows the name
   // catalogue regardless of this — see the render below, guarded by sm:.
   const [mobileView, setMobileView] = useState<"home" | "browse" | "bag" | "gear">("home")
+
+  // Mobile hamburger drawer content — the same four categories as the Home
+  // screen's own cards (title/subtitle match exactly), so the drawer reads
+  // as "everywhere I can go", not a second, different navigation scheme.
+  // "לפני שיוצאים" has no screen yet, so it's shown but disabled — same
+  // treatment HomeScreen already gives that card.
+  const mobileCategories: MobileCategoryItem[] = [
+    {
+      id: "bag",
+      label: "הכנת תיק לידה",
+      subtitle: "מה כבר ארזת?",
+      icon: Suitcase,
+      onSelect: () => setMobileView("bag"),
+    },
+    {
+      id: "browse",
+      label: "בחירת שם",
+      subtitle: "מצאתם כבר שם?",
+      icon: ListMagnifyingGlass,
+      onSelect: () => setMobileView("browse"),
+    },
+    {
+      id: "gear",
+      label: "ציוד לתינוק",
+      subtitle: "מה עדיין חסר?",
+      icon: Basket,
+      onSelect: () => setMobileView("gear"),
+    },
+    {
+      id: "leaving",
+      label: "לפני שיוצאים",
+      subtitle: "לא לשכוח כלום.",
+      icon: CarSimple,
+      onSelect: () => {},
+      disabled: true,
+    },
+  ]
+
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
   const [linkResult, setLinkResult] = useState<LinkResult | null>(null)
@@ -174,6 +213,8 @@ export default function App() {
         brandTagline={TAGLINE}
         navItems={NAV_ITEMS}
         activeNavId="browse"
+        mobileCategories={mobileCategories}
+        activeMobileCategoryId={mobileView}
         searchPlaceholder="חיפוש שם"
         searchQuery={searchQuery}
         onSearch={setSearchQuery}

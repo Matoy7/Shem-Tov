@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { ReactNode } from "react"
 import { Sidebar, type NavItem } from "./Sidebar"
-import { MobileNav } from "./MobileNav"
+import { MobileNav, type MobileCategoryItem } from "./MobileNav"
 import { Topbar } from "./Topbar"
 
 type DashboardLayoutProps = {
@@ -9,6 +9,11 @@ type DashboardLayoutProps = {
   brandTagline: string
   navItems: NavItem[]
   activeNavId: string
+  /** Mobile hamburger drawer content — the Home screen's own categories,
+   * not the desktop sidebar's single "browse" item (the two intentionally
+   * diverge; see MobileNav's own comment). */
+  mobileCategories: MobileCategoryItem[]
+  activeMobileCategoryId: string
   searchPlaceholder: string
   searchQuery: string
   onSearch: (query: string) => void
@@ -32,6 +37,8 @@ export function DashboardLayout({
   brandTagline,
   navItems,
   activeNavId,
+  mobileCategories,
+  activeMobileCategoryId,
   searchPlaceholder,
   searchQuery,
   onSearch,
@@ -65,15 +72,14 @@ export function DashboardLayout({
       <MobileNav
         open={navOpen}
         onClose={() => setNavOpen(false)}
-        items={navItems}
-        activeId={activeNavId}
+        categories={mobileCategories}
+        activeCategoryId={activeMobileCategoryId}
         searchPlaceholder={searchPlaceholder}
         searchQuery={searchQuery}
         onSearch={onSearch}
         onClearSearch={onClearSearch}
         userName={userName}
         canUpgrade={canUpgrade}
-        onSelect={onSelectNav}
         onUpgrade={onUpgrade}
         onSignOut={onSignOut}
       />
