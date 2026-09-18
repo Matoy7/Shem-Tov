@@ -87,7 +87,6 @@ export function SidebarFooter({
 
 type SidebarBrandProps = {
   brandName: string
-  brandTagline: string
 }
 
 /**
@@ -95,9 +94,12 @@ type SidebarBrandProps = {
  * topbar, where it used to live before the sidebar became the persistent,
  * always-visible home for the brand on desktop. Same mascot as the mobile
  * Home screen's own hero (see HomeScreen.tsx), sized to fit the sidebar's
- * fixed 264px width rather than the topbar's much larger scale.
+ * fixed 264px width rather than the topbar's much larger scale. No tagline
+ * here (unlike LoginScreen's own brand lockup, which keeps one) — just the
+ * name, once the sidebar is a persistent fixture the visitor sees on every
+ * screen rather than a one-time introduction.
  */
-function SidebarBrand({ brandName, brandTagline }: SidebarBrandProps) {
+function SidebarBrand({ brandName }: SidebarBrandProps) {
   return (
     <div className="flex items-center gap-3">
       <img
@@ -106,10 +108,7 @@ function SidebarBrand({ brandName, brandTagline }: SidebarBrandProps) {
         aria-hidden
         className="size-14 shrink-0 rounded-full bg-[#fff0f2] object-contain"
       />
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <h1 className="truncate text-[20px] font-bold text-[#6f1e35]">{brandName}</h1>
-        <p className="text-[12px] leading-4 text-[#877275]">{brandTagline}</p>
-      </div>
+      <h1 className="min-w-0 truncate text-[20px] font-bold text-[#6f1e35]">{brandName}</h1>
     </div>
   )
 }
@@ -250,7 +249,6 @@ export function SidebarNav({ groups, activeId, onSelect }: SidebarNavProps) {
 
 type SidebarProps = {
   brandName: string
-  brandTagline: string
   groups: NavItem[][]
   activeId: string
   userName: string
@@ -264,7 +262,6 @@ type SidebarProps = {
 /** Fixed desktop sidebar. Hidden below the `lg` breakpoint. */
 export function Sidebar({
   brandName,
-  brandTagline,
   groups,
   activeId,
   userName,
@@ -281,7 +278,7 @@ export function Sidebar({
         "flex-col gap-8 border-e border-border bg-surface px-4 py-6",
       )}
     >
-      <SidebarBrand brandName={brandName} brandTagline={brandTagline} />
+      <SidebarBrand brandName={brandName} />
 
       <SidebarNav groups={groups} activeId={activeId} onSelect={onSelect} />
       <SidebarFooter

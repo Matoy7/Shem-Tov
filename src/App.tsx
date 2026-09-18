@@ -255,7 +255,6 @@ export default function App() {
     <>
       <DashboardLayout
         brandName={PRODUCT_NAME}
-        brandTagline={TAGLINE}
         navGroups={NAV_GROUPS}
         activeNavId={mobileView}
         mobileCategories={mobileCategories}

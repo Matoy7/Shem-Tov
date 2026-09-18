@@ -6,7 +6,6 @@ import { Topbar } from "./Topbar"
 
 type DashboardLayoutProps = {
   brandName: string
-  brandTagline: string
   navGroups: NavItem[][]
   activeNavId: string
   /** Mobile hamburger drawer content — the Home screen's own categories,
@@ -32,7 +31,6 @@ type DashboardLayoutProps = {
  */
 export function DashboardLayout({
   brandName,
-  brandTagline,
   navGroups,
   activeNavId,
   mobileCategories,
@@ -51,7 +49,6 @@ export function DashboardLayout({
     <div className="min-h-screen bg-bg">
       <Sidebar
         brandName={brandName}
-        brandTagline={brandTagline}
         groups={navGroups}
         activeId={activeNavId}
         userName={userName}
