@@ -32,34 +32,27 @@ const GENDER_LABEL: Record<"boy" | "girl" | "unisex", string> = {
   unisex: "יוניסקס",
 }
 
-// Desktop only — unchanged. Same soft pastel-per-gender palette as the
-// filter bar's gender tabs, so the two surfaces still read as one product.
-const GENDER_TINT_DESKTOP: Record<"boy" | "girl" | "unisex", string> = {
-  boy: "border-[#b9cdfb] bg-[#eaf1ff] text-[#3054c4]",
-  girl: "border-[#f7c3da] bg-[#fdeef4] text-[#c23477]",
-  unisex: "border-border-strong bg-surface-muted text-accent",
-}
-
+// Desktop-only badge — recolored to the same warm-neutral family the mobile
+// tags use (see TagMobile below) instead of the old per-gender blue/pink
+// pastel tints, which were off the Tafsheet palette (blue especially) and
+// made the desktop card read as a different product from mobile.
 function GenderPill({ gender }: { gender: "boy" | "girl" | "unisex" }) {
   return (
-    <span
-      className={cn(
-        "inline-flex h-6 shrink-0 items-center rounded-full border px-2.5 text-caption font-medium",
-        GENDER_TINT_DESKTOP[gender],
-      )}
-    >
+    <span className="inline-flex h-6 shrink-0 items-center rounded-full bg-[#ede7e2] px-2.5 text-caption font-medium text-[#544245]">
       {GENDER_LABEL[gender]}
     </span>
   )
 }
 
-/** Desktop tag — unchanged rainbow fill, exactly as it was before the mobile pass. */
+/**
+ * Desktop tag — same warm-neutral fill/text as the mobile tag (TagMobile
+ * below), not the old per-value rainbow swatch from tagColors.ts. Filters
+ * and name cards now share one color language across breakpoints, per the
+ * Tafsheet visual language: no rainbow tag system anywhere.
+ */
 function TagDesktop({ tag }: { tag: CardTag }) {
   return (
-    <span
-      className="inline-flex h-6 shrink-0 items-center rounded-full border px-2.5 text-caption font-medium"
-      style={{ backgroundColor: tag.swatch.bg, color: tag.swatch.text, borderColor: tag.swatch.border }}
-    >
+    <span className="inline-flex h-6 shrink-0 items-center whitespace-nowrap rounded-full bg-[#ede7e2] px-2.5 text-caption font-medium text-[#544245]">
       {tag.label}
     </span>
   )

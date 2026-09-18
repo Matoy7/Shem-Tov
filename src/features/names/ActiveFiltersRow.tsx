@@ -8,12 +8,12 @@ type ChipData = { key: string; label: string; onRemove: () => void }
 
 function Chip({ chip }: { chip: ChipData }) {
   return (
-    <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-surface-muted ps-1 pe-2.5 text-caption font-medium text-content-primary">
+    <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-[#f3ede8] ps-1 pe-2.5 text-[13px] font-medium text-[#1d1b19]">
       <button
         type="button"
         onClick={chip.onRemove}
         aria-label={`הסרת הסינון ${chip.label}`}
-        className="flex size-5 shrink-0 items-center justify-center rounded-full text-content-muted transition-colors duration-150 hover:bg-surface-hover hover:text-content-primary"
+        className="flex size-5 shrink-0 items-center justify-center rounded-full text-[#877275] transition-colors duration-150 hover:bg-[#e9e1d9] hover:text-[#1d1b19]"
       >
         <PhosphorIcon icon={X} size={10} color="currentColor" weight="bold" />
       </button>
@@ -110,14 +110,14 @@ export function ActiveFiltersRow({ value, onChange }: ActiveFiltersRowProps) {
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <span className="text-caption font-medium text-content-muted">סינון פעיל:</span>
+      <span className="text-[13px] font-medium text-[#877275]">סינון פעיל:</span>
       {chips.map((chip) => (
         <Chip key={chip.key} chip={chip} />
       ))}
       <button
         type="button"
         onClick={() => onChange(EMPTY_NAME_FILTERS)}
-        className="ms-1 text-[13px] font-medium text-[#6f1e35] hover:underline sm:text-caption sm:text-accent"
+        className="ms-1 text-[13px] font-medium text-[#6f1e35] hover:underline"
       >
         ניקוי הכל
       </button>

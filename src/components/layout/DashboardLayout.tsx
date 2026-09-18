@@ -14,10 +14,6 @@ type DashboardLayoutProps = {
    * diverge; see MobileNav's own comment). */
   mobileCategories: MobileCategoryItem[]
   activeMobileCategoryId: string
-  searchPlaceholder: string
-  searchQuery: string
-  onSearch: (query: string) => void
-  onClearSearch: () => void
   userName: string
   avatarUrl: string
   canUpgrade?: boolean
@@ -28,9 +24,11 @@ type DashboardLayoutProps = {
 }
 
 /**
- * Application shell: fixed sidebar (inline-start, RTL-aware) holding search,
- * navigation and sign-out; a sticky topbar carrying the brand and account
- * controls; and a max-width content column.
+ * Application shell: fixed sidebar (inline-start, RTL-aware) holding the
+ * brand, navigation and sign-out; a sticky topbar carrying account controls;
+ * and a max-width content column. Search used to live in the sidebar too,
+ * but moved into the name-selection screen itself — the only screen it ever
+ * applied to.
  */
 export function DashboardLayout({
   brandName,
@@ -39,10 +37,6 @@ export function DashboardLayout({
   activeNavId,
   mobileCategories,
   activeMobileCategoryId,
-  searchPlaceholder,
-  searchQuery,
-  onSearch,
-  onClearSearch,
   userName,
   avatarUrl,
   canUpgrade,
@@ -56,12 +50,10 @@ export function DashboardLayout({
   return (
     <div className="min-h-screen bg-bg">
       <Sidebar
+        brandName={brandName}
+        brandTagline={brandTagline}
         groups={navGroups}
         activeId={activeNavId}
-        searchPlaceholder={searchPlaceholder}
-        searchQuery={searchQuery}
-        onSearch={onSearch}
-        onClearSearch={onClearSearch}
         userName={userName}
         canUpgrade={canUpgrade}
         onSelect={onSelectNav}
@@ -82,8 +74,6 @@ export function DashboardLayout({
 
       <div className="lg:ms-[264px]">
         <Topbar
-          brandName={brandName}
-          brandTagline={brandTagline}
           avatarUrl={avatarUrl}
           displayName={userName}
           isGuest={Boolean(canUpgrade)}

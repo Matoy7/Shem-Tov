@@ -2,11 +2,8 @@ import { IconButton } from "@/components/ui/IconButton"
 import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
 import { List } from "@phosphor-icons/react"
 import { AccountMenu } from "@/features/auth/AccountMenu"
-import { assets } from "@/lib/assets"
 
 type TopbarProps = {
-  brandName: string
-  brandTagline: string
   /** Provider avatar, or the deterministic generated one. */
   avatarUrl: string
   displayName: string
@@ -17,20 +14,17 @@ type TopbarProps = {
 }
 
 /**
- * Sticky application bar.
+ * Sticky application bar — account controls and, below `lg:`, the hamburger
+ * that opens the mobile drawer.
  *
- * Desktop (`sm:` and up): unchanged — the original linear layout, hero
- * illustration, brand lockup at the inline start, account controls pushed
- * to the inline end.
- *
- * Mobile: a simple two-item row — menu button and account avatar pinned to
- * opposite corners, no centered logo mark (the brand is now established by
- * the hero heading below the header instead, per the redesigned Home
- * screen — see HomeScreen.tsx and DESIGN_GUIDE.md).
+ * The brand lockup (mascot, name, tagline) that used to live here moved into
+ * the sidebar instead, once the sidebar became the persistent, always-
+ * visible home for the brand on desktop; keeping a second copy in the topbar
+ * was redundant. Mobile still has no logo mark here either — the brand is
+ * established by the Home screen's own hero heading instead (see
+ * HomeScreen.tsx and DESIGN_GUIDE.md).
  */
 export function Topbar({
-  brandName,
-  brandTagline,
   avatarUrl,
   displayName,
   isGuest,
@@ -59,7 +53,9 @@ export function Topbar({
         />
       </div>
 
-      {/* Desktop (sm: and up): the original layout, unchanged. */}
+      {/* Desktop (sm: and up): hamburger (only shown below lg:, once the
+          sidebar itself is hidden) plus account controls — no brand lockup
+          here any more, since that now lives in the sidebar. */}
       <div className="hidden items-center gap-3 px-4 py-3 sm:flex sm:gap-4 md:gap-5 md:px-6 lg:px-8">
         <IconButton
           label="פתיחת תפריט"
@@ -71,28 +67,8 @@ export function Topbar({
           <PhosphorIcon icon={List} size={22} color="currentColor" />
         </IconButton>
 
-        <img
-          src={assets.brainMascotCheerful}
-          alt=""
-          aria-hidden
-          width={96}
-          height={96}
-          className="size-12 shrink-0 rounded-full bg-surface-secondary object-contain sm:size-20 md:size-24"
-        />
-
-        <div className="flex min-w-0 flex-col gap-1">
-          <h1 className="truncate font-display text-page-title font-bold text-content-primary sm:text-display">
-            {brandName}
-          </h1>
-          {/* Wraps rather than truncates: the tagline is the product's one
-              line of explanation, so a clipped half of it is worse than a
-              second line on narrow screens. */}
-          <p className="text-balance text-body-sm text-content-muted sm:truncate sm:text-body-lg">
-            {brandTagline}
-          </p>
-        </div>
-
-        {/* Account controls — `ms-auto` pushes them to the inline end. */}
+        {/* `ms-auto` pushes account controls to the inline end regardless of
+            whether the hamburger button above is present at this width. */}
         <div className="ms-auto flex shrink-0 items-center gap-2 sm:gap-3">
           <AccountMenu
             displayName={displayName}

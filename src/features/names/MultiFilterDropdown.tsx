@@ -119,7 +119,7 @@ export function MultiFilterDropdown<T extends string>({
             onClick={() => toggle(opt.value)}
             className={cn(
               "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-start text-body-sm transition-colors duration-150",
-              "hover:bg-surface-hover",
+              "hover:bg-[#fef8f3]",
             )}
           >
             <span
@@ -127,15 +127,15 @@ export function MultiFilterDropdown<T extends string>({
               className={cn(
                 "flex size-4 shrink-0 items-center justify-center rounded border transition-colors duration-150",
                 checked
-                  ? "border-[#6f1e35] bg-[#6f1e35] text-white sm:border-accent sm:bg-accent sm:text-content-inverse"
-                  : "border-border-strong bg-surface",
+                  ? "border-[#6f1e35] bg-[#6f1e35] text-white"
+                  : "border-[#e0d5cd] bg-white",
               )}
             >
               {checked ? (
                 <PhosphorIcon icon={Check} size={10} color="currentColor" weight="bold" />
               ) : null}
             </span>
-            <span className={checked ? "font-medium text-content-primary" : "text-content-secondary"}>{opt.label}</span>
+            <span className={checked ? "font-medium text-[#1d1b19]" : "text-[#544245]"}>{opt.label}</span>
           </button>
         )
       })}
@@ -147,14 +147,14 @@ export function MultiFilterDropdown<T extends string>({
       <button
         type="button"
         onClick={() => setDraft([])}
-        className="text-caption font-medium text-content-muted hover:text-content-secondary"
+        className="text-caption font-medium text-[#877275] hover:text-[#544245]"
       >
         ניקוי
       </button>
       <button
         type="button"
         onClick={commitAndClose}
-        className="rounded-md bg-[#6f1e35] px-3 py-1.5 text-caption font-semibold text-white hover:opacity-90 sm:bg-accent sm:text-content-inverse"
+        className="rounded-md bg-[#6f1e35] px-3 py-1.5 text-caption font-semibold text-white hover:opacity-90"
       >
         החלה
       </button>
@@ -172,17 +172,16 @@ export function MultiFilterDropdown<T extends string>({
         className={cn(
           "flex h-10 shrink-0 items-center gap-1.5 rounded-full border-0 bg-white px-4 text-body-sm font-semibold text-[#6f1e35]",
           "shadow-[0px_2px_3px_rgba(0,0,0,0.05)] transition-colors duration-150 whitespace-nowrap",
-          "sm:h-9 sm:rounded-full sm:border sm:bg-surface sm:px-3.5 sm:font-medium sm:text-content-secondary sm:shadow-none sm:hover:bg-surface-hover",
-          active ? "sm:border-accent/40" : "sm:border-border",
+          "sm:h-9 sm:px-3.5 sm:font-medium sm:hover:bg-[#fff0f2]",
         )}
       >
         <span>{label}</span>
         {active ? (
-          <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#6f1e35] text-[10px] font-semibold leading-none text-white sm:bg-accent sm:text-content-inverse">
+          <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#6f1e35] text-[10px] font-semibold leading-none text-white">
             {values.length}
           </span>
         ) : null}
-        <ChevronDown className={cn("text-content-muted", open ? "-scale-y-100" : undefined)} />
+        <ChevronDown className={cn("text-[#877275]", open ? "-scale-y-100" : undefined)} />
       </button>
 
       {open && !isCompact ? (
@@ -196,7 +195,7 @@ export function MultiFilterDropdown<T extends string>({
             "bg-surface shadow-overlay animate-notifications-in",
           )}
         >
-          <p className="px-3 pt-3 pb-1 text-caption font-semibold text-content-muted">{label}</p>
+          <p className="px-3 pt-3 pb-1 text-caption font-semibold text-[#877275]">{label}</p>
           {optionsList}
           {footer}
         </div>
@@ -214,8 +213,8 @@ export function MultiFilterDropdown<T extends string>({
                 dir="rtl"
                 className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col rounded-t-lg border border-border-subtle bg-surface pb-6 shadow-overlay"
               >
-                <span aria-hidden className="mx-auto mb-2 mt-3 block h-1 w-10 shrink-0 rounded-full bg-border-strong/50" />
-                <p className="px-4 pb-2 text-body font-semibold text-content-primary">{label}</p>
+                <span aria-hidden className="mx-auto mb-2 mt-3 block h-1 w-10 shrink-0 rounded-full bg-[#e0d5cd]/50" />
+                <p className="px-4 pb-2 text-body font-semibold text-[#1d1b19]">{label}</p>
                 <div className="px-2.5">{optionsList}</div>
                 {footer}
               </div>

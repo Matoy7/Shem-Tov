@@ -58,7 +58,7 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
       <div
         role="radiogroup"
         aria-label="למי מיועד השם"
-        className="flex shrink-0 items-center gap-1.5 sm:gap-0.5 sm:rounded-full sm:bg-surface-hover sm:p-1"
+        className="flex shrink-0 items-center gap-1.5 sm:gap-0.5 sm:rounded-full sm:bg-[#f3ede8] sm:p-1"
       >
         {GENDER_TABS.map((tab) => {
           const active = value.gender === tab.value
@@ -76,8 +76,8 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
                 "flex h-9 shrink-0 items-center rounded-full px-4 text-body-sm font-semibold transition-colors duration-150",
                 "sm:h-7 sm:px-3 sm:font-medium",
                 active
-                  ? "bg-[#ffd9de] text-[#6f1e35] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sm:bg-surface sm:text-content-primary sm:shadow-panel"
-                  : "bg-white text-[#544245] sm:bg-transparent sm:text-content-secondary sm:hover:text-content-primary",
+                  ? "bg-[#ffd9de] text-[#6f1e35] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
+                  : "bg-white text-[#544245] sm:bg-transparent sm:hover:text-[#6f1e35]",
               )}
             >
               {tab.label}
@@ -86,7 +86,7 @@ export function NameFiltersBar({ value, onChange, onFilterClick }: NameFiltersBa
         })}
       </div>
 
-      <span aria-hidden className="mx-0.5 hidden h-5 w-px shrink-0 bg-border sm:block" />
+      <span aria-hidden className="mx-0.5 hidden h-5 w-px shrink-0 bg-[#f0e8e0] sm:block" />
 
       <div className="flex flex-wrap items-center gap-1.5">
         <MultiFilterDropdown

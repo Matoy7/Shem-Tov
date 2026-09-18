@@ -38,6 +38,35 @@ export function SidebarFooter({ userName, onSignOut }: SidebarFooterProps) {
   )
 }
 
+type SidebarBrandProps = {
+  brandName: string
+  brandTagline: string
+}
+
+/**
+ * Brand lockup pinned to the sidebar's top slot — moved here from the
+ * topbar, where it used to live before the sidebar became the persistent,
+ * always-visible home for the brand on desktop. Same mascot as the mobile
+ * Home screen's own hero (see HomeScreen.tsx), sized to fit the sidebar's
+ * fixed 264px width rather than the topbar's much larger scale.
+ */
+function SidebarBrand({ brandName, brandTagline }: SidebarBrandProps) {
+  return (
+    <div className="flex items-center gap-3">
+      <img
+        src={assets.brainMascotCheerful}
+        alt=""
+        aria-hidden
+        className="size-14 shrink-0 rounded-full bg-[#fff0f2] object-contain"
+      />
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <h1 className="truncate text-[20px] font-bold text-[#6f1e35]">{brandName}</h1>
+        <p className="text-[12px] leading-4 text-[#877275]">{brandTagline}</p>
+      </div>
+    </div>
+  )
+}
+
 type SidebarSearchProps = {
   placeholder: string
   /** The currently active, submitted query — "" when search is inactive. */
@@ -47,14 +76,10 @@ type SidebarSearchProps = {
 }
 
 /**
- * Search field occupying the sidebar's top slot. The 48px wrapper keeps the
- * navigation below it at the same vertical position regardless of the
- * control's own height.
- *
- * The field itself is uncontrolled draft text: search only actually runs on
- * Enter or the search button, never on every keystroke. `query` is the
- * active/submitted value, so the field stays in sync if the search is
- * cleared from elsewhere (e.g. switching feed tabs).
+ * Search field — no longer part of the sidebar itself (removed from there
+ * since it was the only sidebar control that only ever applied to one of
+ * the four screens). Still exported and used directly inside the name-
+ * selection screen instead, where a name search actually applies.
  */
 export function SidebarSearch({
   placeholder,
@@ -79,7 +104,7 @@ export function SidebarSearch({
           type="button"
           aria-label="חיפוש"
           onClick={submit}
-          className="absolute start-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
+          className="absolute start-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35]"
         >
           <PhosphorIcon icon={MagnifyingGlass} size={18} color="currentColor" />
         </button>
@@ -103,9 +128,6 @@ export function SidebarSearch({
             "border-transparent text-[#6f1e35] placeholder:text-[#877275] transition-colors duration-150",
             "focus-visible:border-[#ffd9de]",
             "ps-10 pe-10",
-            "sm:h-10 sm:rounded-md sm:border sm:border-border sm:bg-surface sm:text-content-primary",
-            "sm:placeholder:text-content-muted sm:shadow-none sm:ps-9 sm:pe-9",
-            "sm:hover:border-border-strong sm:focus-visible:border-focus",
           )}
         />
 
@@ -117,7 +139,7 @@ export function SidebarSearch({
               setDraft("")
               onClear()
             }}
-            className="absolute end-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35] sm:text-content-muted sm:hover:text-content-primary"
+            className="absolute end-0 z-10 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#6f1e35]/60 transition-colors duration-150 hover:text-[#6f1e35]"
           >
             <PhosphorIcon icon={X} size={16} color="currentColor" />
           </button>
@@ -180,12 +202,10 @@ export function SidebarNav({ groups, activeId, onSelect }: SidebarNavProps) {
 }
 
 type SidebarProps = {
+  brandName: string
+  brandTagline: string
   groups: NavItem[][]
   activeId: string
-  searchPlaceholder: string
-  searchQuery: string
-  onSearch: (query: string) => void
-  onClearSearch: () => void
   userName: string
   canUpgrade?: boolean
   onSelect: (id: string) => void
@@ -195,12 +215,10 @@ type SidebarProps = {
 
 /** Fixed desktop sidebar. Hidden below the `lg` breakpoint. */
 export function Sidebar({
+  brandName,
+  brandTagline,
   groups,
   activeId,
-  searchPlaceholder,
-  searchQuery,
-  onSearch,
-  onClearSearch,
   userName,
   canUpgrade,
   onSelect,
@@ -214,14 +232,8 @@ export function Sidebar({
         "flex-col gap-8 border-e border-border bg-surface px-4 py-6",
       )}
     >
-      <img src={assets.logoStacked} alt="טפשת" className="h-9 w-auto self-start object-contain" />
+      <SidebarBrand brandName={brandName} brandTagline={brandTagline} />
 
-      <SidebarSearch
-        placeholder={searchPlaceholder}
-        query={searchQuery}
-        onSearch={onSearch}
-        onClear={onClearSearch}
-      />
       <SidebarNav groups={groups} activeId={activeId} onSelect={onSelect} />
       <SidebarFooter userName={userName} onSignOut={onSignOut} />
     </aside>

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { DashboardLayout } from "@/components/layout/DashboardLayout"
 import { DesktopScreenHeader } from "@/components/layout/DesktopScreenHeader"
 import { Section } from "@/components/layout/Section"
+import { SidebarSearch } from "@/components/layout/Sidebar"
 import { EmptyState } from "@/components/ui/EmptyState"
 import { Modal } from "@/components/ui/Modal"
 import { Button } from "@/components/ui/Button"
@@ -259,10 +260,6 @@ export default function App() {
         activeNavId={mobileView}
         mobileCategories={mobileCategories}
         activeMobileCategoryId={mobileView}
-        searchPlaceholder="חיפוש שם"
-        searchQuery={searchQuery}
-        onSearch={setSearchQuery}
-        onClearSearch={() => setSearchQuery("")}
         userName={userName}
         avatarUrl={avatarUrl}
         canUpgrade={canUpgradeAccount(session.user)}
@@ -350,6 +347,16 @@ export default function App() {
                   subtitle="עיינו, חפשו וסננו מתוך הקטלוג המשותף של טפשת, ושמרו את השמות שאהבתם."
                 />
               </div>
+
+              {/* Search used to live in the sidebar, where it was the only
+                  control that applied to just this one screen — now it lives
+                  here instead, right alongside the filters it works with. */}
+              <SidebarSearch
+                placeholder="חיפוש שם"
+                query={searchQuery}
+                onSearch={setSearchQuery}
+                onClear={() => setSearchQuery("")}
+              />
 
               <NameFiltersBar
               value={filters}
