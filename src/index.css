@@ -199,19 +199,16 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Mobile-only: cream/off-white background per the mobile design
-     reference — matches Tailwind's own `sm:` breakpoint exactly, so it
-     reverts to the standard --color-bg lavender the instant a screen is
-     wide enough to be treated as "not mobile" anywhere else in the app.
-     Overrides the --color-bg custom property itself, not just body's own
-     background-color — every element using the bg-bg utility (the page
-     wrapper in DashboardLayout, the login/loading screens) resolves
-     through this variable, so overriding just body left all of those
-     still showing the lavender base value underneath. */
-  @media (max-width: 639px) {
-    :root {
-      --color-bg: var(--color-tafsheet-bg);
-    }
+  /* Cream/off-white background per the Tefeshet design reference, at every
+     width — the desktop workspace uses the exact same palette as mobile,
+     not the older lavender default below. Overrides the --color-bg custom
+     property itself, not just body's own background-color — every element
+     using the bg-bg utility (the page wrapper in DashboardLayout, the
+     login/loading screens) resolves through this variable, so overriding
+     just body left all of those still showing the lavender base value
+     underneath. */
+  :root {
+    --color-bg: var(--color-tafsheet-bg);
   }
 
   /* One consistent focus treatment for every interactive element. */

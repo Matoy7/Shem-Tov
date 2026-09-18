@@ -4,6 +4,7 @@ import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
 import { X, MagnifyingGlass } from "@phosphor-icons/react"
 import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 import { cn } from "@/lib/cn"
+import { assets } from "@/lib/assets"
 
 export type NavItem = {
   id: string
@@ -21,8 +22,8 @@ type SidebarFooterProps = {
 /** Account block pinned to the bottom of the sidebar. */
 export function SidebarFooter({ userName, onSignOut }: SidebarFooterProps) {
   return (
-    <div className="mt-auto flex flex-col gap-2 border-t border-border pt-4">
-      <p className="truncate px-3 text-label text-content-muted">{userName}</p>
+    <div className="mt-auto flex flex-col gap-2 border-t border-[#f0e8e0] pt-4">
+      <p className="truncate px-3 text-label text-[#877275]">{userName}</p>
 
       <Button
         variant="ghost"
@@ -127,52 +128,59 @@ export function SidebarSearch({
 }
 
 type SidebarNavProps = {
-  items: NavItem[]
+  /** Groups of items, each separated by a thin divider — lets the sidebar
+   * read as "product areas" then "names" then account, instead of one flat
+   * list, without inventing a new nav visual language. */
+  groups: NavItem[][]
   activeId: string
   onSelect?: (id: string) => void
 }
 
 /** Navigation list — shared by the desktop sidebar and the mobile drawer. */
-export function SidebarNav({ items, activeId, onSelect }: SidebarNavProps) {
+export function SidebarNav({ groups, activeId, onSelect }: SidebarNavProps) {
   return (
-    <nav aria-label="ניווט ראשי">
-      <ul className="flex flex-col gap-1">
-        {items.map((item) => {
-          const active = item.id === activeId
-          return (
-            <li key={item.id}>
-              <button
-                type="button"
-                aria-current={active ? "page" : undefined}
-                onClick={() => onSelect?.(item.id)}
-                className={cn(
-                  "flex h-10 w-full items-center gap-3 rounded-md px-3 transition-colors duration-150",
-                  "text-body font-medium",
-                  active
-                    ? "bg-surface-muted text-content-primary shadow-panel"
-                    : "text-content-secondary hover:bg-surface-hover hover:text-content-primary",
-                )}
-              >
-                <PhosphorIcon icon={item.icon} size={20} color="currentColor" />
-                <span className="flex min-w-0 items-baseline gap-1">
-                  <span className="truncate">{item.label}</span>
-                  {typeof item.count === "number" ? (
-                    <span className="shrink-0 text-body-sm font-normal text-content-muted">
-                      ({item.count})
+    <nav aria-label="ניווט ראשי" className="flex flex-col gap-4">
+      {groups.map((items, groupIndex) => (
+        <div key={groupIndex} className={cn("flex flex-col gap-1", groupIndex > 0 && "border-t border-border pt-4")}>
+          <ul className="flex flex-col gap-1">
+            {items.map((item) => {
+              const active = item.id === activeId
+              return (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => onSelect?.(item.id)}
+                    className={cn(
+                      "flex h-10 w-full items-center gap-3 rounded-md px-3 transition-colors duration-150",
+                      "text-body font-medium",
+                      active
+                        ? "bg-[#ffd9de] text-[#6f1e35]"
+                        : "text-content-secondary hover:bg-surface-hover hover:text-content-primary",
+                    )}
+                  >
+                    <PhosphorIcon icon={item.icon} size={20} color={active ? "#6f1e35" : "currentColor"} />
+                    <span className="flex min-w-0 items-baseline gap-1">
+                      <span className="truncate">{item.label}</span>
+                      {typeof item.count === "number" ? (
+                        <span className="shrink-0 text-body-sm font-normal text-content-muted">
+                          ({item.count})
+                        </span>
+                      ) : null}
                     </span>
-                  ) : null}
-                </span>
-              </button>
-            </li>
-          )
-        })}
-      </ul>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
     </nav>
   )
 }
 
 type SidebarProps = {
-  items: NavItem[]
+  groups: NavItem[][]
   activeId: string
   searchPlaceholder: string
   searchQuery: string
@@ -187,7 +195,7 @@ type SidebarProps = {
 
 /** Fixed desktop sidebar. Hidden below the `lg` breakpoint. */
 export function Sidebar({
-  items,
+  groups,
   activeId,
   searchPlaceholder,
   searchQuery,
@@ -206,13 +214,15 @@ export function Sidebar({
         "flex-col gap-8 border-e border-border bg-surface px-4 py-6",
       )}
     >
+      <img src={assets.logoStacked} alt="טפשת" className="h-9 w-auto self-start object-contain" />
+
       <SidebarSearch
         placeholder={searchPlaceholder}
         query={searchQuery}
         onSearch={onSearch}
         onClear={onClearSearch}
       />
-      <SidebarNav items={items} activeId={activeId} onSelect={onSelect} />
+      <SidebarNav groups={groups} activeId={activeId} onSelect={onSelect} />
       <SidebarFooter userName={userName} onSignOut={onSignOut} />
     </aside>
   )

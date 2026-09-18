@@ -7,7 +7,7 @@ import { Topbar } from "./Topbar"
 type DashboardLayoutProps = {
   brandName: string
   brandTagline: string
-  navItems: NavItem[]
+  navGroups: NavItem[][]
   activeNavId: string
   /** Mobile hamburger drawer content — the Home screen's own categories,
    * not the desktop sidebar's single "browse" item (the two intentionally
@@ -35,7 +35,7 @@ type DashboardLayoutProps = {
 export function DashboardLayout({
   brandName,
   brandTagline,
-  navItems,
+  navGroups,
   activeNavId,
   mobileCategories,
   activeMobileCategoryId,
@@ -56,7 +56,7 @@ export function DashboardLayout({
   return (
     <div className="min-h-screen bg-bg">
       <Sidebar
-        items={navItems}
+        groups={navGroups}
         activeId={activeNavId}
         searchPlaceholder={searchPlaceholder}
         searchQuery={searchQuery}

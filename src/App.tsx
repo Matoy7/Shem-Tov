@@ -36,13 +36,27 @@ import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
 import { LeavingScreen } from "@/features/leaving/LeavingScreen"
 import { ROUTE_FOR_VIEW, viewForPathname, type MobileView } from "@/lib/screenRoutes"
+import { useIsDesktop } from "@/lib/useIsDesktop"
 import { cn } from "@/lib/cn"
 
 const PRODUCT_NAME = "טפשת"
 const TAGLINE = "עוזרים לך לזכור את מה שחשוב"
 const PRIVACY_NOTE = "השמות שאתם שומרים גלויים רק לכם."
 
-const NAV_ITEMS = [{ id: "browse", label: "עיון בשמות", icon: ListMagnifyingGlass }]
+// Desktop sidebar navigation: the product's functional areas, then names,
+// as two groups — no "settings" row, since there is no settings screen to
+// send it to, and no "home" row, since desktop has no Home screen (see the
+// redirect effect below). Same icons as the mobile drawer's own categories,
+// so desktop and mobile read as the same navigation, just laid out
+// differently.
+const NAV_GROUPS = [
+  [
+    { id: "bag", label: "הכנת תיק לידה", icon: Suitcase },
+    { id: "gear", label: "ציוד לתינוק", icon: Basket },
+    { id: "leaving", label: "לפני שיוצאים", icon: CarSimple },
+  ],
+  [{ id: "browse", label: "בחירת שם", icon: ListMagnifyingGlass }],
+]
 
 export default function App() {
   const { session, loading: sessionLoading, profileLoading, displayName, setDisplayName } = useSession()
@@ -94,6 +108,25 @@ export default function App() {
       onSelect: () => setMobileView("leaving"),
     },
   ]
+
+  // Desktop has no Home screen — it's a workspace the person lands directly
+  // inside a functional area of, per the desktop-layout brief. Mirrors the
+  // same four early-return gates below (Supabase configured, session
+  // resolved, guest profile loaded, guest has chosen a name) so this never
+  // fires while one of those screens — not the dashboard — is what's
+  // actually showing.
+  const isDesktop = useIsDesktop()
+  const readyForDashboard =
+    isSupabaseConfigured &&
+    !sessionLoading &&
+    !(session && isGuest(session.user) && profileLoading) &&
+    Boolean(session) &&
+    !(session && isGuest(session.user) && displayName === null)
+
+  useEffect(() => {
+    if (!readyForDashboard || !isDesktop || mobileView !== "home") return
+    navigate(ROUTE_FOR_VIEW.bag, { replace: true })
+  }, [readyForDashboard, isDesktop, mobileView, navigate])
 
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
   const [sort, setSort] = useState<"alphabetical" | "popularity">("alphabetical")
@@ -220,8 +253,8 @@ export default function App() {
       <DashboardLayout
         brandName={PRODUCT_NAME}
         brandTagline={TAGLINE}
-        navItems={NAV_ITEMS}
-        activeNavId="browse"
+        navGroups={NAV_GROUPS}
+        activeNavId={mobileView}
         mobileCategories={mobileCategories}
         activeMobileCategoryId={mobileView}
         searchPlaceholder="חיפוש שם"
@@ -231,7 +264,7 @@ export default function App() {
         userName={userName}
         avatarUrl={avatarUrl}
         canUpgrade={canUpgradeAccount(session.user)}
-        onSelectNav={() => {}}
+        onSelectNav={(id) => setMobileView(id as MobileView)}
         onUpgrade={startAccountLink}
         onSignOut={() => {
           if (canUpgradeAccount(session.user)) setConfirmGuestSignOut(true)
@@ -266,10 +299,11 @@ export default function App() {
           <LeavingScreen onBack={() => setMobileView("home")} />
         </div>
 
-        {/* The existing name catalogue — byte-for-byte unchanged. Always
-            visible on desktop (sm:block, regardless of mobileView); on
-            mobile, visible only once mobileView is "browse". */}
-        <div className={mobileView !== "browse" ? "hidden sm:block" : undefined}>
+        {/* The existing name catalogue — its own content byte-for-byte
+            unchanged. Now visible (mobile or desktop) only when "browse" is
+            the active route, like every other screen, rather than always
+            showing on desktop regardless of navigation. */}
+        <div className={cn(mobileView === "browse" ? undefined : "hidden")}>
           <Section
             title="כל השמות"
             mobileTitle="בחירת שם"
