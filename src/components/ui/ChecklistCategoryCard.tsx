@@ -1,16 +1,17 @@
 import type { ReactNode } from "react"
-import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
-import { Check } from "@phosphor-icons/react"
+import { ChecklistItemList, type ChecklistRowItem } from "@/components/ui/ChecklistItemList"
 
 /**
  * Desktop counterpart to `AccordionItem`: same card shell, icon-circle,
  * title and progress-badge language as the mobile accordion header (see
  * Accordion.tsx) — but the items are always visible, never collapsed, and
  * no subtitle under the title (mobile's accordion header keeps its own).
- * Desktop has the room to show the whole checklist at once, so there is
- * nothing to expand or collapse here.
+ * Desktop has the room to show the whole checklist at once — up to 5 items;
+ * beyond that, the list scrolls inside a fixed-height area (see
+ * ChecklistItemList) instead of pushing the whole card grid out of
+ * alignment.
  */
-export type ChecklistCardItem = { id: string; label: string }
+export type ChecklistCardItem = ChecklistRowItem
 
 type ChecklistCategoryCardProps = {
   icon: ReactNode
@@ -18,30 +19,6 @@ type ChecklistCategoryCardProps = {
   items: ChecklistCardItem[]
   checked: Set<string>
   onToggle: (id: string) => void
-}
-
-function DesktopChecklistRow({ item, checked, onToggle }: { item: ChecklistCardItem; checked: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-pressed={checked}
-      className="flex w-full items-center gap-2.5 rounded-lg px-1 py-1.5 text-right transition-colors duration-150 hover:bg-[#fef8f3]"
-    >
-      <span
-        aria-hidden
-        className={
-          "flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors " +
-          (checked ? "border-[#6f1e35] bg-[#6f1e35]" : "border-[#e0d5cd] bg-white")
-        }
-      >
-        {checked ? <PhosphorIcon icon={Check} size={10} color="white" weight="bold" /> : null}
-      </span>
-      <span className={"text-[15px] leading-5 " + (checked ? "text-[#877275] line-through" : "text-[#1d1b19]")}>
-        {item.label}
-      </span>
-    </button>
-  )
 }
 
 export function ChecklistCategoryCard({ icon, title, items, checked, onToggle }: ChecklistCategoryCardProps) {
@@ -70,10 +47,8 @@ export function ChecklistCategoryCard({ icon, title, items, checked, onToggle }:
         </span>
       </div>
 
-      <div className="flex flex-col gap-0.5 border-t border-[#f0e8e0] pt-2">
-        {items.map((item) => (
-          <DesktopChecklistRow key={item.id} item={item} checked={checked.has(item.id)} onToggle={() => onToggle(item.id)} />
-        ))}
+      <div className="border-t border-[#f0e8e0] pt-2">
+        <ChecklistItemList items={items} checked={checked} onToggle={onToggle} variant="desktop" />
       </div>
     </div>
   )

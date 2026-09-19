@@ -248,6 +248,24 @@
     display: none;
   }
 
+  /* Subtle internal scroll for a checklist card past 5 items on desktop
+     (see ChecklistItemList) — thin and in the app's own neutral-brown
+     family, never the browser's default chunky bar, never a new color. */
+  .checklist-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-tafsheet-border) transparent;
+  }
+  .checklist-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+  .checklist-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .checklist-scroll::-webkit-scrollbar-thumb {
+    background-color: #e0d5cd;
+    border-radius: 999px;
+  }
+
   /* A single restrained beat when a like lands — enough to feel registered,
      short of the bounce a social feed would use. Neutralised automatically by
      the reduced-motion block below. */

@@ -2,10 +2,11 @@ import { useState } from "react"
 import { AccordionItem } from "@/components/ui/Accordion"
 import { ChecklistCategoryCard } from "@/components/ui/ChecklistCategoryCard"
 import { ChecklistCategoryGrid } from "@/components/ui/ChecklistCategoryGrid"
+import { ChecklistItemList } from "@/components/ui/ChecklistItemList"
 import { DesktopScreenHeader } from "@/components/layout/DesktopScreenHeader"
 import { assets } from "@/lib/assets"
 import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
-import { Check, Bed, Suitcase, Bathtub, TShirt, BowlFood, Lightbulb } from "@phosphor-icons/react"
+import { Bed, Suitcase, Bathtub, TShirt, BowlFood, Lightbulb } from "@phosphor-icons/react"
 import type { Icon as PhosphorIconComponent } from "@phosphor-icons/react"
 
 /**
@@ -138,32 +139,6 @@ const CATEGORIES: GearCategory[] = [
   },
 ]
 
-function ChecklistRow({ item, checked, onToggle }: { item: GearItem; checked: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-pressed={checked}
-      className="flex w-full items-center gap-2.5 py-1.5 text-right"
-    >
-      <span
-        aria-hidden
-        className={
-          "flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors " +
-          (checked ? "border-[#6f1e35] bg-[#6f1e35]" : "border-[#e0d5cd] bg-white")
-        }
-      >
-        {checked ? (
-          <PhosphorIcon icon={Check} size={10} color="white" weight="bold" />
-        ) : null}
-      </span>
-      <span className={"text-[14px] leading-5 " + (checked ? "text-[#877275] line-through" : "text-[#1d1b19]")}>
-        {item.label}
-      </span>
-    </button>
-  )
-}
-
 type BabyGearScreenProps = {
   onBack: () => void
 }
@@ -224,11 +199,7 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
                   </span>
                 }
               >
-                <div className="flex flex-col gap-1">
-                  {category.items.map((item) => (
-                    <ChecklistRow key={item.id} item={item} checked={checked.has(item.id)} onToggle={() => toggle(item.id)} />
-                  ))}
-                </div>
+                <ChecklistItemList items={category.items} checked={checked} onToggle={toggle} variant="mobile" />
               </AccordionItem>
             )
           })}
