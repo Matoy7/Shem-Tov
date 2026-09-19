@@ -35,6 +35,10 @@ export const assets = {
   homeNames: `${base}/home-names.png`,
   homeLeaving: `${base}/home-leaving.png`,
   homeBabyGear: `${base}/home-baby-gear.png`,
+  /** בעלי מקצוע category illustration — the user's own supplied artwork,
+   *  background-removed and cropped to match the other category images'
+   *  transparent-PNG convention above. */
+  homeProfessionals: `${base}/home-professionals.png`,
   iconPerson: `${base}/8fa3b.svg`,
   iconQuote: `${base}/e9844.svg`,
   iconBell: `${base}/47618.svg`,

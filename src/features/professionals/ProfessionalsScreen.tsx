@@ -1,6 +1,6 @@
+import { DesktopScreenHeader } from "@/components/layout/DesktopScreenHeader"
 import { SidebarSearch } from "@/components/layout/Sidebar"
-import { Icon as PhosphorIcon } from "@/components/ui/PhosphorIcon"
-import { UsersThree } from "@phosphor-icons/react"
+import { assets } from "@/lib/assets"
 import { useProfessionals, type ProfessionalSort } from "./useProfessionals"
 import { ProfessionalCategories } from "./ProfessionalCategories"
 import { ProfessionalFilters } from "./ProfessionalFilters"
@@ -15,15 +15,14 @@ type ProfessionalsScreenProps = {
 
 /**
  * בעלי מקצוע — a directory of pregnancy/postpartum professionals, following
- * the same screen anatomy as Hospital Bag / Baby Gear / Leaving: a mobile
- * hero (icon in a soft-pink circle standing in for a dedicated illustration
- * — none exists yet for this category, and per the product's icon brief a
- * new icon comes from Phosphor rather than a fabricated PNG) + back button,
- * a compact DesktopScreenHeader on desktop, one Section-less flow of
- * category → search → filters → results shared by both breakpoints. All
- * state (category, search, filters, sort, favorites) lives here, exactly
- * like the checklist screens keep their own state — nothing needs lifting
- * to App.tsx since nothing here is logged or shared across screens.
+ * the same screen anatomy as Baby Gear / Leaving: a mobile hero (category
+ * illustration + back button) and a compact DesktopScreenHeader on desktop,
+ * both using the same image at the same size as every other category — one
+ * Section-less flow of category → search → filters → results shared by both
+ * breakpoints. All state (category, search, filters, sort, favorites) lives
+ * here, exactly like the checklist screens keep their own state — nothing
+ * needs lifting to App.tsx since nothing here is logged or shared across
+ * screens.
  */
 export function ProfessionalsScreen({ onBack }: ProfessionalsScreenProps) {
   const { category, setCategory, search, setSearch, filters, setFilters, sort, setSort, results, favorites, toggleFavorite } =
@@ -44,9 +43,7 @@ export function ProfessionalsScreen({ onBack }: ProfessionalsScreenProps) {
         </button>
 
         <div className="flex flex-col items-center pb-2 pt-1 text-center">
-          <span aria-hidden className="mb-1 flex size-28 items-center justify-center rounded-full bg-[rgba(255,217,222,0.4)]">
-            <PhosphorIcon icon={UsersThree} size={56} color="#6f1e35" weight="duotone" />
-          </span>
+          <img src={assets.homeProfessionals} alt="" aria-hidden className="mb-1 h-28 w-28 object-contain" />
           <h1 className="text-[26px] font-black leading-[34px] text-[#6f1e35]">בעלי מקצוע</h1>
           <p className="mt-1 text-[14px] leading-[22px] text-[#544245]">
             אנשים שיכולים לעזור לך בתקופת ההריון, הלידה והחודשים הראשונים
@@ -54,20 +51,14 @@ export function ProfessionalsScreen({ onBack }: ProfessionalsScreenProps) {
         </div>
       </div>
 
-      {/* Desktop header — same compact anatomy as DesktopScreenHeader (used
-          by Bag/Gear/Leaving), but with the icon-circle standing in for
-          that component's mandatory illustration prop, since no dedicated
-          artwork exists for this category yet. */}
-      <div className="hidden items-center gap-4 pb-1 sm:flex">
-        <span aria-hidden className="flex size-14 shrink-0 items-center justify-center rounded-full bg-[rgba(255,217,222,0.4)]">
-          <PhosphorIcon icon={UsersThree} size={28} color="#6f1e35" weight="duotone" />
-        </span>
-        <div>
-          <h1 className="text-[26px] font-bold leading-[32px] text-[#6f1e35]">בעלי מקצוע</h1>
-          <p className="mt-0.5 text-[15px] leading-5 text-[#544245]">
-            אנשים שיכולים לעזור לך בתקופת ההריון, הלידה והחודשים הראשונים
-          </p>
-        </div>
+      {/* Desktop header — same DesktopScreenHeader component Bag/Gear/
+          Leaving use, with the same image at the same h-14 w-14 size. */}
+      <div className="hidden sm:block">
+        <DesktopScreenHeader
+          image={assets.homeProfessionals}
+          title="בעלי מקצוע"
+          subtitle="אנשים שיכולים לעזור לך בתקופת ההריון, הלידה והחודשים הראשונים"
+        />
       </div>
 
       <div className="mt-4 flex flex-col gap-4">
