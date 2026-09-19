@@ -23,7 +23,7 @@ import {
 } from "@/features/auth/linkAccount"
 import { assets } from "@/lib/assets"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
-import { ListMagnifyingGlass, Suitcase, Basket, CarSimple } from "@phosphor-icons/react"
+import { ListMagnifyingGlass, Suitcase, Basket, CarSimple, UsersThree } from "@phosphor-icons/react"
 import type { MobileCategoryItem } from "@/components/layout/MobileNav"
 
 import { useNames } from "@/features/names/useNames"
@@ -37,6 +37,7 @@ import { HomeScreen } from "@/features/home/HomeScreen"
 import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
 import { LeavingScreen } from "@/features/leaving/LeavingScreen"
+import { ProfessionalsScreen } from "@/features/professionals/ProfessionalsScreen"
 import { ROUTE_FOR_VIEW, viewForPathname, type MobileView } from "@/lib/screenRoutes"
 import { useIsDesktop } from "@/lib/useIsDesktop"
 import { cn } from "@/lib/cn"
@@ -58,6 +59,7 @@ const NAV_GROUPS = [
     { id: "gear", label: "ציוד לתינוק", icon: Basket },
     { id: "leaving", label: "לפני שיוצאים", icon: CarSimple },
     { id: "browse", label: "בחירת שם", icon: ListMagnifyingGlass },
+    { id: "professionals", label: "בעלי מקצוע", icon: UsersThree },
   ],
 ]
 
@@ -109,6 +111,12 @@ export default function App() {
       label: "לפני שיוצאים",
       icon: CarSimple,
       onSelect: () => setMobileView("leaving"),
+    },
+    {
+      id: "professionals",
+      label: "בעלי מקצוע",
+      icon: UsersThree,
+      onSelect: () => setMobileView("professionals"),
     },
   ]
 
@@ -269,20 +277,20 @@ export default function App() {
           else void supabase.auth.signOut()
         }}
       >
-        {/* All five screens always mounted (never conditionally rendered to
+        {/* All six screens always mounted (never conditionally rendered to
             null) so each keeps its own state — a checked checklist item, an
-            expanded accordion category — when the person navigates away and
-            back. Visibility toggles per screen:
+            expanded accordion category, an active filter — when the person
+            navigates away and back. Visibility toggles per screen:
               - Home has no desktop version at all (desktop redirects away
                 from it — see the effect above), so it alone is hidden at
                 sm: and up whenever it's the active route.
-              - Bag/Gear/Leaving/Browse each handle their own mobile-vs-
-                desktop split internally (an inner "sm:hidden" block for the
-                mobile JSX, "hidden sm:block" for the desktop JSX), so their
-                outer wrapper here must show on EVERY breakpoint when active
-                — using "sm:hidden" here like Home would hide the desktop
-                JSX too and leave the content area blank above the mobile
-                breakpoint.
+              - Bag/Gear/Leaving/Browse/Professionals each handle their own
+                mobile-vs-desktop split internally (an inner "sm:hidden"
+                block for the mobile JSX, "hidden sm:block" for the desktop
+                JSX), so their outer wrapper here must show on EVERY
+                breakpoint when active — using "sm:hidden" here like Home
+                would hide the desktop JSX too and leave the content area
+                blank above the mobile breakpoint.
             Every non-active screen stays plain "hidden" at every breakpoint,
             not unmounted, until it becomes the active route again. */}
         <div className={cn(mobileView === "home" ? "sm:hidden" : "hidden")}>
@@ -304,6 +312,10 @@ export default function App() {
 
         <div className={cn(mobileView === "leaving" ? undefined : "hidden")}>
           <LeavingScreen onBack={() => setMobileView("home")} />
+        </div>
+
+        <div className={cn(mobileView === "professionals" ? undefined : "hidden")}>
+          <ProfessionalsScreen onBack={() => setMobileView("home")} />
         </div>
 
         {/* The existing name catalogue — its own content byte-for-byte

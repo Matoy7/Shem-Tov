@@ -9,7 +9,7 @@
  * navigation and reset that state, which is the opposite of what "the
  * category is restored correctly" (after Back) requires.
  */
-export type MobileView = "home" | "browse" | "bag" | "gear" | "leaving"
+export type MobileView = "home" | "browse" | "bag" | "gear" | "leaving" | "professionals"
 
 export const ROUTE_FOR_VIEW: Record<MobileView, string> = {
   home: "/",
@@ -17,6 +17,7 @@ export const ROUTE_FOR_VIEW: Record<MobileView, string> = {
   bag: "/hospital-bag",
   gear: "/baby-equipment",
   leaving: "/before-going-out",
+  professionals: "/professionals",
 }
 
 const VIEW_FOR_ROUTE: Record<string, MobileView> = Object.fromEntries(
