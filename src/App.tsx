@@ -293,12 +293,12 @@ export default function App() {
             not unmounted, until it becomes the active route again.
             "הכנת תיק לידה" is no longer one of these screens — it merged
             into "ציוד לתינוק" as a category (see BabyGearScreen.tsx), so
-            Home's own bag card now also routes into "gear" below rather
-            than a screen of its own. */}
+            Home's own card in that grid slot now opens "בעלי מקצוע"
+            instead. */}
         <div className={cn(mobileView === "home" ? "sm:hidden" : "hidden")}>
           <HomeScreen
             onNavigateToNames={() => setMobileView("browse")}
-            onNavigateToBag={() => setMobileView("gear")}
+            onNavigateToProfessionals={() => setMobileView("professionals")}
             onNavigateToGear={() => setMobileView("gear")}
             onNavigateToLeaving={() => setMobileView("leaving")}
           />

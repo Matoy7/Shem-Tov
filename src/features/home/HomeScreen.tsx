@@ -10,7 +10,7 @@ type HomeCard = {
 
 type HomeScreenProps = {
   onNavigateToNames: () => void
-  onNavigateToBag: () => void
+  onNavigateToProfessionals: () => void
   onNavigateToGear: () => void
   onNavigateToLeaving: () => void
 }
@@ -20,10 +20,14 @@ type HomeScreenProps = {
  * cheerful brain mascot) plus a 2×2 grid of category cards — no greeting,
  * no extra sections, per the redesign brief. See DESIGN_GUIDE.md for the
  * full token reference this and future screens should draw from.
+ *
+ * "הכנת תיק לידה" no longer has a card of its own here — it merged into
+ * "ציוד לתינוק" as a category (see BabyGearScreen.tsx), so this slot in the
+ * 2×2 grid now opens "בעלי מקצוע" instead.
  */
-export function HomeScreen({ onNavigateToNames, onNavigateToBag, onNavigateToGear, onNavigateToLeaving }: HomeScreenProps) {
+export function HomeScreen({ onNavigateToNames, onNavigateToProfessionals, onNavigateToGear, onNavigateToLeaving }: HomeScreenProps) {
   const cards: HomeCard[] = [
-    { key: "bag", img: assets.homeBirthBag, title: "הכנת תיק לידה", subtitle: "מה כבר ארזת?", onNavigate: onNavigateToBag },
+    { key: "professionals", img: assets.homeProfessionals, title: "בעלי מקצוע", subtitle: "מי יכול לעזור?", onNavigate: onNavigateToProfessionals },
     { key: "names", img: assets.homeNames, title: "בחירת שם", subtitle: "מצאתם כבר שם?", onNavigate: onNavigateToNames },
     { key: "gear", img: assets.homeBabyGear, title: "ציוד לתינוק", subtitle: "מה עדיין חסר?", onNavigate: onNavigateToGear },
     { key: "leaving", img: assets.homeLeaving, title: "לפני שיוצאים", subtitle: "לא לשכוח כלום.", onNavigate: onNavigateToLeaving },
