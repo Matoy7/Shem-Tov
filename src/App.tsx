@@ -23,7 +23,7 @@ import {
 } from "@/features/auth/linkAccount"
 import { assets } from "@/lib/assets"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
-import { ListMagnifyingGlass, Suitcase, Basket, CarSimple, UsersThree } from "@phosphor-icons/react"
+import { ListMagnifyingGlass, Basket, CarSimple, UsersThree } from "@phosphor-icons/react"
 import type { MobileCategoryItem } from "@/components/layout/MobileNav"
 
 import { useNames } from "@/features/names/useNames"
@@ -34,7 +34,6 @@ import { logSearch } from "@/data/searchLogs"
 import { logFilterClick } from "@/data/filterClickLogs"
 import { useSilentRetry } from "@/lib/useSilentRetry"
 import { HomeScreen } from "@/features/home/HomeScreen"
-import { HospitalBagScreen } from "@/features/hospitalBag/HospitalBagScreen"
 import { BabyGearScreen } from "@/features/babyGear/BabyGearScreen"
 import { LeavingScreen } from "@/features/leaving/LeavingScreen"
 import { ProfessionalsScreen } from "@/features/professionals/ProfessionalsScreen"
@@ -53,9 +52,12 @@ const PRIVACY_NOTE = "השמות שאתם שומרים גלויים רק לכם.
 // redirect effect below). Same icons as the mobile drawer's own categories,
 // so desktop and mobile read as the same navigation, just laid out
 // differently.
+//
+// "הכנת תיק לידה" no longer has its own row — it's a category inside
+// "ציוד לתינוק" now (see BabyGearScreen.tsx), so this list has one fewer
+// item than it used to.
 const NAV_GROUPS = [
   [
-    { id: "bag", label: "הכנת תיק לידה", icon: Suitcase },
     { id: "gear", label: "ציוד לתינוק", icon: Basket },
     { id: "leaving", label: "לפני שיוצאים", icon: CarSimple },
     { id: "browse", label: "בחירת שם", icon: ListMagnifyingGlass },
@@ -84,16 +86,12 @@ export default function App() {
     [location.pathname, navigate],
   )
 
-  // Mobile hamburger drawer content — the same four categories as the Home
-  // screen's own cards (titles match exactly), so the drawer reads as
-  // "everywhere I can go", not a second, different navigation scheme.
+  // Mobile hamburger drawer content — the same categories as the Home
+  // screen's own cards, so the drawer reads as "everywhere I can go", not a
+  // second, different navigation scheme. "הכנת תיק לידה" has no row of its
+  // own here any more — it's a category inside "ציוד לתינוק" (see
+  // BabyGearScreen.tsx), which is where its drawer entry now points.
   const mobileCategories: MobileCategoryItem[] = [
-    {
-      id: "bag",
-      label: "הכנת תיק לידה",
-      icon: Suitcase,
-      onSelect: () => setMobileView("bag"),
-    },
     {
       id: "browse",
       label: "בחירת שם",
@@ -136,7 +134,7 @@ export default function App() {
 
   useEffect(() => {
     if (!readyForDashboard || !isDesktop || mobileView !== "home") return
-    navigate(ROUTE_FOR_VIEW.bag, { replace: true })
+    navigate(ROUTE_FOR_VIEW.gear, { replace: true })
   }, [readyForDashboard, isDesktop, mobileView, navigate])
 
   const [filters, setFilters] = useState<NameFiltersValue>(EMPTY_NAME_FILTERS)
@@ -277,14 +275,14 @@ export default function App() {
           else void supabase.auth.signOut()
         }}
       >
-        {/* All six screens always mounted (never conditionally rendered to
+        {/* All five screens always mounted (never conditionally rendered to
             null) so each keeps its own state — a checked checklist item, an
             expanded accordion category, an active filter — when the person
             navigates away and back. Visibility toggles per screen:
               - Home has no desktop version at all (desktop redirects away
                 from it — see the effect above), so it alone is hidden at
                 sm: and up whenever it's the active route.
-              - Bag/Gear/Leaving/Browse/Professionals each handle their own
+              - Gear/Leaving/Browse/Professionals each handle their own
                 mobile-vs-desktop split internally (an inner "sm:hidden"
                 block for the mobile JSX, "hidden sm:block" for the desktop
                 JSX), so their outer wrapper here must show on EVERY
@@ -292,18 +290,18 @@ export default function App() {
                 would hide the desktop JSX too and leave the content area
                 blank above the mobile breakpoint.
             Every non-active screen stays plain "hidden" at every breakpoint,
-            not unmounted, until it becomes the active route again. */}
+            not unmounted, until it becomes the active route again.
+            "הכנת תיק לידה" is no longer one of these screens — it merged
+            into "ציוד לתינוק" as a category (see BabyGearScreen.tsx), so
+            Home's own bag card now also routes into "gear" below rather
+            than a screen of its own. */}
         <div className={cn(mobileView === "home" ? "sm:hidden" : "hidden")}>
           <HomeScreen
             onNavigateToNames={() => setMobileView("browse")}
-            onNavigateToBag={() => setMobileView("bag")}
+            onNavigateToBag={() => setMobileView("gear")}
             onNavigateToGear={() => setMobileView("gear")}
             onNavigateToLeaving={() => setMobileView("leaving")}
           />
-        </div>
-
-        <div className={cn(mobileView === "bag" ? undefined : "hidden")}>
-          <HospitalBagScreen onBack={() => setMobileView("home")} />
         </div>
 
         <div className={cn(mobileView === "gear" ? undefined : "hidden")}>

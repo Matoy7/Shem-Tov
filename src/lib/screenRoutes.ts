@@ -9,12 +9,14 @@
  * navigation and reset that state, which is the opposite of what "the
  * category is restored correctly" (after Back) requires.
  */
-export type MobileView = "home" | "browse" | "bag" | "gear" | "leaving" | "professionals"
+// "הכנת תיק לידה" (Hospital Bag) is no longer its own screen — it merged
+// into "ציוד לתינוק" (Baby Gear) as one of that screen's categories (see
+// BabyGearScreen.tsx), so "bag" is no longer a MobileView of its own.
+export type MobileView = "home" | "browse" | "gear" | "leaving" | "professionals"
 
 export const ROUTE_FOR_VIEW: Record<MobileView, string> = {
   home: "/",
   browse: "/name-selection",
-  bag: "/hospital-bag",
   gear: "/baby-equipment",
   leaving: "/before-going-out",
   professionals: "/professionals",
@@ -24,7 +26,18 @@ const VIEW_FOR_ROUTE: Record<string, MobileView> = Object.fromEntries(
   (Object.entries(ROUTE_FOR_VIEW) as [MobileView, string][]).map(([view, route]) => [route, view]),
 )
 
+/**
+ * The old Hospital Bag screen's own URL. Kept mapped (rather than left to
+ * fall through to Home) so a bookmark, a shared link, or browser history
+ * pointing at the pre-merge screen still lands somewhere meaningful — the
+ * merged "ציוד לתינוק" screen, whose own top category is now "הכנת תיק
+ * לידה" (see BabyGearScreen.tsx's defaultOpen on that category).
+ */
+const LEGACY_ROUTES: Record<string, MobileView> = {
+  "/hospital-bag": "gear",
+}
+
 /** Unrecognised paths (or the router's basename root before it resolves) fall back to Home. */
 export function viewForPathname(pathname: string): MobileView {
-  return VIEW_FOR_ROUTE[pathname] ?? "home"
+  return VIEW_FOR_ROUTE[pathname] ?? LEGACY_ROUTES[pathname] ?? "home"
 }

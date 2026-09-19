@@ -31,8 +31,49 @@ type GearCategory = {
  * themselves change) — nothing else in this file needs to change, since
  * the checked-state logic and rendering are generic over whatever items
  * each category holds.
+ *
+ * "הכנת תיק לידה" (Hospital Bag) used to be its own standalone screen with
+ * its own five internal sub-groups (מוצרים לאמא / לתינוק / מסמכים / לבית
+ * החולים / לחזרה הביתה). It's merged in here as one flat category — every
+ * item below is carried over byte-for-byte from that screen (same ids,
+ * same labels, same order, nothing dropped) — just without the extra
+ * sub-grouping layer, since no other category here has one either and the
+ * brief calls for this to look and behave exactly like its siblings.
  */
 const CATEGORIES: GearCategory[] = [
+  {
+    id: "hospitalBag",
+    icon: Suitcase,
+    title: "הכנת תיק לידה",
+    subtitle: "כל מה שצריך לקחת איתך לבית החולים",
+    items: [
+      // לאמא
+      { id: "mom-1", label: "חלוק או כותונת הנקה" },
+      { id: "mom-2", label: "תחתונים חד-פעמיים" },
+      { id: "mom-3", label: "פדים לחזה" },
+      { id: "mom-4", label: "כפכפים נוחים" },
+      { id: "mom-5", label: "מוצרי טיפוח אישיים" },
+      // לתינוק
+      { id: "baby-1", label: "בגדי גוף (2-3 מידות)" },
+      { id: "baby-2", label: "כובע ראש רך" },
+      { id: "baby-3", label: "שמיכת עטיפה" },
+      { id: "baby-4", label: "בגד ליציאה מבית החולים" },
+      // מסמכים חשובים
+      { id: "docs-1", label: "תעודת זהות" },
+      { id: "docs-2", label: "כרטיס קופת חולים" },
+      { id: "docs-3", label: "טופס מעקב הריון" },
+      { id: "docs-4", label: "טופס בחירת בית חולים (אם רלוונטי)" },
+      // דברים לבית החולים
+      { id: "hospital-1", label: "מטען לטלפון" },
+      { id: "hospital-2", label: "כרית קטנה מהבית" },
+      { id: "hospital-3", label: "חטיפים ומשקה" },
+      { id: "hospital-4", label: "אוזניות" },
+      // דברים לחזרה הביתה
+      { id: "home-1", label: "כיסא בטיחות מותקן ברכב" },
+      { id: "home-2", label: "בגדי חזרה לאמא" },
+      { id: "home-3", label: "בגד חורף/קיץ לתינוק בהתאם לעונה" },
+    ],
+  },
   {
     id: "nursery",
     icon: Bed,
@@ -171,6 +212,7 @@ export function BabyGearScreen({ onBack }: BabyGearScreenProps) {
                 icon={<PhosphorIcon icon={category.icon} size={22} weight="duotone" color="#6f1e35" />}
                 title={category.title}
                 subtitle={category.subtitle}
+                defaultOpen={category.id === "hospitalBag"}
                 badge={
                   <span
                     className={
